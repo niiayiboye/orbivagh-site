@@ -228,8 +228,8 @@
 <div class="top-bar">
   <div class="container top-bar-inner">
     <div class="top-bar-left">
-      <span><i class="fas fa-phone-alt"></i> <span data-store-phone>050 257 8905</span></span>
-      <span><i class="fas fa-envelope"></i> <span data-store-email>info@orbivagh.com</span></span>
+      <span><i class="fas fa-phone-alt"></i> <a href="tel:0502578905" style="color:inherit;text-decoration:none" data-store-phone>050 257 8905</a></span>
+      <span><i class="fas fa-envelope"></i> <a href="mailto:info@orbivagh.com" style="color:inherit;text-decoration:none" data-store-email>info@orbivagh.com</a></span>
     </div>
     <div class="top-bar-right">
       <a href="contact.html">Track Order</a>
@@ -389,13 +389,14 @@
     <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="contact.html">Contact</a></li></ul></div>
     <div class="footer-col"><h4>Categories</h4><ul id="footerCatLinks"></ul></div>
     <div class="footer-col"><h4>Support</h4><ul><li><a href="contact.html">FAQs</a></li><li><a href="contact.html">Returns</a></li><li><a href="contact.html">Track Order</a></li></ul></div>
-    <div class="footer-col footer-contact-col"><h4>Contact</h4><div class="footer-contact-item"><i class="fas fa-phone-alt"></i><a href="tel:0502578905" style="color:inherit;text-decoration:none" data-store-phone>050 257 8905</a></div><div class="footer-contact-item"><i class="fas fa-envelope"></i><span data-store-email>info@orbivagh.com</span></div></div>
+    <div class="footer-col footer-contact-col"><h4>Contact</h4><div class="footer-contact-item"><i class="fas fa-phone-alt"></i><a href="tel:0502578905" style="color:inherit;text-decoration:none" data-store-phone>050 257 8905</a></div><div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:info@orbivagh.com" style="color:inherit;text-decoration:none" data-store-email>info@orbivagh.com</a></div></div>
   </div>
   <div class="footer-bottom"><div class="container footer-bottom-inner"><p>&copy; 2025 Orbiva Technologies.</p></div></div>
 </footer>
 
 <nav class="bottom-nav" id="bottomNav">
   <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+  <button class="bottom-nav-item" id="bnavCategories" onclick="openCategoryDrawer()"><i class="fas fa-list-ul"></i><span>Categories</span></button>
   <a href="shop.html" class="bottom-nav-item"><i class="fas fa-th-large"></i><span>Shop</span></a>
   <button class="bottom-nav-item" id="bnavCart" onclick="document.getElementById('cartToggle').click()">
     <i class="fas fa-shopping-cart"></i><span>Cart</span><span class="bnav-badge" id="bnavCartCount">0</span>
@@ -407,6 +408,16 @@
     <i class="fas fa-user"></i><span>Account</span>
   </button>
 </nav>
+
+<div class="cat-drawer-backdrop" id="catDrawerBackdrop" onclick="closeCategoryDrawer()"></div>
+<div class="cat-drawer" id="catDrawer">
+  <div class="cat-drawer-handle"></div>
+  <div class="cat-drawer-header">
+    <h3>Shop by Category</h3>
+    <button class="cat-drawer-close" onclick="closeCategoryDrawer()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cat-drawer-list" id="catDrawerList"></div>
+</div>
 
 <div class="search-panel" id="searchPanel">
   <div class="search-panel-hd">
@@ -434,7 +445,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   applyOverrides();
   // Populate nav dropdowns
   const catDd = document.getElementById('catDropdown');
-  if (catDd) catDd.innerHTML = CATEGORIES.map(c => `<li><a href="shop.html?cat=${c.id}"><i class="${c.icon}" style="color:${c.color};margin-right:8px;width:16px"></i>${c.name}</a></li>`).join('');
+  if (catDd) catDd.innerHTML = buildCategoryDropdownHtml(CATEGORIES);
   const brandDd = document.getElementById('brandDropdown');
   if (brandDd) brandDd.innerHTML = BRANDS.map(b => `<li><a href="shop.html?brand=${b.id}">${b.name}</a></li>`).join('');
   const footerCats = document.getElementById('footerCatLinks');

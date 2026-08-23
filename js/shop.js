@@ -52,8 +52,14 @@ function initShopPage() {
   const { cat, brand, q, filter, sub } = getUrlParams();
   let filtered = [...PRODUCTS];
 
-  // Apply filters from URL
-  if (cat)    filtered = filtered.filter(p => p.category === cat);
+  // Apply filters from URL. If `cat` is a parent category, also include
+  // products from its subcategories — e.g. filtering "Refrigerators" should
+  // show products filed under a "Mini Fridges" subcategory too.
+  if (cat) {
+    const childIds = CATEGORIES.filter(c => c.parentId === cat).map(c => c.id);
+    const catIds = new Set([cat, ...childIds]);
+    filtered = filtered.filter(p => catIds.has(p.category));
+  }
   if (brand)  filtered = filtered.filter(p => p.brandId === brand || p.brand.toLowerCase() === brand.toLowerCase());
   if (q) {
     // Use the same smart search engine as the search panel dropdown —

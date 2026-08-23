@@ -64,14 +64,21 @@ function applyOverrides() {
       if (brandDels.has(BRANDS[i].id)) BRANDS.splice(i, 1);
     }
     brandAdds.forEach(b => { if (!BRANDS.some(x => x.id === b.id)) BRANDS.push(b); });
-    // Admin-added/removed categories — mirrors the brand logic above so
-    // categories created in admin show up site-wide (nav, filters, shop grid).
+    // Admin-added/removed/edited categories — mirrors the brand logic above so
+    // categories created or edited in admin show up site-wide (nav, filters,
+    // shop grid), including subcategories via each category's parentId.
     const catAdds = JSON.parse(localStorage.getItem('obv_cat_adds') || '[]');
     const catDels = new Set(JSON.parse(localStorage.getItem('obv_cat_dels') || '[]'));
+    const catEdits = JSON.parse(localStorage.getItem('obv_cat_edits') || '{}');
     for (let i = CATEGORIES.length - 1; i >= 0; i--) {
-      if (catDels.has(CATEGORIES[i].id)) CATEGORIES.splice(i, 1);
+      if (catDels.has(CATEGORIES[i].id)) { CATEGORIES.splice(i, 1); continue; }
+      if (catEdits[CATEGORIES[i].id]) Object.assign(CATEGORIES[i], catEdits[CATEGORIES[i].id]);
     }
-    catAdds.forEach(c => { if (!CATEGORIES.some(x => x.id === c.id)) CATEGORIES.push(c); });
+    catAdds.forEach(c => {
+      if (catDels.has(c.id)) return;
+      const merged = catEdits[c.id] ? Object.assign({}, c, catEdits[c.id]) : c;
+      if (!CATEGORIES.some(x => x.id === c.id)) CATEGORIES.push(merged);
+    });
   } catch(e) {}
   // Hide products without images (default ON; admin can turn off in Settings)
   if (localStorage.getItem('obv_img_required') !== 'off') {
@@ -87,17 +94,25 @@ function applyOverrides() {
     const s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
     if (s.storePhone) {
       const ph = s.storePhone;
-      document.querySelectorAll('[data-store-phone]').forEach(el => el.textContent = ph);
-      document.querySelectorAll('a[href^="tel:"]').forEach(el => {
-        el.href = 'tel:' + ph.replace(/\D/g, '');
+      const telHref = 'tel:' + ph.replace(/\D/g, '');
+      document.querySelectorAll('[data-store-phone]').forEach(el => {
+        el.textContent = ph;
+        if (el.tagName === 'A') el.href = telHref; // link is clickable itself
+      });
+      document.querySelectorAll('a[href^="tel:"]:not([data-store-phone])').forEach(el => {
+        el.href = telHref;
         Array.from(el.childNodes).filter(n => n.nodeType === 3 && n.textContent.trim()).forEach(n => { n.textContent = ' ' + ph; });
       });
     }
     if (s.storeEmail) {
       const em = s.storeEmail;
-      document.querySelectorAll('[data-store-email]').forEach(el => el.textContent = em);
-      document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
-        el.href = 'mailto:' + em;
+      const mailHref = 'mailto:' + em;
+      document.querySelectorAll('[data-store-email]').forEach(el => {
+        el.textContent = em;
+        if (el.tagName === 'A') el.href = mailHref; // link is clickable itself
+      });
+      document.querySelectorAll('a[href^="mailto:"]:not([data-store-email])').forEach(el => {
+        el.href = mailHref;
         Array.from(el.childNodes).filter(n => n.nodeType === 3 && n.textContent.trim()).forEach(n => { n.textContent = ' ' + em; });
       });
     }
@@ -186,7 +201,27 @@ function handleAddToCart(btn, productId) {
 
 /* ── Product Quick View / Detail ── */
 function openProduct(productId) {
+  showPageLoadingOverlay();
   window.location.href = 'product.html?id=' + productId;
+}
+
+// Lightweight full-screen loading indicator shown the instant a product is
+// clicked from search (or anywhere else), so there's immediate visual
+// feedback while the browser navigates — even though it's usually fast,
+// clicking something and seeing nothing happen for a moment feels broken.
+function showPageLoadingOverlay() {
+  if (document.getElementById('pageLoadingOverlay')) return;
+  const el = document.createElement('div');
+  el.id = 'pageLoadingOverlay';
+  el.style.cssText = 'position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;';
+  el.innerHTML = '<div style="width:38px;height:38px;border:3px solid #e2e8f0;border-top-color:var(--primary,#1d4ed8);border-radius:50%;animation:pageLoadSpin .7s linear infinite"></div>';
+  if (!document.getElementById('pageLoadSpinStyle')) {
+    const style = document.createElement('style');
+    style.id = 'pageLoadSpinStyle';
+    style.textContent = '@keyframes pageLoadSpin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(style);
+  }
+  document.body.appendChild(el);
 }
 
 function showProductModal(p) {
@@ -383,13 +418,60 @@ function startCardMarquee(track, wrap, speed) {
   }, {passive:true});
 }
 
+// Shared by shop.html and product.html — builds the category dropdown menu
+// with subcategories nested (indented) under their parent category.
+function buildCategoryDropdownHtml(cats) {
+  const topLevel = cats.filter(c => !c.parentId);
+  const itemHtml = (c, isSub) => `<li><a href="shop.html?cat=${c.id}" style="${isSub ? 'padding-left:28px;font-size:13px' : ''}"><i class="${c.icon}" style="color:${c.color};margin-right:8px;width:16px"></i>${c.name}</a></li>`;
+  let html = '';
+  topLevel.forEach(c => {
+    html += itemHtml(c, false);
+    cats.filter(s => s.parentId === c.id).forEach(s => { html += itemHtml(s, true); });
+  });
+  return html;
+}
+
+// Mobile category drawer — quick category browsing from the bottom nav
+function openCategoryDrawer() {
+  const list = document.getElementById('catDrawerList');
+  if (list) {
+    const cats = typeof CATEGORIES !== 'undefined' ? CATEGORIES : [];
+    const topLevel = cats.filter(c => !c.parentId);
+    let html = '';
+    topLevel.forEach(c => {
+      html += `<a href="shop.html?cat=${c.id}" class="cat-drawer-item">
+        <span class="cat-drawer-icon" style="background:${c.bg};color:${c.color}"><i class="${c.icon}"></i></span>
+        ${c.name}
+      </a>`;
+      cats.filter(s => s.parentId === c.id).forEach(s => {
+        html += `<a href="shop.html?cat=${s.id}" class="cat-drawer-item sub">
+          <span class="cat-drawer-icon" style="background:${s.bg};color:${s.color}"><i class="${s.icon}"></i></span>
+          ${s.name}
+        </a>`;
+      });
+    });
+    list.innerHTML = html || '<p style="padding:16px;color:var(--text-muted);font-size:13px">No categories yet.</p>';
+  }
+  document.getElementById('catDrawerBackdrop')?.classList.add('open');
+  document.getElementById('catDrawer')?.classList.add('open');
+}
+function closeCategoryDrawer() {
+  document.getElementById('catDrawerBackdrop')?.classList.remove('open');
+  document.getElementById('catDrawer')?.classList.remove('open');
+}
+
 function renderCategories() {
   const grid = document.getElementById('categoriesGrid');
   if (!grid) return;
   const countMap = {};
   PRODUCTS.forEach(p => { countMap[p.category] = (countMap[p.category] || 0) + 1; });
-  grid.innerHTML = CATEGORIES.map(c => {
-    const count = countMap[c.id] || 0;
+  // Homepage promo tiles stay top-level only — subcategories are still fully
+  // browsable via the nav dropdown and shop page filters, just not as their
+  // own big tile here, to keep this grid from getting cluttered.
+  grid.innerHTML = CATEGORIES.filter(c => !c.parentId).map(c => {
+    // A parent's count includes its subcategories' products too
+    const subIds = CATEGORIES.filter(s => s.parentId === c.id).map(s => s.id);
+    const count = (countMap[c.id] || 0) + subIds.reduce((sum, id) => sum + (countMap[id] || 0), 0);
     if (!count) return '';
     return `<div class="category-card" onclick="window.location='shop.html?cat=${c.id}'">
       <div class="cat-icon" style="background:${c.bg};color:${c.color}"><i class="${c.icon}"></i></div>
@@ -774,8 +856,8 @@ function handleSearchSelect(type, id, text) {
   const el = document.getElementById('searchSuggestions');
   if (el) el.classList.remove('active');
   if (type === 'product') openProduct(id);
-  else if (type === 'category') window.location.href = `shop.html?cat=${id}`;
-  else if (type === 'brand') window.location.href = `shop.html?brand=${id}`;
+  else if (type === 'category') { showPageLoadingOverlay(); window.location.href = `shop.html?cat=${id}`; }
+  else if (type === 'brand') { showPageLoadingOverlay(); window.location.href = `shop.html?brand=${id}`; }
 }
 
 function highlightMatch(str, q) {

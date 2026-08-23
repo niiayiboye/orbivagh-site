@@ -678,6 +678,10 @@
     <i class="fas fa-home"></i>
     <span>Home</span>
   </a>
+  <button class="bottom-nav-item" id="bnavCategories" onclick="openCategoryDrawer()">
+    <i class="fas fa-list-ul"></i>
+    <span>Categories</span>
+  </button>
   <a href="shop.html" class="bottom-nav-item" id="bnavShop">
     <i class="fas fa-th-large"></i>
     <span>Shop</span>
@@ -697,6 +701,16 @@
     <span>Account</span>
   </button>
 </nav>
+
+<div class="cat-drawer-backdrop" id="catDrawerBackdrop" onclick="closeCategoryDrawer()"></div>
+<div class="cat-drawer" id="catDrawer">
+  <div class="cat-drawer-handle"></div>
+  <div class="cat-drawer-header">
+    <h3>Shop by Category</h3>
+    <button class="cat-drawer-close" onclick="closeCategoryDrawer()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cat-drawer-list" id="catDrawerList"></div>
+</div>
 
 <div class="toast-container" id="toastContainer"></div>
 

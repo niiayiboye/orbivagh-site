@@ -185,6 +185,10 @@
     <i class="fas fa-home"></i>
     <span>Home</span>
   </a>
+  <button class="bottom-nav-item" id="bnavCategories" onclick="openCategoryDrawer()">
+    <i class="fas fa-list-ul"></i>
+    <span>Categories</span>
+  </button>
   <a href="shop.html" class="bottom-nav-item">
     <i class="fas fa-th-large"></i>
     <span>Shop</span>
@@ -202,6 +206,16 @@
     <span>Account</span>
   </a>
 </nav>
+
+<div class="cat-drawer-backdrop" id="catDrawerBackdrop" onclick="closeCategoryDrawer()"></div>
+<div class="cat-drawer" id="catDrawer">
+  <div class="cat-drawer-handle"></div>
+  <div class="cat-drawer-header">
+    <h3>Shop by Category</h3>
+    <button class="cat-drawer-close" onclick="closeCategoryDrawer()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cat-drawer-list" id="catDrawerList"></div>
+</div>
 
 <div class="search-panel" id="searchPanel">
   <div class="search-panel-hd">
@@ -244,10 +258,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function renderCheckoutSummary() {
   const itemsEl    = document.getElementById('checkoutOrderItems');
-  const subtotalEl = document.getElementById('coSubtotal');
-  const totalEl    = document.getElementById('coTotal');
-  const delivRow   = document.getElementById('deliveryRow');
-  const delivVal   = document.getElementById('deliveryVal');
   if (!itemsEl) return;
 
   if (cart.length === 0) {
@@ -255,48 +265,79 @@ function renderCheckoutSummary() {
     return;
   }
 
-  itemsEl.innerHTML = cart.map(item => `
+  itemsEl.innerHTML = cart.map(item => {
+    const prod = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).find(p => p.id === item.id);
+    const sku = prod?.model || item.id;
+    return `
     <div class="order-item">
       <div class="order-item-img">${item.icon}</div>
       <div style="flex:1">
         <div class="order-item-name">${item.name}</div>
-        <div style="font-size:12px;color:var(--text-muted)">Qty: ${item.qty}</div>
+        <div style="font-size:12px;color:var(--text-muted)">SKU: ${sku} · Qty: ${item.qty}</div>
       </div>
       <div class="order-item-price">${fmt(item.price * item.qty)}</div>
     </div>
-  `).join('');
+  `;}).join('');
+
+  updateOrderTotals();
+}
+
+let currentPaymentMethod = 'momo';
+let currentFulfillment  = 'delivery';
+let appliedPromoPct = 0;
+let appliedPromoCode = '';
+let currentOrderTotal = 0; // authoritative numeric total — avoids parsing displayed text
+
+// Single source of truth for pricing — recalculates subtotal, delivery fee
+// (which depends on fulfillment method), and any applied promo discount
+// together, and keeps all three UI spots in sync. Previously delivery fee
+// and promo discount were computed in separate places that could silently
+// contradict each other — e.g. applying a promo code dropped the delivery
+// fee from the total entirely, and switching to Store Pickup never removed
+// a delivery fee that had already been added.
+function updateOrderTotals() {
+  const subtotalEl = document.getElementById('coSubtotal');
+  const totalEl    = document.getElementById('coTotal');
+  const delivRow   = document.getElementById('deliveryRow');
+  const delivVal   = document.getElementById('deliveryVal');
+  const promoRow   = document.getElementById('promoRow');
+  const promoDiscEl= document.getElementById('promoDiscount');
 
   const subtotal = getCartTotal();
   if (subtotalEl) subtotalEl.textContent = fmt(subtotal);
 
-  // Delivery logic
+  // Delivery fee — never applies to store pickup, regardless of settings
   const freeEnabled = localStorage.getItem('obv_freeDelivery') !== 'off';
   const s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
   const threshold = s.deliveryThreshold !== undefined ? parseFloat(s.deliveryThreshold) : 500;
   const fee       = s.deliveryFee       !== undefined ? parseFloat(s.deliveryFee)       : 0;
 
   let deliveryFee = 0;
-  if (!freeEnabled) {
-    // Free delivery disabled — hide delivery row entirely
+  if (currentFulfillment === 'pickup' || !freeEnabled) {
     if (delivRow) delivRow.style.display = 'none';
   } else {
     if (delivRow) delivRow.style.display = '';
     if (subtotal >= threshold || fee === 0) {
-      // Free delivery
       deliveryFee = 0;
       if (delivVal) { delivVal.textContent = 'Free'; delivVal.className = 'free-ship'; }
     } else {
-      // Below threshold — show fee
       deliveryFee = fee;
       if (delivVal) { delivVal.textContent = fmt(fee); delivVal.className = ''; }
     }
   }
 
-  if (totalEl) totalEl.textContent = fmt(subtotal + deliveryFee);
-}
+  // Promo discount — applies to product subtotal only, not delivery
+  const discount = appliedPromoPct ? Math.round(subtotal * appliedPromoPct) : 0;
+  if (appliedPromoPct) {
+    if (promoRow) promoRow.style.display = 'flex';
+    if (promoDiscEl) promoDiscEl.textContent = '-' + fmt(discount);
+  } else if (promoRow) {
+    promoRow.style.display = 'none';
+  }
 
-let currentPaymentMethod = 'momo';
-let currentFulfillment  = 'delivery';
+  currentOrderTotal = subtotal + deliveryFee - discount;
+  if (totalEl) totalEl.textContent = fmt(currentOrderTotal);
+}
 
 function selectFulfillment(method, el) {
   currentFulfillment = method;
@@ -304,6 +345,7 @@ function selectFulfillment(method, el) {
   el.classList.add('selected');
   el.querySelector('input[type="radio"]').checked = true;
   document.getElementById('addressFields').style.display = method === 'delivery' ? '' : 'none';
+  updateOrderTotals();
 }
 
 function selectPayment(el, method) {
@@ -325,11 +367,9 @@ function applyPromo() {
   const code = document.getElementById('promoInput')?.value.trim().toUpperCase();
   const validCodes = { 'TECH20': 0.20, 'SAVE15': 0.15, 'WELCOME10': 0.10 };
   if (validCodes[code]) {
-    const total = getCartTotal();
-    const disc = Math.round(total * validCodes[code]);
-    document.getElementById('promoRow').style.display = 'flex';
-    document.getElementById('promoDiscount').textContent = '-' + fmt(disc);
-    document.getElementById('coTotal').textContent = fmt(total - disc);
+    appliedPromoPct = validCodes[code];
+    appliedPromoCode = code;
+    updateOrderTotals();
     showToast('success', 'Promo Applied!', `Code "${code}" applied. You save ${Math.round(validCodes[code]*100)}%!`, 'fas fa-tag');
   } else {
     showToast('error', 'Invalid Code', 'Try: TECH20, SAVE15, or WELCOME10', 'fas fa-times-circle');
@@ -337,12 +377,10 @@ function applyPromo() {
 }
 
 function getDisplayTotal() {
-  const el = document.getElementById('coTotal');
-  if (!el) return cart.reduce((s, i) => s + i.price * (i.qty || 1), 0);
-  return parseInt(el.textContent.replace(/[^\d]/g, '')) || cart.reduce((s, i) => s + i.price * (i.qty || 1), 0);
+  return currentOrderTotal || cart.reduce((s, i) => s + i.price * (i.qty || 1), 0);
 }
 
-function saveAndConfirmOrder(paymentMethod, paystackRef) {
+async function saveAndConfirmOrder(paymentMethod, paystackRef) {
   const firstName = (document.getElementById('co_firstName')?.value || '').trim();
   const lastName  = (document.getElementById('co_lastName')?.value  || '').trim();
   const phone     = (document.getElementById('co_phone')?.value     || '').trim();
@@ -357,7 +395,23 @@ function saveAndConfirmOrder(paymentMethod, paystackRef) {
     return { name: i.name, qty: i.qty || 1, price: i.price, sku: i.id, model: prod?.model || '' };
   });
 
-  const orders = JSON.parse(localStorage.getItem('obv_orders') || '[]');
+  // Re-fetch the current order list fresh from Supabase right before writing,
+  // instead of trusting whatever was cached in this browser at page-load
+  // time. Orders are stored as a single row, so two customers checking out
+  // around the same time could otherwise silently overwrite each other's
+  // order — this narrows that risk down to a near-impossible window instead
+  // of the whole time both people spend on the checkout page.
+  let orders = JSON.parse(localStorage.getItem('obv_orders') || '[]');
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/kv_store?key=eq.obv_orders&select=value`, {
+      headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` }
+    });
+    if (res.ok) {
+      const rows = await res.json();
+      if (rows.length) orders = JSON.parse(rows[0].value);
+    }
+  } catch(e) {}
+
   const maxId  = orders.length ? Math.max(...orders.map(o => o.id)) : 1000;
   const order  = {
     id: maxId + 1,
@@ -367,6 +421,7 @@ function saveAndConfirmOrder(paymentMethod, paystackRef) {
     deliveryArea: currentFulfillment === 'delivery' ? (address + (city ? ', ' + city : '') + (region ? ', ' + region : '')) : 'Store Pickup',
     items: itemsSnap,
     total, notes,
+    promoCode: appliedPromoCode || null,
     paymentMethod,
     paymentRef: paystackRef || null,
     status: paystackRef ? 'confirmed' : 'pending',
@@ -384,7 +439,7 @@ function showReceiptModal(order) {
   const statusColor = order.status === 'confirmed' ? '#16a34a' : '#d97706';
   const statusLabel = order.status === 'confirmed' ? '✓ Payment Confirmed' : '⏳ Pending Payment';
   const itemsHtml = (order.items || []).map(i =>
-    `<tr><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:13px">${i.name}</td><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;text-align:center;color:#64748b;font-size:13px">×${i.qty}</td><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;text-align:right;font-weight:600;font-size:13px">GH₵ ${(i.price*i.qty).toLocaleString()}</td></tr>`
+    `<tr><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:13px">${i.name}<br><span style="font-size:11px;color:#94a3b8">SKU: ${i.model || i.sku || '—'}</span></td><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;text-align:center;color:#64748b;font-size:13px">×${i.qty}</td><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;text-align:right;font-weight:600;font-size:13px">GH₵ ${(i.price*i.qty).toLocaleString()}</td></tr>`
   ).join('');
 
   document.getElementById('receiptContent').innerHTML = `
@@ -421,7 +476,7 @@ function downloadReceipt() {
   if (!o) return;
   const methodLabel = { momo: 'MTN Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[o.paymentMethod] || o.paymentMethod;
   const itemsRows = (o.items||[]).map(i =>
-    `<tr><td>${i.name}</td><td style="text-align:center">×${i.qty}</td><td style="text-align:right">GH₵ ${(i.price*i.qty).toLocaleString()}</td></tr>`
+    `<tr><td>${i.name}<br><span style="font-size:11px;color:#94a3b8">SKU: ${i.model || i.sku || '—'}</span></td><td style="text-align:center">×${i.qty}</td><td style="text-align:right">GH₵ ${(i.price*i.qty).toLocaleString()}</td></tr>`
   ).join('');
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
   <link rel="canonical" href="https://www.orbivagh.com/checkout.html"><title>Receipt - Order #${o.id}</title>
