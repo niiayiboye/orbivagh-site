@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Checkout – Orbiva Technologies">
+  <link rel="canonical" href="https://orbivagh.com/checkout.html">
+  <link rel="icon" type="image/jpeg" href="img/logo.jpeg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout – Orbiva Technologies</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+<!-- Mini Header -->
+<header class="header" style="position:sticky;top:0" id="mainHeader">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <img src="img/logo.jpeg" alt="Orbiva Technologies" class="logo-img">
+    </a>
+    <div style="display:flex;align-items:center;gap:20px;color:var(--text-muted);font-size:13px">
+      <span><i class="fas fa-lock" style="color:var(--success)"></i> SSL Secured</span>
+      <span><i class="fas fa-shield-alt" style="color:var(--primary)"></i> Safe Checkout</span>
+    </div>
+    <a href="shop.html" class="btn-outline" style="font-size:13px;padding:8px 18px"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+  </div>
+</header>
+
+<!-- Checkout Steps -->
+<div style="background:var(--bg-soft);border-bottom:1px solid var(--border);padding:16px 0">
+  <div class="container" style="display:flex;align-items:center;justify-content:center;gap:0">
+    <div class="checkout-step active" id="step1" style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--primary)">
+      <div style="width:28px;height:28px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px">1</div>
+      Cart
+    </div>
+    <div style="width:60px;height:2px;background:var(--primary);margin:0 8px"></div>
+    <div style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--primary)">
+      <div style="width:28px;height:28px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px">2</div>
+      Checkout
+    </div>
+    <div style="width:60px;height:2px;background:var(--border);margin:0 8px"></div>
+    <div style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--text-muted)">
+      <div style="width:28px;height:28px;background:var(--border);color:var(--text-muted);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px">3</div>
+      Confirmation
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="checkout-layout">
+    <!-- Left: Forms -->
+    <div>
+      <!-- Contact Info -->
+      <div class="checkout-section">
+        <h3><i class="fas fa-user"></i> Contact Information</h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="form-group"><label>First Name*</label><input type="text" id="co_firstName" placeholder="John" /></div>
+          <div class="form-group"><label>Last Name*</label><input type="text" id="co_lastName" placeholder="Doe" /></div>
+          <div class="form-group"><label>Phone Number*</label><input type="tel" id="co_phone" placeholder="+233 XX XXX XXXX" /></div>
+          <div class="form-group"><label>Email Address <span style="font-weight:400;color:var(--text-muted)">(Optional)</span></label><input type="email" id="co_email" placeholder="john@example.com" /></div>
+        </div>
+      </div>
+
+      <!-- Fulfillment Method -->
+      <div class="checkout-section">
+        <h3><i class="fas fa-map-marker-alt"></i> Fulfillment</h3>
+        <div style="display:flex;gap:10px;margin-bottom:16px">
+          <div class="payment-method selected" style="flex:1;cursor:pointer" onclick="selectFulfillment('delivery',this)">
+            <input type="radio" name="fulfillment" checked />
+            <div class="payment-method-icon"><i class="fas fa-truck"></i></div>
+            <div><strong style="font-size:14px">Home Delivery</strong></div>
+          </div>
+          <div class="payment-method" style="flex:1;cursor:pointer" onclick="selectFulfillment('pickup',this)">
+            <input type="radio" name="fulfillment" />
+            <div class="payment-method-icon"><i class="fas fa-store"></i></div>
+            <div><strong style="font-size:14px">Pickup from Store</strong></div>
+          </div>
+        </div>
+
+        <div id="addressFields">
+          <div class="form-group" style="margin-bottom:12px"><label>Street Address*</label><input type="text" id="co_address" placeholder="123 Example Street, Accra" /></div>
+          <div class="form-grid-2">
+            <div class="form-group"><label>City*</label>
+              <select id="co_city" style="padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:14px;outline:none;width:100%;color:var(--text-dark);background:#fff">
+                <option>Accra</option><option>Kumasi</option><option>Tamale</option><option>Takoradi</option><option>Cape Coast</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Region*</label>
+              <select id="co_region" style="padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:14px;outline:none;width:100%;color:var(--text-dark);background:#fff">
+                <option>Greater Accra</option><option>Ashanti</option><option>Northern</option><option>Western</option><option>Central</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:12px">
+          <label>Notes (Optional)</label>
+          <textarea id="co_notes" style="padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:14px;outline:none;width:100%;color:var(--text-dark);min-height:80px;resize:vertical" placeholder="e.g. Gate colour, landmark near house…"></textarea>
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="checkout-section">
+        <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+        <div id="paymentOptions">
+        <div class="payment-method selected" onclick="selectPayment(this,'momo')">
+          <input type="radio" name="payment" checked />
+          <div class="payment-method-icon" style="color:#fcd34d"><i class="fas fa-mobile-alt"></i></div>
+          <div>
+            <strong style="font-size:14px">MTN Mobile Money</strong>
+            <p style="font-size:12px;color:var(--text-muted);margin:0">Pay securely with MTN MoMo</p>
+          </div>
+        </div>
+        <div class="payment-method" onclick="selectPayment(this,'card')">
+          <input type="radio" name="payment" />
+          <div class="payment-method-icon"><i class="fab fa-cc-visa"></i></div>
+          <div>
+            <strong style="font-size:14px">Credit / Debit Card</strong>
+            <p style="font-size:12px;color:var(--text-muted);margin:0">Visa, Mastercard accepted</p>
+          </div>
+        </div>
+        <div class="payment-method" onclick="selectPayment(this,'cod')">
+          <input type="radio" name="payment" />
+          <div class="payment-method-icon" style="color:var(--success)"><i class="fas fa-money-bill-wave"></i></div>
+          <div>
+            <strong style="font-size:14px">Cash on Delivery</strong>
+            <p style="font-size:12px;color:var(--text-muted);margin:0">Pay when you receive your order</p>
+          </div>
+        </div>
+        </div>
+
+        <!-- Dynamic payment input -->
+        <div id="paymentFields" style="margin-top:16px">
+          <div class="form-group"><label>MTN MoMo Number*</label><input type="tel" placeholder="024 XXX XXXX" id="momoField" /></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Order Summary -->
+    <div class="order-summary-card">
+      <h3>Order Summary</h3>
+
+      <!-- Cart Items -->
+      <div id="checkoutOrderItems">
+        <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0">Your cart is empty</p>
+      </div>
+
+      <!-- Promo Code -->
+      <div style="margin-top:16px">
+        <p style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:8px">Promo Code</p>
+        <div class="promo-input-wrap">
+          <input type="text" placeholder="Enter code (e.g. TECH20)" id="promoInput" />
+          <button onclick="applyPromo()">Apply</button>
+        </div>
+      </div>
+
+      <!-- Totals -->
+      <div style="margin-top:8px">
+        <div class="summary-row"><span>Subtotal</span><strong id="coSubtotal">GH₵ 0</strong></div>
+        <div class="summary-row" id="deliveryRow"><span>Delivery</span><strong id="deliveryVal" class="free-ship">Free</strong></div>
+        <div class="summary-row" id="promoRow" style="display:none;color:var(--success)"><span>Promo Discount</span><strong id="promoDiscount">-GH₵ 0</strong></div>
+        <div class="summary-row summary-total"><span>Total</span><strong id="coTotal">GH₵ 0</strong></div>
+      </div>
+
+      <button class="btn-primary btn-block" onclick="placeOrder()" style="margin-top:16px;font-size:15px;padding:15px">
+        <i class="fas fa-lock"></i> Place Order
+      </button>
+      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:10px">
+        <i class="fas fa-shield-alt" style="color:var(--success)"></i> Your payment is encrypted and secure.
+      </p>
+      <div style="display:flex;justify-content:center;gap:12px;margin-top:12px;align-items:center">
+        <i class="fab fa-cc-visa" style="font-size:28px;color:#1a1f71"></i>
+        <i class="fab fa-cc-mastercard" style="font-size:28px;color:#eb001b"></i>
+        <span style="font-size:11px;font-weight:700;color:#fcd34d;background:#1a1a1a;padding:2px 8px;border-radius:4px;line-height:28px">MTN MoMo</span>
+        <img src="https://website-v3-assets.s3.amazonaws.com/assets/img/hero/Paystack-mark-white-twitter.png" alt="Paystack" style="height:22px;opacity:0.7">
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav" id="bottomNav">
+  <a href="index.html" class="bottom-nav-item">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <a href="shop.html" class="bottom-nav-item">
+    <i class="fas fa-th-large"></i>
+    <span>Shop</span>
+  </a>
+  <a href="checkout.html" class="bottom-nav-item active">
+    <i class="fas fa-shopping-cart"></i>
+    <span>Checkout</span>
+  </a>
+  <a href="shop.html" class="bottom-nav-item">
+    <i class="fas fa-heart"></i>
+    <span>Saved</span>
+  </a>
+  <a href="index.html" class="bottom-nav-item">
+    <i class="fas fa-user"></i>
+    <span>Account</span>
+  </a>
+</nav>
+
+<div class="search-panel" id="searchPanel">
+  <div class="search-panel-hd">
+    <h2 class="search-panel-title">Search</h2>
+    <button class="search-panel-close" id="searchPanelClose"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="search-panel-bd">
+    <div class="search-panel-input-wrap">
+      <input type="text" id="searchPanelInput" class="search-panel-input" placeholder="Search products, brands, SKU…" autocomplete="off">
+    </div>
+    <div id="searchPanelSugs" class="search-panel-sugs"></div>
+  </div>
+</div>
+<div class="search-panel-backdrop" id="searchPanelBackdrop"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Receipt Modal -->
+<div id="receiptModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border-radius:18px;max-width:480px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <div id="receiptContent" style="padding:32px 28px"></div>
+    <div style="padding:0 28px 24px;display:flex;gap:10px">
+      <button onclick="downloadReceipt()" style="flex:1;padding:13px;background:#1d4ed8;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><i class="fas fa-download"></i> Download Receipt</button>
+      <a href="index.html" style="flex:1;padding:13px;background:#f1f5f9;color:#1e293b;border-radius:10px;font-size:14px;font-weight:700;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center">Continue Shopping</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script src="js/supabase.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/cart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  await (window.obvSyncPromise || Promise.resolve());
+  applyOverrides();
+  renderCheckoutSummary();
+});
+
+function renderCheckoutSummary() {
+  const itemsEl    = document.getElementById('checkoutOrderItems');
+  const subtotalEl = document.getElementById('coSubtotal');
+  const totalEl    = document.getElementById('coTotal');
+  const delivRow   = document.getElementById('deliveryRow');
+  const delivVal   = document.getElementById('deliveryVal');
+  if (!itemsEl) return;
+
+  if (cart.length === 0) {
+    itemsEl.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0">Your cart is empty. <a href="shop.html" style="color:var(--primary)">Start shopping</a></p>';
+    return;
+  }
+
+  itemsEl.innerHTML = cart.map(item => `
+    <div class="order-item">
+      <div class="order-item-img">${item.icon}</div>
+      <div style="flex:1">
+        <div class="order-item-name">${item.name}</div>
+        <div style="font-size:12px;color:var(--text-muted)">Qty: ${item.qty}</div>
+      </div>
+      <div class="order-item-price">${fmt(item.price * item.qty)}</div>
+    </div>
+  `).join('');
+
+  const subtotal = getCartTotal();
+  if (subtotalEl) subtotalEl.textContent = fmt(subtotal);
+
+  // Delivery logic
+  const freeEnabled = localStorage.getItem('obv_freeDelivery') !== 'off';
+  const s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
+  const threshold = s.deliveryThreshold !== undefined ? parseFloat(s.deliveryThreshold) : 500;
+  const fee       = s.deliveryFee       !== undefined ? parseFloat(s.deliveryFee)       : 0;
+
+  let deliveryFee = 0;
+  if (!freeEnabled) {
+    // Free delivery disabled — hide delivery row entirely
+    if (delivRow) delivRow.style.display = 'none';
+  } else {
+    if (delivRow) delivRow.style.display = '';
+    if (subtotal >= threshold || fee === 0) {
+      // Free delivery
+      deliveryFee = 0;
+      if (delivVal) { delivVal.textContent = 'Free'; delivVal.className = 'free-ship'; }
+    } else {
+      // Below threshold — show fee
+      deliveryFee = fee;
+      if (delivVal) { delivVal.textContent = fmt(fee); delivVal.className = ''; }
+    }
+  }
+
+  if (totalEl) totalEl.textContent = fmt(subtotal + deliveryFee);
+}
+
+let currentPaymentMethod = 'momo';
+let currentFulfillment  = 'delivery';
+
+function selectFulfillment(method, el) {
+  currentFulfillment = method;
+  document.querySelectorAll('[name="fulfillment"]').forEach(r => r.closest('.payment-method').classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input[type="radio"]').checked = true;
+  document.getElementById('addressFields').style.display = method === 'delivery' ? '' : 'none';
+}
+
+function selectPayment(el, method) {
+  currentPaymentMethod = method;
+  document.querySelectorAll('#paymentOptions .payment-method').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input[type="radio"]').checked = true;
+
+  const fields = document.getElementById('paymentFields');
+  const fieldMap = {
+    momo: '<p style="font-size:13px;color:var(--text-muted);padding:12px;background:var(--bg-soft);border-radius:var(--radius-md)"><i class="fas fa-mobile-alt" style="color:#fcd34d"></i> A Paystack popup will open. Enter your MTN MoMo number there to complete payment securely.</p>',
+    card: '<p style="font-size:13px;color:var(--text-muted);padding:12px;background:var(--bg-soft);border-radius:var(--radius-md)"><i class="fab fa-cc-visa" style="color:var(--primary)"></i> A secure Paystack popup will open for you to enter your card details.</p>',
+    cod: '<p style="font-size:13px;color:var(--text-muted);padding:12px;background:var(--bg-soft);border-radius:var(--radius-md)"><i class="fas fa-info-circle" style="color:var(--primary)"></i> Pay in cash when your order is delivered.</p>'
+  };
+  if (fields) fields.innerHTML = fieldMap[method] || '';
+}
+
+function applyPromo() {
+  const code = document.getElementById('promoInput')?.value.trim().toUpperCase();
+  const validCodes = { 'TECH20': 0.20, 'SAVE15': 0.15, 'WELCOME10': 0.10 };
+  if (validCodes[code]) {
+    const total = getCartTotal();
+    const disc = Math.round(total * validCodes[code]);
+    document.getElementById('promoRow').style.display = 'flex';
+    document.getElementById('promoDiscount').textContent = '-' + fmt(disc);
+    document.getElementById('coTotal').textContent = fmt(total - disc);
+    showToast('success', 'Promo Applied!', `Code "${code}" applied. You save ${Math.round(validCodes[code]*100)}%!`, 'fas fa-tag');
+  } else {
+    showToast('error', 'Invalid Code', 'Try: TECH20, SAVE15, or WELCOME10', 'fas fa-times-circle');
+  }
+}
+
+function getDisplayTotal() {
+  const el = document.getElementById('coTotal');
+  if (!el) return cart.reduce((s, i) => s + i.price * (i.qty || 1), 0);
+  return parseInt(el.textContent.replace(/[^\d]/g, '')) || cart.reduce((s, i) => s + i.price * (i.qty || 1), 0);
+}
+
+function saveAndConfirmOrder(paymentMethod, paystackRef) {
+  const firstName = (document.getElementById('co_firstName')?.value || '').trim();
+  const lastName  = (document.getElementById('co_lastName')?.value  || '').trim();
+  const phone     = (document.getElementById('co_phone')?.value     || '').trim();
+  const email     = (document.getElementById('co_email')?.value     || '').trim();
+  const address   = currentFulfillment === 'delivery' ? (document.getElementById('co_address')?.value || '').trim() : '';
+  const city      = currentFulfillment === 'delivery' ? (document.getElementById('co_city')?.value   || '') : '';
+  const region    = currentFulfillment === 'delivery' ? (document.getElementById('co_region')?.value || '') : '';
+  const notes     = (document.getElementById('co_notes')?.value || '').trim();
+  const total     = getDisplayTotal();
+  const itemsSnap = cart.map(i => {
+    const prod = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).find(p => p.id === i.id);
+    return { name: i.name, qty: i.qty || 1, price: i.price, sku: i.id, model: prod?.model || '' };
+  });
+
+  const orders = JSON.parse(localStorage.getItem('obv_orders') || '[]');
+  const maxId  = orders.length ? Math.max(...orders.map(o => o.id)) : 1000;
+  const order  = {
+    id: maxId + 1,
+    customerName: firstName + (lastName ? ' ' + lastName : ''),
+    phone, email,
+    fulfillment: currentFulfillment,
+    deliveryArea: currentFulfillment === 'delivery' ? (address + (city ? ', ' + city : '') + (region ? ', ' + region : '')) : 'Store Pickup',
+    items: itemsSnap,
+    total, notes,
+    paymentMethod,
+    paymentRef: paystackRef || null,
+    status: paystackRef ? 'confirmed' : 'pending',
+    createdAt: new Date().toISOString()
+  };
+  orders.push(order);
+  localStorage.setItem('obv_orders', JSON.stringify(orders));
+  sbPush('obv_orders');
+  clearCart();
+  showReceiptModal(order);
+}
+
+function showReceiptModal(order) {
+  const methodLabel = { momo: 'MTN Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[order.paymentMethod] || order.paymentMethod;
+  const statusColor = order.status === 'confirmed' ? '#16a34a' : '#d97706';
+  const statusLabel = order.status === 'confirmed' ? '✓ Payment Confirmed' : '⏳ Pending Payment';
+  const itemsHtml = (order.items || []).map(i =>
+    `<tr><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:13px">${i.name}</td><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;text-align:center;color:#64748b;font-size:13px">×${i.qty}</td><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;text-align:right;font-weight:600;font-size:13px">GH₵ ${(i.price*i.qty).toLocaleString()}</td></tr>`
+  ).join('');
+
+  document.getElementById('receiptContent').innerHTML = `
+    <div style="text-align:center;margin-bottom:24px">
+      <img src="img/logo.jpeg" style="height:48px;border-radius:8px;margin-bottom:10px">
+      <div style="font-size:11px;color:#64748b;letter-spacing:.5px;text-transform:uppercase">Order Receipt</div>
+      <div style="font-size:22px;font-weight:800;color:#0f172a;margin:6px 0">Order #${order.id}</div>
+      <span style="display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;background:${order.status==='confirmed'?'#dcfce7':'#fef3c7'};color:${statusColor}">${statusLabel}</span>
+    </div>
+    <div style="background:#f8fafc;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Customer</span><strong>${order.customerName}</strong></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Phone</span><strong>${order.phone}</strong></div>
+      ${order.email?`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Email</span><strong>${order.email}</strong></div>`:''}
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Fulfillment</span><strong>${order.fulfillment==='pickup'?'Store Pickup':'Home Delivery'}</strong></div>
+      ${order.deliveryArea&&order.deliveryArea!=='Store Pickup'?`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Address</span><strong style="text-align:right;max-width:60%">${order.deliveryArea}</strong></div>`:''}
+      <div style="display:flex;justify-content:space-between"><span style="color:#64748b">Payment</span><strong>${methodLabel}</strong></div>
+      ${order.paymentRef?`<div style="display:flex;justify-content:space-between;margin-top:6px"><span style="color:#64748b">Ref</span><strong style="font-size:11px">${order.paymentRef}</strong></div>`:''}
+    </div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:12px">${itemsHtml}</table>
+    <div style="display:flex;justify-content:space-between;background:#1d4ed8;color:#fff;border-radius:10px;padding:14px 16px;font-size:16px;font-weight:800">
+      <span>Total</span><span>GH₵ ${order.total.toLocaleString()}</span>
+    </div>
+    <div style="text-align:center;margin-top:16px;font-size:11px;color:#94a3b8">
+      ${new Date(order.createdAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})} · Orbiva Technologies
+    </div>`;
+
+  const modal = document.getElementById('receiptModal');
+  modal.style.display = 'flex';
+  window._lastOrder = order;
+}
+
+function downloadReceipt() {
+  const o = window._lastOrder;
+  if (!o) return;
+  const methodLabel = { momo: 'MTN Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[o.paymentMethod] || o.paymentMethod;
+  const itemsRows = (o.items||[]).map(i =>
+    `<tr><td>${i.name}</td><td style="text-align:center">×${i.qty}</td><td style="text-align:right">GH₵ ${(i.price*i.qty).toLocaleString()}</td></tr>`
+  ).join('');
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <link rel="canonical" href="https://www.orbivagh.com/checkout.html"><title>Receipt - Order #${o.id}</title>
+  <style>body{font-family:Arial,sans-serif;max-width:420px;margin:30px auto;color:#1e293b;font-size:13px}
+  h1{font-size:20px;margin:0}.header{text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #1d4ed8}
+  .info-row{display:flex;justify-content:space-between;margin:5px 0}
+  .info-box{background:#f8fafc;border-radius:8px;padding:12px;margin-bottom:16px}
+  table{width:100%;border-collapse:collapse;margin-bottom:12px}
+  td{padding:7px 4px;border-bottom:1px solid #f1f5f9}
+  .total-row{background:#1d4ed8;color:#fff;border-radius:8px;padding:12px;display:flex;justify-content:space-between;font-size:16px;font-weight:800}
+  .footer{text-align:center;margin-top:16px;font-size:11px;color:#94a3b8}
+  @media print{body{margin:10px}button{display:none}}</style></head>
+  <body>
+  <div class="header"><h1>Orbiva Technologies</h1><div style="font-size:11px;color:#64748b;margin:4px 0">ORDER RECEIPT</div>
+  <div style="font-size:18px;font-weight:800">Order #${o.id}</div>
+  <div style="color:${o.status==='confirmed'?'#16a34a':'#d97706'};font-weight:700">${o.status==='confirmed'?'✓ Payment Confirmed':'⏳ Pending Payment'}</div></div>
+  <div class="info-box">
+  <div class="info-row"><span style="color:#64748b">Customer</span><strong>${o.customerName}</strong></div>
+  <div class="info-row"><span style="color:#64748b">Phone</span><strong>${o.phone}</strong></div>
+  ${o.email?`<div class="info-row"><span style="color:#64748b">Email</span><strong>${o.email}</strong></div>`:''}
+  <div class="info-row"><span style="color:#64748b">Fulfillment</span><strong>${o.fulfillment==='pickup'?'Store Pickup':'Home Delivery'}</strong></div>
+  ${o.deliveryArea&&o.deliveryArea!=='Store Pickup'?`<div class="info-row"><span style="color:#64748b">Address</span><strong>${o.deliveryArea}</strong></div>`:''}
+  <div class="info-row"><span style="color:#64748b">Payment</span><strong>${methodLabel}</strong></div>
+  ${o.paymentRef?`<div class="info-row"><span style="color:#64748b">Ref</span><strong style="font-size:11px">${o.paymentRef}</strong></div>`:''}
+  <div class="info-row"><span style="color:#64748b">Date</span><strong>${new Date(o.createdAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</strong></div>
+  </div>
+  <table>${itemsRows}</table>
+  <div class="total-row"><span>Total</span><span>GH₵ ${o.total.toLocaleString()}</span></div>
+  <div class="footer">Thank you for shopping with Orbiva Technologies · orbivagh.com</div>
+  <br><button onclick="window.print()" style="width:100%;padding:10px;background:#1d4ed8;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">🖨 Print / Save as PDF</button>
+  </body></html>`;
+  const w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+  setTimeout(() => w.print(), 600);
+}
+
+function placeOrder() {
+  if (cart.length === 0) {
+    showToast('error', 'Cart Empty', 'Add items to your cart before placing an order.', 'fas fa-shopping-cart');
+    return;
+  }
+
+  const firstName = (document.getElementById('co_firstName')?.value || '').trim();
+  const lastName  = (document.getElementById('co_lastName')?.value  || '').trim();
+  const phone     = (document.getElementById('co_phone')?.value     || '').trim();
+  const email     = (document.getElementById('co_email')?.value     || '').trim();
+  const address   = (document.getElementById('co_address')?.value   || '').trim();
+
+  if (!firstName || !phone) {
+    showToast('error', 'Missing Info', 'Please fill in your name and phone number.', 'fas fa-exclamation-circle');
+    return;
+  }
+  if (currentFulfillment === 'delivery' && !address) {
+    showToast('error', 'Missing Address', 'Please enter your delivery address.', 'fas fa-exclamation-circle');
+    return;
+  }
+
+  // Cash on Delivery — no payment popup
+  if (currentPaymentMethod === 'cod') {
+    saveAndConfirmOrder('cod', null);
+    return;
+  }
+
+  // Paystack — MoMo or Card; generate fallback email if blank
+  const paystackEmail = email || (phone.replace(/\s+/g, '').replace(/^\+/, '') + '@orbivagh.com');
+
+  const btn = document.querySelector('.order-summary-card .btn-primary');
+  if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening Payment…'; btn.disabled = true; }
+
+  const total = getDisplayTotal();
+  const ref   = 'ORB-' + Date.now();
+
+  const handler = PaystackPop.setup({
+    key: 'pk_live_42994b6cf900a23da30c3f2174b4778998ffa1bc',
+    email: paystackEmail,
+    amount: total * 100,
+    currency: 'GHS',
+    ref: ref,
+    channels: currentPaymentMethod === 'card' ? ['card'] : ['mobile_money', 'card'],
+    metadata: {
+      custom_fields: [
+        { display_name: 'Customer Name',     variable_name: 'customer_name',     value: firstName + (lastName ? ' ' + lastName : '') },
+        { display_name: 'Phone',             variable_name: 'phone',             value: phone },
+        { display_name: 'Delivery Address',  variable_name: 'delivery_address',  value: address }
+      ]
+    },
+    callback: function(response) {
+      saveAndConfirmOrder(currentPaymentMethod, response.reference);
+    },
+    onClose: function() {
+      if (btn) { btn.innerHTML = '<i class="fas fa-lock"></i> Place Order'; btn.disabled = false; }
+      showToast('info', 'Payment Cancelled', 'You closed the payment window. Your cart is still saved.', 'fas fa-info-circle');
+    }
+  });
+  handler.openIframe();
+}
+</script>
+</body>
+</html>

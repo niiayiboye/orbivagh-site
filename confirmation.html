@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Order Confirmed – Orbiva Technologies">
+  <link rel="canonical" href="https://orbivagh.com/confirmation.html">
+  <link rel="icon" type="image/jpeg" href="img/logo.jpeg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Confirmed – Orbiva Technologies</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    .confirm-page { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 60px 0; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); }
+    .confirm-card { background: #fff; border-radius: 24px; padding: 60px 48px; text-align: center; max-width: 540px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+    .confirm-icon { width: 100px; height: 100px; background: linear-gradient(135deg, #16a34a, #22c55e); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; font-size: 44px; color: #fff; animation: zoomIn 0.6s ease; }
+    .confirm-card h1 { font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
+    .confirm-card p { font-size: 15px; color: #64748b; line-height: 1.7; margin-bottom: 24px; }
+    .order-num { background: rgba(29,78,216,0.08); border-radius: 12px; padding: 16px 24px; margin-bottom: 28px; }
+    .order-num span { font-size: 13px; color: #64748b; display: block; margin-bottom: 4px; }
+    .order-num strong { font-size: 22px; font-weight: 800; color: #1d4ed8; }
+    .confirm-steps { display: flex; justify-content: center; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+    .cs { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .cs-icon { width: 48px; height: 48px; background: rgba(29,78,216,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #1d4ed8; font-size: 18px; }
+    .cs-label { font-size: 12px; font-weight: 600; color: #334155; }
+    .cs-sep { width: 40px; height: 2px; background: #e2e8f0; align-self: center; }
+    @keyframes zoomIn { from { opacity:0; transform:scale(0.5); } to { opacity:1; transform:scale(1); } }
+  </style>
+</head>
+<body>
+<header class="header" style="position:sticky;top:0;z-index:900">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <img src="img/logo.jpeg" alt="Orbiva Technologies" class="logo-img">
+    </a>
+  </div>
+</header>
+
+<section class="confirm-page">
+  <div class="confirm-card">
+    <div class="confirm-icon"><i class="fas fa-check"></i></div>
+    <h1>Order Confirmed!</h1>
+    <p>Thank you for shopping with Orbiva! Your order has been received and is being processed. You'll receive a confirmation email shortly.</p>
+    <div class="order-num">
+      <span>Your Order Number</span>
+      <strong id="orderNum">#OBV-2025-00000</strong>
+    </div>
+    <div class="confirm-steps">
+      <div class="cs">
+        <div class="cs-icon"><i class="fas fa-check-circle" style="color:#16a34a"></i></div>
+        <span class="cs-label">Confirmed</span>
+      </div>
+      <div class="cs-sep"></div>
+      <div class="cs">
+        <div class="cs-icon"><i class="fas fa-box"></i></div>
+        <span class="cs-label">Packing</span>
+      </div>
+      <div class="cs-sep"></div>
+      <div class="cs">
+        <div class="cs-icon"><i class="fas fa-truck"></i></div>
+        <span class="cs-label">On the Way</span>
+      </div>
+      <div class="cs-sep"></div>
+      <div class="cs">
+        <div class="cs-icon"><i class="fas fa-home"></i></div>
+        <span class="cs-label">Delivered</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="index.html" class="btn-primary"><i class="fas fa-home"></i> Back to Home</a>
+      <a href="shop.html" class="btn-outline"><i class="fas fa-shopping-bag"></i> Continue Shopping</a>
+    </div>
+  </div>
+</section>
+<nav class="bottom-nav" id="bottomNav">
+  <a href="index.html" class="bottom-nav-item active">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <a href="shop.html" class="bottom-nav-item">
+    <i class="fas fa-th-large"></i>
+    <span>Shop</span>
+  </a>
+  <a href="shop.html?filter=flash" class="bottom-nav-item">
+    <i class="fas fa-bolt"></i>
+    <span>Deals</span>
+  </a>
+  <a href="shop.html" class="bottom-nav-item">
+    <i class="fas fa-heart"></i>
+    <span>Saved</span>
+  </a>
+  <a href="index.html" class="bottom-nav-item">
+    <i class="fas fa-user"></i>
+    <span>Account</span>
+  </a>
+</nav>
+
+<script>
+  // Generate random order number
+  const num = '#OBV-2025-' + String(Math.floor(10000 + Math.random() * 90000));
+  document.getElementById('orderNum').textContent = num;
+</script>
+</body>
+</html>
