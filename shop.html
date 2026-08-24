@@ -55,15 +55,7 @@
       </div>
       <div class="desktop-nav-item">
         <a href="shop.html" class="desktop-nav-link">Categories <i class="fas fa-chevron-down fa-xs"></i></a>
-        <ul class="desktop-dropdown">
-          <li><a href="shop.html?cat=tv"><span>📺</span> Televisions</a></li>
-          <li><a href="shop.html?cat=ac"><span>❄️</span> Air Conditioners</a></li>
-          <li><a href="shop.html?cat=fridge"><span>🧊</span> Refrigerators</a></li>
-          <li><a href="shop.html?cat=laundry"><span>👕</span> Washing Machines</a></li>
-          <li><a href="shop.html?cat=kitchen"><span>🍳</span> Kitchen Appliances</a></li>
-          <li><a href="shop.html?cat=audio"><span>🎵</span> Audio Devices</a></li>
-          <li><a href="shop.html?cat=small"><span>🔌</span> Other Appliances</a></li>
-        </ul>
+        <ul class="desktop-dropdown" id="desktopCatDropdown"></ul>
       </div>
     </nav>
     <div class="header-actions">
@@ -418,6 +410,8 @@ function renderShopFilters() {
   if (catDd) {
     catDd.innerHTML = buildCategoryDropdownHtml(CATEGORIES);
   }
+  const deskCatDd = document.getElementById('desktopCatDropdown');
+  if (deskCatDd) deskCatDd.innerHTML = buildCategoryDropdownHtml(CATEGORIES);
 
   // Nav brand dropdown
   const brandDd = document.getElementById('brandDropdown');

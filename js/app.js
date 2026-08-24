@@ -116,6 +116,13 @@ function applyOverrides() {
         Array.from(el.childNodes).filter(n => n.nodeType === 3 && n.textContent.trim()).forEach(n => { n.textContent = ' ' + em; });
       });
     }
+    if (s.storeAddress) {
+      document.querySelectorAll('[data-store-address]').forEach(el => { el.textContent = s.storeAddress; });
+    }
+    if (s.hoursWeekday || s.hoursSunday) {
+      const hoursHtml = [s.hoursWeekday, s.hoursSunday].filter(Boolean).join('<br>');
+      document.querySelectorAll('[data-store-hours]').forEach(el => { el.innerHTML = hoursHtml; });
+    }
     if (s.storeWhatsapp || s.storePhone) {
       const wa = (s.storeWhatsapp || s.storePhone).replace(/\D/g,'');
       document.querySelectorAll('a.whatsapp-float, a[href*="wa.me"]').forEach(el => { el.href = 'https://wa.me/' + wa; });
@@ -458,6 +465,23 @@ function openCategoryDrawer() {
 function closeCategoryDrawer() {
   document.getElementById('catDrawerBackdrop')?.classList.remove('open');
   document.getElementById('catDrawer')?.classList.remove('open');
+}
+
+// Renders admin-managed FAQs on the contact page. If none have been added
+// yet, the page's own default FAQ items (already in the HTML) stay as-is —
+// nothing gets wiped out just because the admin hasn't touched this yet.
+function renderFaqs() {
+  const list = document.getElementById('faqList');
+  if (!list) return;
+  const faqs = JSON.parse(localStorage.getItem('obv_faqs') || '[]');
+  if (!faqs.length) return;
+  list.innerHTML = faqs.map(f => `
+    <details style="border:1px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden">
+      <summary style="padding:13px 16px;font-size:13.5px;font-weight:600;color:var(--text-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+        ${f.question} <i class="fas fa-chevron-down" style="color:var(--text-muted);font-size:12px"></i>
+      </summary>
+      <p style="padding:0 16px 14px;font-size:13px;color:var(--text-muted);line-height:1.6">${f.answer}</p>
+    </details>`).join('');
 }
 
 function renderCategories() {
@@ -1147,6 +1171,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await Promise.race([window.obvSyncPromise || Promise.resolve(), new Promise(r => setTimeout(r, 3000))]);
   try { applyOverrides(); } catch(e) {}
+  try { renderFaqs(); } catch(e) {}
   try { renderCategories(); } catch(e) {}
   try { renderFlashProducts(); } catch(e) {}
   try { renderFeaturedProducts(); } catch(e) {}
@@ -1169,6 +1194,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (catDd) catDd.innerHTML = catHtml;
     const deskCatDd = document.getElementById('desktopCatDropdown');
     if (deskCatDd) deskCatDd.innerHTML = catHtml;
+    const footerCatList = document.getElementById('footerCatList');
+    if (footerCatList) footerCatList.innerHTML = CATEGORIES.filter(c => !c.parentId).map(c => `<li><a href="shop.html?cat=${c.id}">${c.name}</a></li>`).join('');
   } catch(e) {}
   try { startCountdown(); } catch(e) {}
   try { initSearch(); } catch(e) {}

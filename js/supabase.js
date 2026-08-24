@@ -52,9 +52,43 @@ function _cleanEditsForPush(raw) {
   } catch(e) { return { value: raw, stripped: false }; }
 }
 
+/* Returns a valid admin session access token if one exists and is (or can
+   be refreshed to be) valid — otherwise null, meaning "use the public key"
+   which is exactly right for logged-out visitors (e.g. customers placing
+   an order at checkout, which the database only allows for that one
+   record type regardless of which key is used). */
+async function getValidAdminAccessToken() {
+  try {
+    const session = JSON.parse(localStorage.getItem('obv_admin_session') || 'null');
+    if (!session || !session.access_token) return null;
+    if (session.expires_at && Date.now() < session.expires_at - 60000) {
+      return session.access_token; // still valid, with a 1-minute safety buffer
+    }
+    if (!session.refresh_token) return null;
+    const res = await fetch(`${SB_URL}/auth/v1/token?grant_type=refresh_token`, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: session.refresh_token })
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const newSession = {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      expires_at: Date.now() + (data.expires_in * 1000)
+    };
+    localStorage.setItem('obv_admin_session', JSON.stringify(newSession));
+    return newSession.access_token;
+  } catch(e) { return null; }
+}
+
 /* Write current localStorage value for key to Supabase (fire-and-forget).
-   For obv_prod_edits: base64 images are stripped so the payload stays small. */
-function sbPush(key) {
+   For obv_prod_edits: base64 images are stripped so the payload stays small.
+   Uses a real signed-in admin session token when available (required by the
+   database's security rules for every write except placing an order) —
+   otherwise falls back to the public key, which the database only accepts
+   for order records. */
+async function sbPush(key) {
   let value = localStorage.getItem(key);
   if (value === null) return;
   let stripped = false;
@@ -64,11 +98,12 @@ function sbPush(key) {
   }
   const kb = Math.round(value.length / 1024);
   if (stripped && typeof window.sbPushError === 'function') window.sbPushError(key, 'stripped', kb);
+  const adminToken = await getValidAdminAccessToken();
   fetch(`${SB_URL}/rest/v1/kv_store`, {
     method: 'POST',
     headers: {
       'apikey': SB_KEY,
-      'Authorization': `Bearer ${SB_KEY}`,
+      'Authorization': `Bearer ${adminToken || SB_KEY}`,
       'Content-Type': 'application/json',
       'Prefer': 'resolution=merge-duplicates'
     },

@@ -266,10 +266,11 @@ textarea{resize:vertical;min-height:70px}
     <img src="img/logo.jpeg" alt="Orbiva" class="admin-logo-img" style="height:52px;border-radius:8px;margin-bottom:16px;background:#fff;padding:4px 8px">
     <div class="login-logo">Admin Portal</div>
     <div class="login-sub">Orbiva Technologies — Management Console</div>
-    <input type="password" id="loginPass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+    <input type="email" id="loginEmail" placeholder="Admin email" autocomplete="username" style="margin-bottom:10px">
+    <input type="password" id="loginPass" placeholder="Enter admin password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
     <div class="login-error" id="loginErr">Incorrect password. Try again.</div>
-    <div class="login-sub" id="loginSetupMsg" style="display:none;margin-top:10px;color:#fbbf24">No admin password set yet. Enter a new password above (min 6 characters) to create one.</div>
+    <div class="login-sub" id="loginSetupMsg" style="display:none;margin-top:10px;color:#fbbf24">No admin account exists yet. Enter an email and a password (min 6 characters) above to create the first one.</div>
   </div>
 </div>
 
@@ -295,6 +296,7 @@ textarea{resize:vertical;min-height:70px}
       <div class="nav-item" onclick="showPage('images')" id="nav-images"><i class="fas fa-images"></i> Image Library</div>
       <div class="nav-item" onclick="showPage('brands')" id="nav-brands"><i class="fas fa-copyright"></i> Brands</div>
       <div class="nav-item" onclick="showPage('categories')" id="nav-categories"><i class="fas fa-th-large"></i> Categories</div>
+      <div class="nav-item" onclick="showPage('faqs')" id="nav-faqs"><i class="fas fa-question-circle"></i> FAQs</div>
       <div class="nav-section" style="margin-top:8px">Admin</div>
       <div class="nav-item" onclick="showPage('history')" id="nav-history"><i class="fas fa-history"></i> Change History</div>
       <div class="nav-item" onclick="showPage('settings')" id="nav-settings"><i class="fas fa-cog"></i> Settings</div>
@@ -462,6 +464,9 @@ textarea{resize:vertical;min-height:70px}
           <div class="form-group"><label>Phone Number</label><input type="text" id="s_phone" placeholder="050 257 8905"></div>
           <div class="form-group"><label>Email Address</label><input type="text" id="s_email" placeholder="info@orbivagh.com"></div>
           <div class="form-group"><label>Currency Symbol</label><input type="text" id="s_currency" placeholder="GH₵"></div>
+          <div class="form-group full"><label>Store Address</label><input type="text" id="s_address" placeholder="e.g. 123 Spintex Road, Accra, Ghana"></div>
+          <div class="form-group"><label>Weekday Hours</label><input type="text" id="s_hoursWeekday" placeholder="Mon–Sat: 8AM–8PM"></div>
+          <div class="form-group"><label>Sunday Hours</label><input type="text" id="s_hoursSunday" placeholder="Sunday: 10AM–6PM"></div>
         </div>
         <div style="margin-top:16px"><button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> Save Settings</button></div>
       </div>
@@ -589,6 +594,15 @@ textarea{resize:vertical;min-height:70px}
         <button class="btn btn-primary" onclick="openAddCategoryModal()"><i class="fas fa-plus"></i> Add Category</button>
       </div>
       <div id="categoriesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px"></div>
+    </div>
+
+    <!-- FAQS -->
+    <div class="content" id="page-faqs" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <div><h2 style="font-size:18px;font-weight:800">FAQ Management</h2><p style="font-size:13px;color:var(--muted)">Manage the "Common Questions" shown on your Contact page.</p></div>
+        <button class="btn btn-primary" onclick="openAddFaqModal()"><i class="fas fa-plus"></i> Add Question</button>
+      </div>
+      <div id="faqsGridAdmin" style="display:flex;flex-direction:column;gap:12px"></div>
     </div>
 
     <!-- HISTORY -->
@@ -765,6 +779,26 @@ textarea{resize:vertical;min-height:70px}
   </div>
 </div>
 
+<!-- FAQ Modal -->
+<div class="modal-overlay" id="faqModal">
+  <div class="modal-box" style="max-width:480px">
+    <div class="modal-header">
+      <div class="modal-title" id="faqModalTitle">Add Question</div>
+      <button class="modal-close" onclick="closeModal('faqModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Question</label><input type="text" id="faq_question" placeholder="e.g. Do you offer delivery?"></div>
+        <div class="form-group full"><label>Answer</label><textarea id="faq_answer" placeholder="e.g. Yes! We deliver across Ghana." style="min-height:90px"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('faqModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveFaq()"><i class="fas fa-save"></i> Save Question</button>
+    </div>
+  </div>
+</div>
+
 <!-- Deal Modal -->
 <div class="modal-overlay" id="dealModal">
   <div class="modal-box">
@@ -819,7 +853,6 @@ textarea{resize:vertical;min-height:70px}
 <script src="js/data.js"></script>
 <script>
 /* ── Constants ── */
-const ADMIN_PASS_KEY = 'obv_pass';
 let CAT_LABELS = Object.fromEntries(CATEGORIES.map(c => [c.id, c.name]));
 const CAT_CLASS  = {tv:'cat-tv',ac:'cat-ac',fridge:'cat-fridge',laundry:'cat-laundry',kitchen:'cat-kitchen',audio:'cat-small',small:'cat-small',phones:'cat-phones',tablets:'cat-phones',commercial:'cat-commercial'};
 
@@ -854,54 +887,107 @@ function lsGet(key, def) { try { const v=localStorage.getItem(key); return v===n
 function lsSet(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) { throw new Error('Storage full — try removing unused images from the Image Library.'); } }
 
 /* ── Auth ──
-   Password is never stored or shipped in plain text. It's hashed (SHA-256)
-   client-side and the hash is synced via Supabase so it works on any device.
-   Note: this still isn't server-verified auth — real protection also
-   requires Supabase RLS rules that block writes without a valid session. */
-async function sha256Hex(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+   Real Supabase Auth (server-verified), not just a client-side password
+   check. The admin password is never visible to or checkable by anyone
+   without a genuine account — and the database itself now rejects writes
+   from anyone who isn't signed in this way (see the RLS policies). */
+const ADMIN_SESSION_KEY = 'obv_admin_session';   // this device's session — never synced
+const ADMIN_EMAIL_FLAG_KEY = 'obv_admin_email';  // just marks that an account exists; not sensitive
+
+function saveAdminSession(data) {
+  localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify({
+    access_token: data.access_token,
+    refresh_token: data.refresh_token,
+    expires_at: Date.now() + (data.expires_in * 1000)
+  }));
 }
 
 async function doLogin() {
   await (window.obvSyncPromise || Promise.resolve());
-  const pass = document.getElementById('loginPass').value;
-  const storedHash = localStorage.getItem(ADMIN_PASS_KEY);
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  errEl.style.display = 'none';
 
-  if (!storedHash) {
-    // First-time setup: no password exists yet, so this attempt sets it.
-    if (pass.length < 6) {
-      document.getElementById('loginErr').textContent = 'Choose a password of at least 6 characters.';
-      document.getElementById('loginErr').style.display = 'block';
-      return;
-    }
-    const hash = await sha256Hex(pass);
-    localStorage.setItem(ADMIN_PASS_KEY, hash);
-    sbPush(ADMIN_PASS_KEY);
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    toast('Admin password created.', 'ok');
-    init();
+  if (!email || !pass) {
+    errEl.textContent = 'Enter both email and password.';
+    errEl.style.display = 'block';
     return;
   }
 
-  const hash = await sha256Hex(pass);
-  if (hash === storedHash) {
+  const adminConfigured = !!localStorage.getItem(ADMIN_EMAIL_FLAG_KEY);
+
+  if (!adminConfigured) {
+    // First-time setup — create the one real admin account.
+    if (pass.length < 6) {
+      errEl.textContent = 'Choose a password of at least 6 characters.';
+      errEl.style.display = 'block';
+      return;
+    }
+    try {
+      const signupRes = await fetch(`${SB_URL}/auth/v1/signup`, {
+        method: 'POST',
+        headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pass })
+      });
+      const signupData = await signupRes.json();
+      if (!signupRes.ok) {
+        errEl.textContent = signupData.msg || signupData.error_description || 'Could not create account.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (!signupData.access_token) {
+        // Project has email confirmation turned on — can't sign in until confirmed.
+        errEl.textContent = 'Account created — check your email to confirm it, then sign in.';
+        errEl.style.display = 'block';
+        return;
+      }
+      saveAdminSession(signupData);
+      localStorage.setItem(ADMIN_EMAIL_FLAG_KEY, email);
+      sbPush(ADMIN_EMAIL_FLAG_KEY);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      toast('Admin account created.', 'ok');
+      init();
+    } catch(e) {
+      errEl.textContent = 'Network error — check your connection and try again.';
+      errEl.style.display = 'block';
+    }
+    return;
+  }
+
+  // Returning admin — real sign-in against Supabase Auth.
+  try {
+    const res = await fetch(`${SB_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      errEl.textContent = 'Incorrect email or password. Try again.';
+      errEl.style.display = 'block';
+      document.getElementById('loginPass').value = '';
+      return;
+    }
+    saveAdminSession(data);
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     init();
-  } else {
-    document.getElementById('loginErr').textContent = 'Incorrect password. Try again.';
-    document.getElementById('loginErr').style.display = 'block';
-    document.getElementById('loginPass').value = '';
+  } catch(e) {
+    errEl.textContent = 'Network error — check your connection and try again.';
+    errEl.style.display = 'block';
   }
 }
 
-function logout() { location.reload(); }
+function logout() {
+  localStorage.removeItem(ADMIN_SESSION_KEY);
+  location.reload();
+}
 
 document.addEventListener('DOMContentLoaded', async function () {
   await (window.obvSyncPromise || Promise.resolve());
-  if (!localStorage.getItem(ADMIN_PASS_KEY)) {
+  if (!localStorage.getItem(ADMIN_EMAIL_FLAG_KEY)) {
     document.getElementById('loginSetupMsg').style.display = 'block';
   }
 });
@@ -912,8 +998,8 @@ function publishSite() {
 }
 
 /* ── Navigation ── */
-const PAGES = ['dashboard','orders','deals','products','images','brands','categories','history','settings'];
-const PAGE_TITLES = {dashboard:'Dashboard',orders:'Orders',deals:'Deals & Promotions',products:'Products',images:'Image Library',brands:'Brands',categories:'Categories',history:'Change History',settings:'Settings'};
+const PAGES = ['dashboard','orders','deals','products','images','brands','categories','faqs','history','settings'];
+const PAGE_TITLES = {dashboard:'Dashboard',orders:'Orders',deals:'Deals & Promotions',products:'Products',images:'Image Library',brands:'Brands',categories:'Categories',faqs:'FAQs',history:'Change History',settings:'Settings'};
 function toggleSidebar(){
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarBackdrop').classList.toggle('open');
@@ -938,6 +1024,7 @@ function showPage(page) {
   if (page==='images')    loadImages();
   if (page==='brands')     renderBrands();
   if (page==='categories') renderCategoriesGrid();
+  if (page==='faqs')       renderFaqsGridAdmin();
   if (page==='history')   renderHistory();
   if (page==='settings')  loadSettings();
 }
@@ -953,6 +1040,9 @@ let editingId=null, editingDealId=null;
 window.sbPushError = function(key, reason, kb) {
   if (reason === 'stripped') {
     toast('Note: uploaded (file) images are local only. Paste a Google Drive link to make images visible to customers.','info');
+  }
+  if (reason === 401 || reason === 403) {
+    toast('Your session expired — please sign in again to keep saving changes.','err');
   }
 };
 
@@ -1904,7 +1994,9 @@ const BACKUP_KEYS=[
   'obv_settings','obv_branding','obv_flash_prods',
   'obv_delivery_text','obv_freeDelivery','obv_sku_img_map',
   'obv_img_required','obv_images','obv_history',
-  'obv_orders','obv_data_version'
+  'obv_orders','obv_data_version',
+  'obv_cat_adds','obv_cat_dels','obv_cat_edits',
+  'obv_brand_adds','obv_brand_dels','obv_faqs'
 ];
 // Keys too large for Supabase or irrelevant to the storefront
 const BACKUP_LOCAL_ONLY=new Set(['obv_images','obv_history','obv_orders']);
@@ -2275,6 +2367,9 @@ function loadSettings(){
   document.getElementById('s_phone').value=s.storePhone||'';
   document.getElementById('s_email').value=s.storeEmail||'';
   document.getElementById('s_currency').value=s.currency||'GH₵';
+  document.getElementById('s_address').value=s.storeAddress||'';
+  document.getElementById('s_hoursWeekday').value=s.hoursWeekday||'';
+  document.getElementById('s_hoursSunday').value=s.hoursSunday||'';
   loadDisplaySettings();
   loadBranding();
 }
@@ -2411,7 +2506,10 @@ function saveSettings(){
     storeName:document.getElementById('s_name').value.trim(),
     storePhone:document.getElementById('s_phone').value.trim(),
     storeEmail:document.getElementById('s_email').value.trim(),
-    currency:document.getElementById('s_currency').value.trim()
+    currency:document.getElementById('s_currency').value.trim(),
+    storeAddress:document.getElementById('s_address').value.trim(),
+    hoursWeekday:document.getElementById('s_hoursWeekday').value.trim(),
+    hoursSunday:document.getElementById('s_hoursSunday').value.trim()
   });
   sbPush('obv_settings');
   toast('Settings saved & published!','ok');
@@ -2423,14 +2521,39 @@ async function changePassword(){
   if(!cur||!np||!cp){toast('All fields required','err');return;}
   if(np!==cp){toast('Passwords do not match','err');return;}
   if(np.length<6){toast('Minimum 6 characters','err');return;}
-  const stored=localStorage.getItem(ADMIN_PASS_KEY);
-  const curHash=await sha256Hex(cur);
-  if(!stored||curHash!==stored){toast('Incorrect current password','err');return;}
-  const newHash=await sha256Hex(np);
-  localStorage.setItem(ADMIN_PASS_KEY,newHash);
-  sbPush(ADMIN_PASS_KEY);
-  toast('Password updated on all devices!','ok');
-  ['s_curPass','s_newPass','s_confPass'].forEach(id=>document.getElementById(id).value='');
+
+  const email = localStorage.getItem(ADMIN_EMAIL_FLAG_KEY);
+  if (!email) { toast('No admin account found','err'); return; }
+
+  // Re-verify the current password directly against Supabase Auth before
+  // allowing a change — confirms it's really the admin typing, not just
+  // relying on a lingering logged-in session.
+  try {
+    const verifyRes = await fetch(`${SB_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: cur })
+    });
+    const verifyData = await verifyRes.json();
+    if (!verifyRes.ok) { toast('Incorrect current password','err'); return; }
+    saveAdminSession(verifyData); // refresh the local session with this fresh token
+
+    const updateRes = await fetch(`${SB_URL}/auth/v1/user`, {
+      method: 'PUT',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${verifyData.access_token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ password: np })
+    });
+    if (!updateRes.ok) { toast('Could not update password — try again','err'); return; }
+
+    toast('Password updated!','ok');
+    ['s_curPass','s_newPass','s_confPass'].forEach(id=>document.getElementById(id).value='');
+  } catch(e) {
+    toast('Network error — try again','err');
+  }
 }
 
 /* ── Brands ── */
@@ -2620,6 +2743,74 @@ function deleteCategory(id){
   logHistory({type:'category_delete',label:'Removed category: '+id,undoData:{categoryId:id}});
   toast('Category deleted','ok');renderCategoriesGrid();populateCategoryDropdowns();
 }
+
+/* ── FAQs ── */
+let editingFaqId = null;
+
+function renderFaqsGridAdmin(){
+  const grid = document.getElementById('faqsGridAdmin');
+  const faqs = lsGet('obv_faqs', []);
+  if (!faqs.length) {
+    grid.innerHTML = '<div class="empty-state"><i class="fas fa-question-circle"></i><p>No custom questions yet — the Contact page is currently showing its default 4 questions. Add one below to start managing them from here.</p></div>';
+    return;
+  }
+  grid.innerHTML = faqs.map((f,idx) => `
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;align-items:flex-start;gap:14px">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px">${escHtml(f.question)}</div>
+        <div style="font-size:13px;color:var(--muted)">${escHtml(f.answer)}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button class="btn btn-outline btn-sm" onclick="openEditFaqModal(${idx})"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="confirmAction('Delete this question?','This will remove it from the Contact page.',()=>deleteFaq(${idx}))"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+function openAddFaqModal(){
+  editingFaqId = null;
+  document.getElementById('faqModalTitle').textContent = 'Add Question';
+  document.getElementById('faq_question').value = '';
+  document.getElementById('faq_answer').value = '';
+  document.getElementById('faqModal').classList.add('open');
+}
+
+function openEditFaqModal(idx){
+  const faqs = lsGet('obv_faqs', []);
+  const f = faqs[idx];
+  if (!f) { toast('Question not found','err'); return; }
+  editingFaqId = idx;
+  document.getElementById('faqModalTitle').textContent = 'Edit Question';
+  document.getElementById('faq_question').value = f.question;
+  document.getElementById('faq_answer').value = f.answer;
+  document.getElementById('faqModal').classList.add('open');
+}
+
+function saveFaq(){
+  const question = document.getElementById('faq_question').value.trim();
+  const answer = document.getElementById('faq_answer').value.trim();
+  if (!question || !answer) { toast('Both question and answer are required','err'); return; }
+  const faqs = lsGet('obv_faqs', []);
+  if (editingFaqId !== null) {
+    faqs[editingFaqId] = { question, answer };
+    toast('Question updated!','ok');
+  } else {
+    faqs.push({ question, answer });
+    toast('Question added! It will appear on the Contact page once synced.','ok');
+  }
+  lsSet('obv_faqs', faqs); sbPush('obv_faqs');
+  logHistory({type:'faq_save',label:(editingFaqId!==null?'Edited':'Added')+' FAQ: '+question,undoData:{}});
+  closeModal('faqModal'); renderFaqsGridAdmin();
+}
+
+function deleteFaq(idx){
+  const faqs = lsGet('obv_faqs', []);
+  const removed = faqs.splice(idx,1);
+  lsSet('obv_faqs', faqs); sbPush('obv_faqs');
+  logHistory({type:'faq_delete',label:'Removed FAQ: '+(removed[0]?.question||''),undoData:{}});
+  toast('Question deleted','ok'); renderFaqsGridAdmin();
+}
+
 
 /* ── Change History ── */
 function logHistory(entry){
