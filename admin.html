@@ -500,7 +500,7 @@ textarea{resize:vertical;min-height:70px}
             <div style="font-size:12px;color:var(--muted);margin-top:3px">Show the flash sale countdown and deals on the home page</div>
           </div>
           <label class="toggle-wrap">
-            <input type="checkbox" id="t_flashSale" onchange="saveDisplaySettings()">
+            <input type="checkbox" id="t_flashSale" onchange="saveFlashSaleSetting()">
             <span class="toggle-slider"></span>
           </label>
         </div>
@@ -510,7 +510,7 @@ textarea{resize:vertical;min-height:70px}
             <div style="font-size:12px;color:var(--muted);margin-top:3px">Show New, Sale, Hot, Best Seller badges on product cards</div>
           </div>
           <label class="toggle-wrap">
-            <input type="checkbox" id="t_badges" onchange="saveDisplaySettings()">
+            <input type="checkbox" id="t_badges" onchange="saveBadgesSetting()">
             <span class="toggle-slider"></span>
           </label>
         </div>
@@ -521,7 +521,7 @@ textarea{resize:vertical;min-height:70px}
               <div style="font-size:12px;color:var(--muted);margin-top:3px">Show free delivery notice across the site</div>
             </div>
             <label class="toggle-wrap">
-              <input type="checkbox" id="t_freeDelivery" onchange="saveDisplaySettings()">
+              <input type="checkbox" id="t_freeDelivery" onchange="saveFreeDeliverySetting()">
               <span class="toggle-slider"></span>
             </label>
           </div>
@@ -547,7 +547,7 @@ textarea{resize:vertical;min-height:70px}
             <div style="font-size:12px;color:var(--muted);margin-top:3px">ON by default: hides products that have no image. Turn OFF to show all products including those without photos.</div>
           </div>
           <label class="toggle-wrap">
-            <input type="checkbox" id="t_imgRequired" onchange="saveDisplaySettings()">
+            <input type="checkbox" id="t_imgRequired" onchange="saveImgRequiredSetting()">
             <span class="toggle-slider"></span>
           </label>
         </div>
@@ -665,20 +665,34 @@ textarea{resize:vertical;min-height:70px}
 
 <!-- Add Manual Order Modal -->
 <div class="modal-overlay" id="addOrderModal">
-  <div class="modal-box">
+  <div class="modal-box" style="max-width:600px">
     <div class="modal-header">
       <div class="modal-title">Add Manual Order</div>
       <button class="modal-close" onclick="closeModal('addOrderModal')"><i class="fas fa-times"></i></button>
     </div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="form-group"><label>Customer Name</label><input type="text" id="ao_name" placeholder="Full name"></div>
-        <div class="form-group"><label>Phone Number</label><input type="text" id="ao_phone" placeholder="050 xxx xxxx"></div>
-        <div class="form-group full"><label>Delivery Area</label><input type="text" id="ao_area" placeholder="e.g. East Legon, Accra"></div>
-        <div class="form-group full">
-          <label>Items (one per line: Name, Qty, Unit Price)</label>
-          <textarea id="ao_items" placeholder="Samsung 43&quot; TV, 1, 2800&#10;Extension Board, 2, 120" style="min-height:100px"></textarea>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="ao_phone" list="customerPhoneList" placeholder="050 xxx xxxx" oninput="lookupReturningCustomer()">
+          <datalist id="customerPhoneList"></datalist>
         </div>
+        <div class="form-group"><label>Customer Name</label><input type="text" id="ao_name" placeholder="Full name"></div>
+        <div class="form-group full"><label>Delivery Area</label><input type="text" id="ao_area" placeholder="e.g. East Legon, Accra"></div>
+        <div class="form-group full" id="ao_returningNote" style="display:none;background:#eff6ff;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1d4ed8"></div>
+
+        <div class="form-group full">
+          <label>Items</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <input type="text" id="ao_productPick" list="adminProductList" placeholder="Type to search products..." style="flex:1" oninput="prefillPickedProductPrice()">
+            <input type="number" id="ao_pickQty" value="1" min="1" style="width:70px" placeholder="Qty">
+            <input type="number" id="ao_pickPrice" placeholder="Price" style="width:100px">
+            <button type="button" class="btn btn-outline btn-sm" onclick="addPickedItemToOrder()"><i class="fas fa-plus"></i></button>
+          </div>
+          <datalist id="adminProductList"></datalist>
+          <div id="ao_itemsList" style="border:1.5px solid var(--border);border-radius:8px;min-height:60px;padding:8px"></div>
+        </div>
+
         <div class="form-group full"><label>Notes / Special Instructions</label><textarea id="ao_notes" placeholder="Any delivery notes..."></textarea></div>
         <div class="form-group">
           <label>Payment Method</label>
@@ -1330,26 +1344,115 @@ function deleteOrder(id) {
   sbPush('obv_orders');
   toast('Order deleted','ok'); loadOrders(); filterOrders(); updatePendingBadge(); renderDashboard();
 }
-function openAddOrderModal(){document.getElementById('addOrderModal').classList.add('open');}
+let currentOrderItems = [];
+
+function openAddOrderModal(){
+  currentOrderItems = [];
+  ['ao_phone','ao_name','ao_area','ao_notes','ao_productPick','ao_pickPrice'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ao_pickQty').value = 1;
+  document.getElementById('ao_paid').checked = true;
+  document.getElementById('ao_paymentMethod').value = 'Cash';
+  document.getElementById('ao_returningNote').style.display = 'none';
+  renderOrderItemsList();
+  populateCustomerPhoneDatalist();
+  populateAdminProductDatalist();
+  document.getElementById('addOrderModal').classList.add('open');
+}
+
+// Remembers past customers so returning ones don't need retyping — matched
+// by phone number against order history, autofilling name and area.
+function populateCustomerPhoneDatalist(){
+  const dl = document.getElementById('customerPhoneList');
+  if (!dl) return;
+  const seen = new Map();
+  [...ORDERS].reverse().forEach(o => { if (o.phone && !seen.has(o.phone)) seen.set(o.phone, o); });
+  dl.innerHTML = [...seen.values()].map(o => `<option value="${escHtml(o.phone)}">${escHtml(o.customerName||'')}</option>`).join('');
+}
+function lookupReturningCustomer(){
+  const phone = document.getElementById('ao_phone').value.trim();
+  const note = document.getElementById('ao_returningNote');
+  if (!phone) { note.style.display = 'none'; return; }
+  const match = [...ORDERS].reverse().find(o => o.phone === phone);
+  if (match) {
+    document.getElementById('ao_name').value = match.customerName || '';
+    document.getElementById('ao_area').value = (match.deliveryArea && match.deliveryArea !== 'Store Pickup') ? match.deliveryArea : '';
+    note.style.display = 'block';
+    note.innerHTML = `<i class="fas fa-user-check"></i> Returning customer — details filled from their last order (#${match.id}).`;
+  } else {
+    note.style.display = 'none';
+  }
+}
+
+// Product picker — search by typing, price auto-fills, then "+" adds it to
+// the order's item list. Replaces free-text item entry entirely.
+function populateAdminProductDatalist(){
+  const dl = document.getElementById('adminProductList');
+  if (!dl) return;
+  const prods = getAdminProducts();
+  dl.innerHTML = prods.map(p => `<option value="${escHtml(p.name)}" data-price="${p.price}" data-id="${p.id}"></option>`).join('');
+}
+function prefillPickedProductPrice(){
+  const name = document.getElementById('ao_productPick').value;
+  const prods = getAdminProducts();
+  const match = prods.find(p => p.name === name);
+  if (match) document.getElementById('ao_pickPrice').value = match.price;
+}
+function addPickedItemToOrder(){
+  const name = document.getElementById('ao_productPick').value.trim();
+  const qty = parseInt(document.getElementById('ao_pickQty').value) || 1;
+  const price = parseFloat(document.getElementById('ao_pickPrice').value);
+  if (!name) { toast('Pick or type a product name','err'); return; }
+  if (isNaN(price)) { toast('Enter a price','err'); return; }
+  const prods = getAdminProducts();
+  const match = prods.find(p => p.name === name);
+  currentOrderItems.push({ name, qty, price, model: match?.model || '' });
+  renderOrderItemsList();
+  ['ao_productPick','ao_pickPrice'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ao_pickQty').value = 1;
+  document.getElementById('ao_productPick').focus();
+}
+function removeOrderItem(idx){
+  currentOrderItems.splice(idx,1);
+  renderOrderItemsList();
+}
+function renderOrderItemsList(){
+  const el = document.getElementById('ao_itemsList');
+  if (!currentOrderItems.length) { el.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:8px">No items added yet.</div>'; return; }
+  const total = currentOrderItems.reduce((s,i)=>s+i.price*i.qty,0);
+  el.innerHTML = currentOrderItems.map((i,idx)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid var(--border);font-size:13px">
+      <div style="flex:1">${escHtml(i.name)}${i.model?` <span style="color:var(--muted);font-size:11px">(${escHtml(i.model)})</span>`:''}</div>
+      <div style="color:var(--muted)">×${i.qty}</div>
+      <div style="font-weight:600;width:80px;text-align:right">${fmt(i.price*i.qty)}</div>
+      <button type="button" onclick="removeOrderItem(${idx})" style="background:none;border:none;color:var(--accent);cursor:pointer;padding:2px 6px"><i class="fas fa-times"></i></button>
+    </div>`).join('') +
+    `<div style="display:flex;justify-content:flex-end;padding:8px 4px 2px;font-weight:800">Total: ${fmt(total)}</div>`;
+}
+
+
 function saveManualOrder(printInvoice) {
   const name=document.getElementById('ao_name').value.trim();
   const phone=document.getElementById('ao_phone').value.trim();
   if(!name||!phone){toast('Name and phone required','err');return;}
-  const rawItems=document.getElementById('ao_items').value.trim();
-  const items=rawItems?rawItems.split('\n').map(line=>{const p=line.split(',').map(s=>s.trim());return{name:p[0]||line,qty:parseInt(p[1])||1,price:parseFloat(p[2])||0};}):'';
-  const total=Array.isArray(items)?items.reduce((s,i)=>s+(i.price*(i.qty||1)),0):0;
+  if(!currentOrderItems.length){toast('Add at least one item','err');return;}
+  const items=currentOrderItems;
+  const total=items.reduce((s,i)=>s+(i.price*(i.qty||1)),0);
   const orders=lsGet('obv_orders',[]);
   const maxId=orders.length?Math.max(...orders.map(o=>o.id)):1000;
   const newId=maxId+1;
   orders.push({id:newId,customerName:name,phone,deliveryArea:document.getElementById('ao_area').value.trim(),
-    items:items||[],total,notes:document.getElementById('ao_notes').value.trim(),status:'pending',
+    items,total,notes:document.getElementById('ao_notes').value.trim(),status:'pending',
     paid:document.getElementById('ao_paid').checked,paymentMethod:document.getElementById('ao_paymentMethod').value,
     createdAt:new Date().toISOString()});
   lsSet('obv_orders',orders); sbPush('obv_orders');
   toast('Order saved!','ok'); closeModal('addOrderModal');
-  ['ao_name','ao_phone','ao_area','ao_items','ao_notes'].forEach(id=>document.getElementById(id).value='');
+  currentOrderItems=[];
+  ['ao_name','ao_phone','ao_area','ao_notes','ao_productPick','ao_pickPrice'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ao_pickQty').value=1;
   document.getElementById('ao_paid').checked=true;
   document.getElementById('ao_paymentMethod').value='Cash';
+  document.getElementById('ao_returningNote').style.display='none';
+  renderOrderItemsList();
   loadOrders(); filteredOrders=[...ORDERS].reverse(); renderOrdersTable(); updatePendingBadge(); renderDashboard();
   if (printInvoice) generateInvoice(newId);
 }
@@ -2248,7 +2351,7 @@ function loadDisplaySettings(){
   document.getElementById('t_flashSale').checked=localStorage.getItem('obv_flashSale')==='on';
   document.getElementById('t_badges').checked=localStorage.getItem('obv_badges')==='on';
   document.getElementById('t_freeDelivery').checked=localStorage.getItem('obv_freeDelivery')!=='off';
-  document.getElementById('t_imgRequired').checked=localStorage.getItem('obv_img_required')==='on';
+  document.getElementById('t_imgRequired').checked=localStorage.getItem('obv_img_required')!=='off';
   const dtEl=document.getElementById('s_deliveryText');
   if(dtEl) dtEl.value=localStorage.getItem('obv_delivery_text')||'';
   const s=lsGet('obv_settings',{});
@@ -2263,15 +2366,33 @@ function saveDeliveryText(){
   sbPush('obv_delivery_text');
   toast('Free delivery text updated!','ok');
 }
-function saveDisplaySettings(){
-  const prev={flashSale:localStorage.getItem('obv_flashSale'),badges:localStorage.getItem('obv_badges'),freeDelivery:localStorage.getItem('obv_freeDelivery'),imgRequired:localStorage.getItem('obv_img_required')};
+function saveFlashSaleSetting(){
+  const prev=localStorage.getItem('obv_flashSale');
   localStorage.setItem('obv_flashSale',document.getElementById('t_flashSale').checked?'on':'off');
+  sbPush('obv_flashSale');
+  try{logHistory({type:'display',label:'Flash sale banner setting changed',undoData:{flashSale:prev}});}catch(e){}
+  toast('Setting saved!','ok');
+}
+function saveBadgesSetting(){
+  const prev=localStorage.getItem('obv_badges');
   localStorage.setItem('obv_badges',document.getElementById('t_badges').checked?'on':'off');
+  sbPush('obv_badges');
+  try{logHistory({type:'display',label:'Product badges setting changed',undoData:{badges:prev}});}catch(e){}
+  toast('Setting saved!','ok');
+}
+function saveFreeDeliverySetting(){
+  const prev=localStorage.getItem('obv_freeDelivery');
   localStorage.setItem('obv_freeDelivery',document.getElementById('t_freeDelivery').checked?'on':'off');
+  sbPush('obv_freeDelivery');
+  try{logHistory({type:'display',label:'Free delivery banner setting changed',undoData:{freeDelivery:prev}});}catch(e){}
+  toast('Setting saved!','ok');
+}
+function saveImgRequiredSetting(){
+  const prev=localStorage.getItem('obv_img_required');
   localStorage.setItem('obv_img_required',document.getElementById('t_imgRequired').checked?'on':'off');
-  sbPush('obv_flashSale');sbPush('obv_badges');sbPush('obv_freeDelivery');sbPush('obv_img_required');
-  try{logHistory({type:'display',label:'Display settings changed',undoData:prev});}catch(e){}
-  toast('Display settings saved!','ok');
+  sbPush('obv_img_required');
+  try{logHistory({type:'display',label:'Require product images setting changed',undoData:{imgRequired:prev}});}catch(e){}
+  toast('Setting saved!','ok');
 }
 function saveDeliverySettings(){
   const s=lsGet('obv_settings',{});

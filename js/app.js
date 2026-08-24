@@ -1160,6 +1160,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const deskBrandDd = document.getElementById('desktopBrandDropdown');
     if (deskBrandDd) deskBrandDd.innerHTML = html;
   } catch(e) {}
+  try {
+    // Homepage category dropdowns were previously hardcoded static HTML —
+    // never reflected admin changes or subcategories at all. Now built the
+    // same subcategory-aware way as the shop/product page nav dropdowns.
+    const catHtml = buildCategoryDropdownHtml(CATEGORIES);
+    const catDd = document.getElementById('catDropdown');
+    if (catDd) catDd.innerHTML = catHtml;
+    const deskCatDd = document.getElementById('desktopCatDropdown');
+    if (deskCatDd) deskCatDd.innerHTML = catHtml;
+  } catch(e) {}
   try { startCountdown(); } catch(e) {}
   try { initSearch(); } catch(e) {}
   try { initSearchPanel(); } catch(e) {}
