@@ -487,7 +487,7 @@ function renderFaqs() {
   const faqs = JSON.parse(localStorage.getItem('obv_faqs') || '[]');
   if (!faqs.length) return;
   list.innerHTML = faqs.map(f => `
-    <details style="border:1px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden">
+    <details class="faq-accordion" style="border:1px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden">
       <summary style="padding:13px 16px;font-size:13.5px;font-weight:600;color:var(--text-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
         ${f.question} <i class="fas fa-chevron-down" style="color:var(--text-muted);font-size:12px"></i>
       </summary>
@@ -932,6 +932,10 @@ function initSidebars() {
     document.body.style.overflow = '';
   }
   function openAccount() {
+    // Always reopen on the signup form, not stuck on a previous "welcome"
+    // state from earlier in the same visit.
+    document.getElementById('signupWelcomeView')?.style.setProperty('display', 'none');
+    document.getElementById('signupFormView')?.style.setProperty('display', 'block');
     accountModal?.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -1052,26 +1056,9 @@ function initProductTabs() {
 }
 
 /* ════════════════════════════════════════
-   MODAL TABS (Account)
+   ACCOUNT MODAL (Stay Updated signup)
 ════════════════════════════════════════ */
 function initModalTabs() {
-  document.querySelectorAll('.modal-tabs .tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tabId = btn.getAttribute('data-tab');
-      document.querySelectorAll('.modal-tabs .tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(tabId + 'Tab')?.classList.add('active');
-    });
-  });
-
-  // Form submit
-  document.getElementById('loginForm')?.addEventListener('submit', e => {
-    e.preventDefault();
-    showToast('success', 'Logged In!', 'Welcome back to Orbiva.', 'fas fa-user-check');
-    document.getElementById('accountModal')?.classList.remove('open');
-    document.body.style.overflow = '';
-  });
   document.getElementById('registerForm')?.addEventListener('submit', e => {
     e.preventDefault();
     const firstName = document.getElementById('reg_fname')?.value.trim() || '';
@@ -1079,9 +1066,12 @@ function initModalTabs() {
     const email     = document.getElementById('reg_email')?.value.trim() || '';
     const phone     = document.getElementById('reg_phone')?.value.trim() || '';
     if (email) saveCustomerSignup({ firstName, lastName, email, phone });
-    showToast('success', "You're on the list!", "We'll keep you updated on new products and promotions.", 'fas fa-check-circle');
-    document.getElementById('accountModal')?.classList.remove('open');
-    document.body.style.overflow = '';
+    // Show the welcome moment in-place rather than just closing the modal —
+    // a proper, personal acknowledgment instead of a passing toast.
+    const welcomeName = document.getElementById('welcomeName');
+    if (welcomeName) welcomeName.textContent = firstName || 'there';
+    document.getElementById('signupFormView')?.style.setProperty('display', 'none');
+    document.getElementById('signupWelcomeView')?.style.setProperty('display', 'block');
     e.target.reset();
   });
 }

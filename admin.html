@@ -136,7 +136,8 @@ textarea{resize:vertical;min-height:70px}
 .img-preview{width:100px;height:100px;border-radius:8px;object-fit:contain;border:1px solid var(--border);background:#f8fafc;margin:0 auto 10px;display:block}
 .upload-hint{font-size:13px;color:var(--muted)}
 .img-slot{display:grid;grid-template-columns:60px 1fr auto auto;gap:8px;align-items:center;background:#f8fafc;border:1.5px solid var(--border);border-radius:10px;padding:8px;margin-bottom:8px}
-.img-slot-thumb{width:52px;height:52px;border-radius:7px;background:#f1f5f9;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;font-size:11px;font-weight:700;color:#94a3b8}
+.img-slot-thumb{width:52px;height:52px;border-radius:7px;background:#f1f5f9;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;font-size:11px;font-weight:700;color:#94a3b8;position:relative}
+.img-slot-thumb.local-only::after{content:"NOT LIVE";position:absolute;bottom:0;left:0;right:0;background:#dc2626;color:#fff;font-size:7px;font-weight:800;text-align:center;padding:1.5px 0;letter-spacing:.3px}
 .img-slot-thumb img{width:100%;height:100%;object-fit:contain;display:none}
 .img-slot-thumb img.loaded{display:block}
 .img-slot:first-child{border-color:var(--primary);background:#f0f7ff}
@@ -320,7 +321,6 @@ textarea{resize:vertical;min-height:70px}
         <button class="btn btn-primary" id="topAddBtn" onclick="openAddModal()" style="display:none"><i class="fas fa-plus"></i> Add Product</button>
         <button class="btn btn-primary" id="topAddOrderBtn" onclick="openAddOrderModal()" style="display:none"><i class="fas fa-plus"></i> Add Order</button>
         <button class="btn btn-primary" id="topAddDealBtn" onclick="openAddDealModal()" style="display:none"><i class="fas fa-plus"></i> New Deal</button>
-        <button class="btn btn-success" id="publishBtn" onclick="publishSite()"><i class="fas fa-rocket"></i> Publish</button>
         <button class="btn btn-outline" onclick="logout()" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
       </div>
     </div>
@@ -1164,11 +1164,6 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('admin-sw.js').catch(() => {});
   });
-}
-
-/* ── Publish ── */
-function publishSite() {
-  toast('Changes sync to all visitors via Supabase automatically.','info');
 }
 
 /* ── Navigation ── */
@@ -2016,7 +2011,8 @@ function driveToDirectUrl(url){
   return url;
 }
 function slotUrlChange(input){
-  const img=input.closest('.img-slot').querySelector('.img-slot-thumb img');
+  const thumb=input.closest('.img-slot').querySelector('.img-slot-thumb');
+  const img=thumb.querySelector('img');
   let url=input.value.trim();
   if(url&&url.includes('drive.google.com')){
     url=driveToDirectUrl(url);
@@ -2024,6 +2020,11 @@ function slotUrlChange(input){
   }
   img.src=url||'';
   img.classList.toggle('loaded',!!url);
+  // Local file uploads (data: URLs) never make it to the live site — they're
+  // stripped before syncing since the database can't hold them at that
+  // size. Mark this clearly on the thumbnail itself, not just a one-time
+  // toast, so it stays visible every time this product is reopened too.
+  thumb.classList.toggle('local-only', url.startsWith('data:'));
 }
 function slotFilesUpload(input){
   const files=Array.from(input.files);if(!files.length)return;
@@ -2039,7 +2040,7 @@ function slotFilesUpload(input){
     };
     reader.readAsDataURL(file);
   })),Promise.resolve()).then(()=>{
-    toast(files.length+' image'+(files.length!==1?'s':'')+' added!','ok');
+    toast(files.length+' image'+(files.length!==1?'s':'')+' added — but only visible to YOU until replaced with a Google Drive link. Customers won\'t see this product until then.','info');
   });
 }
 function getImageSlotUrls(){
@@ -2070,6 +2071,25 @@ function saveProduct(stayOpen=false){
     toast('This product has no image. Add at least one image, or turn off "Require product images" in Settings → Display.','err');
     return;
   }
+  // A directly-uploaded file (data: URL) never makes it past this device —
+  // it gets stripped before syncing, since the database can't hold images
+  // at that size. If EVERY image on this product is one of those, saving
+  // now would silently make it invisible to every customer, even though it
+  // looks completely fine here. Catch that here instead of finding out
+  // later that a product "isn't showing up."
+  const hasRealImg = _imgs.some(u => u && u.trim() && !u.startsWith('data:'));
+  const hasLocalOnlyImg = _imgs.some(u => u && u.trim() && u.startsWith('data:'));
+  if (imgRequiredOn && hasLocalOnlyImg && !hasRealImg) {
+    confirmAction(
+      'This product will be invisible to customers',
+      'Every image on this product was uploaded directly from a file, which only shows on this device — it never reaches the live site. If you save now, this product won\'t appear for customers at all. Replace at least one image with a Google Drive link first, or save anyway and fix it later.',
+      () => _doSaveProduct(stayOpen, name, price, _sku, _imgs)
+    );
+    return;
+  }
+  _doSaveProduct(stayOpen, name, price, _sku, _imgs);
+}
+function _doSaveProduct(stayOpen, name, price, _sku, _imgs){
   const brand=document.getElementById('f_brand').value;
   const cat=document.getElementById('f_category').value;
   const cIcons={tv:'📺',ac:'❄️',fridge:'🧊',laundry:'🫧',kitchen:'🍳',audio:'🔊',small:'⚡',phones:'📱',commercial:'🏭'};

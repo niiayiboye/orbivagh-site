@@ -20,9 +20,9 @@
     <a href="index.html" class="logo">
       <img src="img/logo.jpeg" alt="Orbiva Technologies" class="logo-img">
     </a>
-    <div style="display:flex;align-items:center;gap:20px;color:var(--text-muted);font-size:13px">
-      <span><i class="fas fa-lock" style="color:var(--success)"></i> SSL Secured</span>
-      <span><i class="fas fa-shield-alt" style="color:var(--primary)"></i> Safe Checkout</span>
+    <div class="checkout-trust-badges" style="display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:12.5px">
+      <span style="display:flex;align-items:center;gap:6px;background:#f0fdf4;color:#16a34a;padding:6px 12px;border-radius:20px;font-weight:600"><i class="fas fa-lock"></i> SSL Secured</span>
+      <span style="display:flex;align-items:center;gap:6px;background:#eff6ff;color:var(--primary);padding:6px 12px;border-radius:20px;font-weight:600"><i class="fas fa-shield-alt"></i> Safe Checkout</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
       <button class="action-btn" id="accountToggle" title="Account"><i class="fas fa-user"></i></button>
@@ -35,12 +35,12 @@
 <div style="background:var(--bg-soft);border-bottom:1px solid var(--border);padding:16px 0">
   <div class="container" style="display:flex;align-items:center;justify-content:center;gap:0">
     <div class="checkout-step active" id="step1" style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--primary)">
-      <div style="width:28px;height:28px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px">1</div>
+      <div style="width:28px;height:28px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px"><i class="fas fa-check"></i></div>
       Cart
     </div>
     <div style="width:60px;height:2px;background:var(--primary);margin:0 8px"></div>
     <div style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--primary)">
-      <div style="width:28px;height:28px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px">2</div>
+      <div style="width:28px;height:28px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 3px 10px rgba(29,78,216,0.35)">2</div>
       Checkout
     </div>
     <div style="width:60px;height:2px;background:var(--border);margin:0 8px"></div>
@@ -57,7 +57,7 @@
     <div>
       <!-- Contact Info -->
       <div class="checkout-section">
-        <h3><i class="fas fa-user"></i> Contact Information</h3>
+        <h3><span class="section-icon"><i class="fas fa-user"></i></span> Contact Information</h3>
         <div style="display:flex;flex-direction:column;gap:12px">
           <div class="form-group"><label>First Name*</label><input type="text" id="co_firstName" placeholder="John" /></div>
           <div class="form-group"><label>Last Name*</label><input type="text" id="co_lastName" placeholder="Doe" /></div>
@@ -68,15 +68,17 @@
 
       <!-- Fulfillment Method -->
       <div class="checkout-section">
-        <h3><i class="fas fa-map-marker-alt"></i> Fulfillment</h3>
+        <h3><span class="section-icon"><i class="fas fa-map-marker-alt"></i></span> Fulfillment</h3>
         <div style="display:flex;gap:10px;margin-bottom:16px">
           <div class="payment-method selected" style="flex:1;cursor:pointer" onclick="selectFulfillment('delivery',this)">
             <input type="radio" name="fulfillment" checked />
+            <div class="payment-method-radio"></div>
             <div class="payment-method-icon"><i class="fas fa-truck"></i></div>
             <div><strong style="font-size:14px">Home Delivery</strong></div>
           </div>
           <div class="payment-method" style="flex:1;cursor:pointer" onclick="selectFulfillment('pickup',this)">
             <input type="radio" name="fulfillment" />
+            <div class="payment-method-radio"></div>
             <div class="payment-method-icon"><i class="fas fa-store"></i></div>
             <div><strong style="font-size:14px">Pickup from Store</strong></div>
           </div>
@@ -86,12 +88,12 @@
           <div class="form-group" style="margin-bottom:12px"><label>Street Address*</label><input type="text" id="co_address" placeholder="123 Example Street, Accra" /></div>
           <div class="form-grid-2">
             <div class="form-group"><label>City*</label>
-              <select id="co_city" style="padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:14px;outline:none;width:100%;color:var(--text-dark);background:#fff">
+              <select id="co_city">
                 <option>Accra</option><option>Kumasi</option><option>Tamale</option><option>Takoradi</option><option>Cape Coast</option>
               </select>
             </div>
             <div class="form-group"><label>Region*</label>
-              <select id="co_region" style="padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:14px;outline:none;width:100%;color:var(--text-dark);background:#fff">
+              <select id="co_region">
                 <option>Greater Accra</option><option>Ashanti</option><option>Northern</option><option>Western</option><option>Central</option>
               </select>
             </div>
@@ -100,17 +102,18 @@
 
         <div class="form-group" style="margin-top:12px">
           <label>Notes (Optional)</label>
-          <textarea id="co_notes" style="padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:14px;outline:none;width:100%;color:var(--text-dark);min-height:80px;resize:vertical" placeholder="e.g. Gate colour, landmark near house…"></textarea>
+          <textarea id="co_notes" style="min-height:80px;resize:vertical" placeholder="e.g. Gate colour, landmark near house…"></textarea>
         </div>
       </div>
 
       <!-- Payment Method -->
       <div class="checkout-section">
-        <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+        <h3><span class="section-icon"><i class="fas fa-credit-card"></i></span> Payment Method</h3>
         <div id="paymentOptions">
         <div class="payment-method selected" onclick="selectPayment(this,'momo')">
           <input type="radio" name="payment" checked />
-          <div class="payment-method-icon" style="color:#fcd34d"><i class="fas fa-mobile-alt"></i></div>
+          <div class="payment-method-radio"></div>
+          <div class="payment-method-icon icon-momo"><i class="fas fa-mobile-alt"></i></div>
           <div>
             <strong style="font-size:14px">MTN Mobile Money</strong>
             <p style="font-size:12px;color:var(--text-muted);margin:0">Pay securely with MTN MoMo</p>
@@ -118,7 +121,8 @@
         </div>
         <div class="payment-method" onclick="selectPayment(this,'card')">
           <input type="radio" name="payment" />
-          <div class="payment-method-icon"><i class="fab fa-cc-visa"></i></div>
+          <div class="payment-method-radio"></div>
+          <div class="payment-method-icon icon-card"><i class="fab fa-cc-visa"></i></div>
           <div>
             <strong style="font-size:14px">Credit / Debit Card</strong>
             <p style="font-size:12px;color:var(--text-muted);margin:0">Visa, Mastercard accepted</p>
@@ -126,7 +130,8 @@
         </div>
         <div class="payment-method" onclick="selectPayment(this,'cod')">
           <input type="radio" name="payment" />
-          <div class="payment-method-icon" style="color:var(--success)"><i class="fas fa-money-bill-wave"></i></div>
+          <div class="payment-method-radio"></div>
+          <div class="payment-method-icon icon-cod"><i class="fas fa-money-bill-wave"></i></div>
           <div>
             <strong style="font-size:14px">Cash on Delivery</strong>
             <p style="font-size:12px;color:var(--text-muted);margin:0">Pay when you receive your order</p>
@@ -143,7 +148,7 @@
 
     <!-- Right: Order Summary -->
     <div class="order-summary-card">
-      <h3>Order Summary</h3>
+      <h3><span class="section-icon"><i class="fas fa-receipt"></i></span> Order Summary</h3>
 
       <!-- Cart Items -->
       <div id="checkoutOrderItems">
@@ -167,17 +172,19 @@
         <div class="summary-row summary-total"><span>Total</span><strong id="coTotal">GH₵ 0</strong></div>
       </div>
 
-      <button class="btn-primary btn-block" onclick="placeOrder()" style="margin-top:16px;font-size:15px;padding:15px">
+      <button class="btn-primary btn-block btn-checkout-pay" onclick="placeOrder()" style="margin-top:16px;font-size:15px;padding:15px">
         <i class="fas fa-lock"></i> Place Order
       </button>
       <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:10px">
         <i class="fas fa-shield-alt" style="color:var(--success)"></i> Your payment is encrypted and secure.
       </p>
-      <div style="display:flex;justify-content:center;gap:12px;margin-top:12px;align-items:center">
-        <i class="fab fa-cc-visa" style="font-size:28px;color:#1a1f71"></i>
-        <i class="fab fa-cc-mastercard" style="font-size:28px;color:#eb001b"></i>
-        <span style="font-size:11px;font-weight:700;color:#fcd34d;background:#1a1a1a;padding:2px 8px;border-radius:4px;line-height:28px">MTN MoMo</span>
-        <img src="https://website-v3-assets.s3.amazonaws.com/assets/img/hero/Paystack-mark-white-twitter.png" alt="Paystack" style="height:22px;opacity:0.7">
+      <div style="display:flex;justify-content:center;align-items:center;gap:14px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border-light)">
+        <i class="fab fa-cc-visa" style="font-size:24px;color:#94a3b8"></i>
+        <i class="fab fa-cc-mastercard" style="font-size:24px;color:#94a3b8"></i>
+        <span style="width:1px;height:16px;background:var(--border)"></span>
+        <span style="font-size:11px;font-weight:700;color:#64748b;letter-spacing:.3px">MTN MOMO</span>
+        <span style="width:1px;height:16px;background:var(--border)"></span>
+        <span style="font-size:11px;font-weight:600;color:#94a3b8">Secured by Paystack</span>
       </div>
     </div>
   </div>
@@ -231,17 +238,6 @@
 <div class="search-panel-backdrop" id="searchPanelBackdrop"></div>
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Receipt Modal -->
-<div id="receiptModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;padding:16px">
-  <div style="background:#fff;border-radius:18px;max-width:480px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
-    <div id="receiptContent" style="padding:32px 28px"></div>
-    <div style="padding:0 28px 24px;display:flex;gap:10px">
-      <button onclick="downloadReceipt()" style="flex:1;padding:13px;background:#1d4ed8;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><i class="fas fa-download"></i> Download Receipt</button>
-      <a href="index.html" style="flex:1;padding:13px;background:#f1f5f9;color:#1e293b;border-radius:10px;font-size:14px;font-weight:700;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center">Continue Shopping</a>
-    </div>
-  </div>
-</div>
-
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script src="js/supabase.js"></script>
 <script src="js/data.js"></script>
@@ -267,9 +263,13 @@ function renderCheckoutSummary() {
   itemsEl.innerHTML = cart.map(item => {
     const prod = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).find(p => p.id === item.id);
     const sku = prod?.model || item.id;
+    const photo = prod?.images && prod.images[0];
+    const thumb = photo
+      ? `<img src="${photo}" alt="${item.name}" loading="lazy">`
+      : (item.icon || '📦');
     return `
     <div class="order-item">
-      <div class="order-item-img">${item.icon}</div>
+      <div class="order-item-img">${thumb}</div>
       <div style="flex:1">
         <div class="order-item-name">${item.name}</div>
         <div style="font-size:12px;color:var(--text-muted)">SKU: ${sku} · Qty: ${item.qty}</div>
@@ -364,13 +364,21 @@ function selectPayment(el, method) {
 
 function applyPromo() {
   const code = document.getElementById('promoInput')?.value.trim().toUpperCase();
+  const wrap = document.querySelector('.promo-input-wrap');
+  const btn = wrap?.querySelector('button');
   const validCodes = { 'TECH20': 0.20, 'SAVE15': 0.15, 'WELCOME10': 0.10 };
   if (validCodes[code]) {
     appliedPromoPct = validCodes[code];
     appliedPromoCode = code;
     updateOrderTotals();
+    wrap?.classList.add('applied');
+    wrap?.classList.remove('shake');
+    if (btn) btn.innerHTML = '<i class="fas fa-check"></i>';
     showToast('success', 'Promo Applied!', `Code "${code}" applied. You save ${Math.round(validCodes[code]*100)}%!`, 'fas fa-tag');
   } else {
+    wrap?.classList.remove('applied');
+    wrap?.classList.add('shake');
+    setTimeout(() => wrap?.classList.remove('shake'), 400);
     showToast('error', 'Invalid Code', 'Try: TECH20, SAVE15, or WELCOME10', 'fas fa-times-circle');
   }
 }
@@ -430,87 +438,7 @@ async function saveAndConfirmOrder(paymentMethod, paystackRef) {
   localStorage.setItem('obv_orders', JSON.stringify(orders));
   sbPush('obv_orders');
   clearCart();
-  showReceiptModal(order);
-}
-
-function showReceiptModal(order) {
-  const methodLabel = { momo: 'MTN Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[order.paymentMethod] || order.paymentMethod;
-  const statusColor = order.status === 'confirmed' ? '#16a34a' : '#d97706';
-  const statusLabel = order.status === 'confirmed' ? '✓ Payment Confirmed' : '⏳ Pending Payment';
-  const itemsHtml = (order.items || []).map(i =>
-    `<tr><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:13px">${i.name}<br><span style="font-size:11px;color:#94a3b8">SKU: ${i.model || i.sku || '—'}</span></td><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;text-align:center;color:#64748b;font-size:13px">×${i.qty}</td><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;text-align:right;font-weight:600;font-size:13px">GH₵ ${(i.price*i.qty).toLocaleString()}</td></tr>`
-  ).join('');
-
-  document.getElementById('receiptContent').innerHTML = `
-    <div style="text-align:center;margin-bottom:24px">
-      <img src="img/logo.jpeg" style="height:48px;border-radius:8px;margin-bottom:10px">
-      <div style="font-size:11px;color:#64748b;letter-spacing:.5px;text-transform:uppercase">Order Receipt</div>
-      <div style="font-size:22px;font-weight:800;color:#0f172a;margin:6px 0">Order #${order.id}</div>
-      <span style="display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;background:${order.status==='confirmed'?'#dcfce7':'#fef3c7'};color:${statusColor}">${statusLabel}</span>
-    </div>
-    <div style="background:#f8fafc;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Customer</span><strong>${order.customerName}</strong></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Phone</span><strong>${order.phone}</strong></div>
-      ${order.email?`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Email</span><strong>${order.email}</strong></div>`:''}
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Fulfillment</span><strong>${order.fulfillment==='pickup'?'Store Pickup':'Home Delivery'}</strong></div>
-      ${order.deliveryArea&&order.deliveryArea!=='Store Pickup'?`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Address</span><strong style="text-align:right;max-width:60%">${order.deliveryArea}</strong></div>`:''}
-      <div style="display:flex;justify-content:space-between"><span style="color:#64748b">Payment</span><strong>${methodLabel}</strong></div>
-      ${order.paymentRef?`<div style="display:flex;justify-content:space-between;margin-top:6px"><span style="color:#64748b">Ref</span><strong style="font-size:11px">${order.paymentRef}</strong></div>`:''}
-    </div>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:12px">${itemsHtml}</table>
-    <div style="display:flex;justify-content:space-between;background:#1d4ed8;color:#fff;border-radius:10px;padding:14px 16px;font-size:16px;font-weight:800">
-      <span>Total</span><span>GH₵ ${order.total.toLocaleString()}</span>
-    </div>
-    <div style="text-align:center;margin-top:16px;font-size:11px;color:#94a3b8">
-      ${new Date(order.createdAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})} · Orbiva Technologies
-    </div>`;
-
-  const modal = document.getElementById('receiptModal');
-  modal.style.display = 'flex';
-  window._lastOrder = order;
-}
-
-function downloadReceipt() {
-  const o = window._lastOrder;
-  if (!o) return;
-  const methodLabel = { momo: 'MTN Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[o.paymentMethod] || o.paymentMethod;
-  const itemsRows = (o.items||[]).map(i =>
-    `<tr><td>${i.name}<br><span style="font-size:11px;color:#94a3b8">SKU: ${i.model || i.sku || '—'}</span></td><td style="text-align:center">×${i.qty}</td><td style="text-align:right">GH₵ ${(i.price*i.qty).toLocaleString()}</td></tr>`
-  ).join('');
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <link rel="canonical" href="https://www.orbivagh.com/checkout.html"><title>Receipt - Order #${o.id}</title>
-  <style>body{font-family:Arial,sans-serif;max-width:420px;margin:30px auto;color:#1e293b;font-size:13px}
-  h1{font-size:20px;margin:0}.header{text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #1d4ed8}
-  .info-row{display:flex;justify-content:space-between;margin:5px 0}
-  .info-box{background:#f8fafc;border-radius:8px;padding:12px;margin-bottom:16px}
-  table{width:100%;border-collapse:collapse;margin-bottom:12px}
-  td{padding:7px 4px;border-bottom:1px solid #f1f5f9}
-  .total-row{background:#1d4ed8;color:#fff;border-radius:8px;padding:12px;display:flex;justify-content:space-between;font-size:16px;font-weight:800}
-  .footer{text-align:center;margin-top:16px;font-size:11px;color:#94a3b8}
-  @media print{body{margin:10px}button{display:none}}</style></head>
-  <body>
-  <div class="header"><h1>Orbiva Technologies</h1><div style="font-size:11px;color:#64748b;margin:4px 0">ORDER RECEIPT</div>
-  <div style="font-size:18px;font-weight:800">Order #${o.id}</div>
-  <div style="color:${o.status==='confirmed'?'#16a34a':'#d97706'};font-weight:700">${o.status==='confirmed'?'✓ Payment Confirmed':'⏳ Pending Payment'}</div></div>
-  <div class="info-box">
-  <div class="info-row"><span style="color:#64748b">Customer</span><strong>${o.customerName}</strong></div>
-  <div class="info-row"><span style="color:#64748b">Phone</span><strong>${o.phone}</strong></div>
-  ${o.email?`<div class="info-row"><span style="color:#64748b">Email</span><strong>${o.email}</strong></div>`:''}
-  <div class="info-row"><span style="color:#64748b">Fulfillment</span><strong>${o.fulfillment==='pickup'?'Store Pickup':'Home Delivery'}</strong></div>
-  ${o.deliveryArea&&o.deliveryArea!=='Store Pickup'?`<div class="info-row"><span style="color:#64748b">Address</span><strong>${o.deliveryArea}</strong></div>`:''}
-  <div class="info-row"><span style="color:#64748b">Payment</span><strong>${methodLabel}</strong></div>
-  ${o.paymentRef?`<div class="info-row"><span style="color:#64748b">Ref</span><strong style="font-size:11px">${o.paymentRef}</strong></div>`:''}
-  <div class="info-row"><span style="color:#64748b">Date</span><strong>${new Date(o.createdAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</strong></div>
-  </div>
-  <table>${itemsRows}</table>
-  <div class="total-row"><span>Total</span><span>GH₵ ${o.total.toLocaleString()}</span></div>
-  <div class="footer">Thank you for shopping with Orbiva Technologies · orbivagh.com</div>
-  <br><button onclick="window.print()" style="width:100%;padding:10px;background:#1d4ed8;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">🖨 Print / Save as PDF</button>
-  </body></html>`;
-  const w = window.open('', '_blank');
-  w.document.write(html);
-  w.document.close();
-  setTimeout(() => w.print(), 600);
+  window.location.href = 'confirmation.html?order=' + order.id;
 }
 
 function placeOrder() {
@@ -534,8 +462,12 @@ function placeOrder() {
     return;
   }
 
-  // Cash on Delivery — no payment popup
+  // Cash on Delivery — no payment popup, but still a real network wait
+  // underneath (checking for concurrent orders before writing) — worth
+  // showing, same as the Paystack path gets.
   if (currentPaymentMethod === 'cod') {
+    const btn = document.querySelector('.order-summary-card .btn-primary');
+    if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Confirming your order…'; btn.disabled = true; btn.classList.add('shimmer'); }
     saveAndConfirmOrder('cod', null);
     return;
   }
@@ -544,7 +476,7 @@ function placeOrder() {
   const paystackEmail = email || (phone.replace(/\s+/g, '').replace(/^\+/, '') + '@orbivagh.com');
 
   const btn = document.querySelector('.order-summary-card .btn-primary');
-  if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening Payment…'; btn.disabled = true; }
+  if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening Payment…'; btn.disabled = true; btn.classList.add('shimmer'); }
 
   const total = getDisplayTotal();
   const ref   = 'ORB-' + Date.now();
@@ -564,10 +496,11 @@ function placeOrder() {
       ]
     },
     callback: function(response) {
+      if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Confirming your order…'; }
       saveAndConfirmOrder(currentPaymentMethod, response.reference);
     },
     onClose: function() {
-      if (btn) { btn.innerHTML = '<i class="fas fa-lock"></i> Place Order'; btn.disabled = false; }
+      if (btn) { btn.innerHTML = '<i class="fas fa-lock"></i> Place Order'; btn.disabled = false; btn.classList.remove('shimmer'); }
       showToast('info', 'Payment Cancelled', 'You closed the payment window. Your cart is still saved.', 'fas fa-info-circle');
     }
   });
@@ -581,39 +514,9 @@ function placeOrder() {
 <div class="modal" id="accountModal">
   <div class="modal-box">
     <button class="close-btn modal-close" id="closeAccount"><i class="fas fa-times"></i></button>
-    <div class="modal-tabs">
-      <button class="tab-btn active" data-tab="login">Login</button>
-      <button class="tab-btn" data-tab="register">Register</button>
-    </div>
-    <div class="tab-content active" id="loginTab">
-      <h2>Welcome Back!</h2>
-      <p class="modal-sub">Sign in to your account</p>
-      <form class="auth-form" id="loginForm">
-        <div class="form-group">
-          <label for="login_email">Email Address</label>
-          <input type="email" id="login_email" name="email" autocomplete="email" placeholder="Enter your email" required />
-        </div>
-        <div class="form-group">
-          <label for="login_password">Password</label>
-          <input type="password" id="login_password" name="password" autocomplete="current-password" placeholder="Enter your password" required />
-        </div>
-        <div class="form-row">
-          <label class="checkbox-label"><input type="checkbox" /> Remember me</label>
-          <a href="#" class="forgot-link">Forgot password?</a>
-        </div>
-        <button type="submit" class="btn-primary btn-block">Sign In</button>
-        <div class="social-login">
-          <span>Or continue with</span>
-          <div class="social-btns">
-            <button type="button" class="social-btn"><i class="fab fa-google"></i> Google</button>
-            <button type="button" class="social-btn"><i class="fab fa-facebook-f"></i> Facebook</button>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="tab-content" id="registerTab">
+    <div id="signupFormView">
       <h2>Stay Updated</h2>
-      <p class="modal-sub">Get notified about new products & promotions</p>
+      <p class="modal-sub">Get notified about new products &amp; promotions</p>
       <form class="auth-form" id="registerForm">
         <div class="form-row-2">
           <div class="form-group">
@@ -638,6 +541,14 @@ function placeOrder() {
         </p>
         <button type="submit" class="btn-primary btn-block">Sign Me Up</button>
       </form>
+    </div>
+    <div id="signupWelcomeView" style="display:none;text-align:center;padding:12px 4px">
+      <div style="width:64px;height:64px;border-radius:50%;background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 18px">
+        <i class="fas fa-check"></i>
+      </div>
+      <h2>Welcome, <span id="welcomeName"></span>!</h2>
+      <p class="modal-sub" style="margin-bottom:22px">You're on the list — we'll let you know the moment new products and promotions land.</p>
+      <button type="button" class="btn-primary btn-block" onclick="document.getElementById('accountModal').classList.remove('open');document.body.style.overflow=''">Continue Shopping</button>
     </div>
   </div>
 </div>
