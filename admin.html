@@ -301,6 +301,7 @@ textarea{resize:vertical;min-height:70px}
       <div class="nav-item" onclick="showPage('categories')" id="nav-categories"><i class="fas fa-th-large"></i> Categories</div>
       <div class="nav-item" onclick="showPage('faqs')" id="nav-faqs"><i class="fas fa-question-circle"></i> FAQs</div>
       <div class="nav-item" onclick="showPage('supplier')" id="nav-supplier"><i class="fas fa-truck"></i> Supplier Requests</div>
+      <div class="nav-item" onclick="showPage('customers')" id="nav-customers"><i class="fas fa-address-book"></i> Customer Signups</div>
       <div class="nav-section" style="margin-top:8px">Admin</div>
       <div class="nav-item" onclick="showPage('history')" id="nav-history"><i class="fas fa-history"></i> Change History</div>
       <div class="nav-item" onclick="showPage('settings')" id="nav-settings"><i class="fas fa-cog"></i> Settings</div>
@@ -655,6 +656,21 @@ textarea{resize:vertical;min-height:70px}
         <h3 style="font-size:15px;font-weight:800;margin-bottom:12px">Balance History</h3>
         <div id="supplierLedgerList" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
+    </div>
+
+    <!-- CUSTOMER SIGNUPS -->
+    <div class="content" id="page-customers" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <div><h2 style="font-size:18px;font-weight:800">Customer Signups</h2><p style="font-size:13px;color:var(--muted)">People who signed up on the site for updates on new products and promotions. This is a contact list — not a login system.</p></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" onclick="copyAllCustomerEmails()"><i class="fas fa-copy"></i> Copy All Emails</button>
+          <button class="btn btn-outline btn-sm" onclick="exportCustomersCSV()"><i class="fas fa-download"></i> Export CSV</button>
+        </div>
+      </div>
+      <div class="toolbar" style="margin-bottom:14px">
+        <input class="search-input" type="text" id="customerSearch" placeholder="Search name, email or phone..." oninput="renderCustomersPage()">
+      </div>
+      <div id="customersTableWrap"></div>
     </div>
 
     <!-- HISTORY -->
@@ -1156,8 +1172,8 @@ function publishSite() {
 }
 
 /* ── Navigation ── */
-const PAGES = ['dashboard','orders','deals','products','images','brands','categories','faqs','supplier','history','settings'];
-const PAGE_TITLES = {dashboard:'Dashboard',orders:'Orders',deals:'Deals & Promotions',products:'Products',images:'Image Library',brands:'Brands',categories:'Categories',faqs:'FAQs',supplier:'Supplier Requests',history:'Change History',settings:'Settings'};
+const PAGES = ['dashboard','orders','deals','products','images','brands','categories','faqs','supplier','customers','history','settings'];
+const PAGE_TITLES = {dashboard:'Dashboard',orders:'Orders',deals:'Deals & Promotions',products:'Products',images:'Image Library',brands:'Brands',categories:'Categories',faqs:'FAQs',supplier:'Supplier Requests',customers:'Customer Signups',history:'Change History',settings:'Settings'};
 function toggleSidebar(){
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarBackdrop').classList.toggle('open');
@@ -1184,6 +1200,7 @@ function showPage(page) {
   if (page==='categories') renderCategoriesGrid();
   if (page==='faqs')       renderFaqsGridAdmin();
   if (page==='supplier')   renderSupplierPage();
+  if (page==='customers')  renderCustomersPage();
   if (page==='history')   renderHistory();
   if (page==='settings')  loadSettings();
 }
@@ -2156,7 +2173,8 @@ const BACKUP_KEYS=[
   'obv_orders','obv_data_version',
   'obv_cat_adds','obv_cat_dels','obv_cat_edits',
   'obv_brand_adds','obv_brand_dels','obv_faqs',
-  'obv_supplier_requests','obv_supplier_ledger','obv_supplier_pricelist'
+  'obv_supplier_requests','obv_supplier_ledger','obv_supplier_pricelist',
+  'obv_customers'
 ];
 // Keys too large for Supabase or irrelevant to the storefront
 const BACKUP_LOCAL_ONLY=new Set(['obv_images','obv_history','obv_orders']);
@@ -3267,6 +3285,63 @@ function deletePriceListItem(id){
   toast('Item deleted','ok');
   renderSupplierPriceListAdmin();
   populateSupplierPriceListDatalist();
+}
+
+/* ── Customer Signups ──
+   A simple contact list from the "stay updated" form — not a login system.
+   Useful for marketing outreach (WhatsApp broadcast, email list, etc.). */
+function getCustomers(){ return lsGet('obv_customers', []); }
+
+function renderCustomersPage(){
+  const search = (document.getElementById('customerSearch')?.value || '').toLowerCase();
+  const customers = getCustomers().filter(c => {
+    if (!search) return true;
+    const hay = `${c.firstName} ${c.lastName} ${c.email} ${c.phone}`.toLowerCase();
+    return hay.includes(search);
+  });
+  const wrap = document.getElementById('customersTableWrap');
+  if (!customers.length) {
+    wrap.innerHTML = '<div class="empty-state"><i class="fas fa-address-book"></i><p>No signups yet. They\'ll appear here as people sign up on the site for updates.</p></div>';
+    return;
+  }
+  wrap.innerHTML = `
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;overflow:hidden">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr style="background:var(--bg);text-align:left">
+          <th style="padding:10px 14px">Name</th><th style="padding:10px 14px">Email</th><th style="padding:10px 14px">Phone</th><th style="padding:10px 14px">Signed Up</th>
+        </tr></thead>
+        <tbody>
+          ${[...customers].reverse().map(c => `
+            <tr style="border-top:1px solid var(--border)">
+              <td style="padding:10px 14px">${escHtml(c.firstName)} ${escHtml(c.lastName)}</td>
+              <td style="padding:10px 14px">${escHtml(c.email)}</td>
+              <td style="padding:10px 14px">${escHtml(c.phone||'—')}</td>
+              <td style="padding:10px 14px;color:var(--muted)">${new Date(c.createdAt).toLocaleDateString()}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size:12.5px;color:var(--muted);margin-top:10px">${customers.length} signup${customers.length!==1?'s':''}${search?' matching search':''}</div>`;
+}
+
+function copyAllCustomerEmails(){
+  const emails = getCustomers().map(c => c.email).filter(Boolean).join(', ');
+  if (!emails) { toast('No signups yet','err'); return; }
+  navigator.clipboard.writeText(emails).then(() => toast('All emails copied to clipboard!','ok')).catch(() => toast('Could not copy — try again','err'));
+}
+
+function exportCustomersCSV(){
+  const customers = getCustomers();
+  if (!customers.length) { toast('No signups yet','err'); return; }
+  const rows = [['First Name','Last Name','Email','Phone','Signed Up']];
+  customers.forEach(c => rows.push([c.firstName, c.lastName, c.email, c.phone||'', new Date(c.createdAt).toLocaleDateString()]));
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'orbiva-customer-signups.csv';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 

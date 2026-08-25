@@ -231,6 +231,17 @@ function showPageLoadingOverlay() {
   document.body.appendChild(el);
 }
 
+// Mobile browsers often restore a page from memory (bfcache) on back/forward
+// navigation instead of reloading it — snapshotting the DOM exactly as it
+// was, including a loading spinner shown right before the user navigated
+// away. Without this, that spinner stays stuck on screen forever after
+// pressing back. `pageshow` fires on both fresh loads and bfcache restores;
+// `event.persisted` tells them apart.
+window.addEventListener('pageshow', function(event) {
+  const overlay = document.getElementById('pageLoadingOverlay');
+  if (overlay) overlay.remove();
+});
+
 function showProductModal(p) {
   // Remove existing
   document.getElementById('productModal')?.remove();
@@ -1063,10 +1074,34 @@ function initModalTabs() {
   });
   document.getElementById('registerForm')?.addEventListener('submit', e => {
     e.preventDefault();
-    showToast('success', 'Account Created!', 'Welcome to Orbiva! Start shopping now.', 'fas fa-user-plus');
+    const firstName = document.getElementById('reg_fname')?.value.trim() || '';
+    const lastName  = document.getElementById('reg_lname')?.value.trim() || '';
+    const email     = document.getElementById('reg_email')?.value.trim() || '';
+    const phone     = document.getElementById('reg_phone')?.value.trim() || '';
+    if (email) saveCustomerSignup({ firstName, lastName, email, phone });
+    showToast('success', "You're on the list!", "We'll keep you updated on new products and promotions.", 'fas fa-check-circle');
     document.getElementById('accountModal')?.classList.remove('open');
     document.body.style.overflow = '';
+    e.target.reset();
   });
+}
+
+// Saves a "stay updated" signup as a simple contact record the admin can see
+// and use for marketing outreach — this is NOT a real login/account system,
+// just a lightweight list. Re-registering with the same email updates their
+// details rather than creating a duplicate entry.
+function saveCustomerSignup({ firstName, lastName, email, phone }) {
+  try {
+    const customers = JSON.parse(localStorage.getItem('obv_customers') || '[]');
+    const existing = customers.find(c => c.email.toLowerCase() === email.toLowerCase());
+    if (existing) {
+      Object.assign(existing, { firstName, lastName, phone, updatedAt: new Date().toISOString() });
+    } else {
+      customers.push({ id: Date.now(), firstName, lastName, email, phone, createdAt: new Date().toISOString() });
+    }
+    localStorage.setItem('obv_customers', JSON.stringify(customers));
+    if (typeof sbPush === 'function') sbPush('obv_customers');
+  } catch(e) {}
 }
 
 /* ════════════════════════════════════════
