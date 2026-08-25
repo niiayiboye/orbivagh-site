@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <script>(function(){try{var b=JSON.parse(localStorage.getItem('obv_branding')||'{}');if(b.logoUrl){document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.admin-logo-img').forEach(function(i){i.src=b.logoUrl;if(b.logoSize)i.style.height=b.logoSize+'px';});});}}catch(e){}}());</script>
 <link rel="icon" type="image/jpeg" href="img/logo.jpeg">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<link rel="manifest" href="admin-manifest.json">
+<meta name="theme-color" content="#1d4ed8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Orbiva Admin Portal</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -297,6 +300,7 @@ textarea{resize:vertical;min-height:70px}
       <div class="nav-item" onclick="showPage('brands')" id="nav-brands"><i class="fas fa-copyright"></i> Brands</div>
       <div class="nav-item" onclick="showPage('categories')" id="nav-categories"><i class="fas fa-th-large"></i> Categories</div>
       <div class="nav-item" onclick="showPage('faqs')" id="nav-faqs"><i class="fas fa-question-circle"></i> FAQs</div>
+      <div class="nav-item" onclick="showPage('supplier')" id="nav-supplier"><i class="fas fa-truck"></i> Supplier Requests</div>
       <div class="nav-section" style="margin-top:8px">Admin</div>
       <div class="nav-item" onclick="showPage('history')" id="nav-history"><i class="fas fa-history"></i> Change History</div>
       <div class="nav-item" onclick="showPage('settings')" id="nav-settings"><i class="fas fa-cog"></i> Settings</div>
@@ -605,6 +609,54 @@ textarea{resize:vertical;min-height:70px}
       <div id="faqsGridAdmin" style="display:flex;flex-direction:column;gap:12px"></div>
     </div>
 
+    <!-- SUPPLIER REQUESTS -->
+    <div class="content" id="page-supplier" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <div><h2 style="font-size:18px;font-weight:800">Supplier Requests</h2><p style="font-size:13px;color:var(--muted)">Track special/out-of-stock requests from your showroom to your supplier, and your monthly supplier balance.</p></div>
+        <button class="btn btn-primary" onclick="openAddSupplierRequestModal()"><i class="fas fa-plus"></i> New Request</button>
+      </div>
+
+      <!-- Balance card -->
+      <div style="background:linear-gradient(135deg,#1d4ed8,#1e40af);border-radius:14px;padding:20px 24px;color:#fff;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:12.5px;opacity:0.85;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Supplier Balance</div>
+          <div style="font-size:32px;font-weight:800;margin-top:4px" id="supBalanceDisplay">GH₵ 0.00</div>
+          <div style="font-size:12.5px;opacity:0.8;margin-top:2px" id="supBalanceSub">This month</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3)" onclick="openAddTopupModal()"><i class="fas fa-plus"></i> Add Top-up</button>
+          <button class="btn" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3)" onclick="showPage('supplier');document.getElementById('supLedgerSection').scrollIntoView({behavior:'smooth'})"><i class="fas fa-list"></i> View Ledger</button>
+        </div>
+      </div>
+
+      <!-- Requests list -->
+      <div class="toolbar" style="margin-bottom:12px">
+        <select class="filter-sel" id="supStatusFilter" onchange="filterSupplierRequests()">
+          <option value="">All Statuses</option>
+          <option value="requested">Requested</option>
+          <option value="sent">Sent to Supplier</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="picked_up">Picked Up</option>
+          <option value="delivered">Delivered</option>
+          <option value="unavailable">Unavailable</option>
+        </select>
+      </div>
+      <div id="supplierRequestsList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px"></div>
+
+      <!-- Price list -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px">
+        <h3 style="font-size:15px;font-weight:800">Supplier Price List</h3>
+        <button class="btn btn-outline btn-sm" onclick="openAddPriceListItemModal()"><i class="fas fa-plus"></i> Add Item</button>
+      </div>
+      <div id="supplierPriceList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:28px"></div>
+
+      <!-- Ledger -->
+      <div id="supLedgerSection">
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:12px">Balance History</h3>
+        <div id="supplierLedgerList" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div>
+
     <!-- HISTORY -->
     <div class="content" id="page-history" style="display:none">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
@@ -799,6 +851,92 @@ textarea{resize:vertical;min-height:70px}
   </div>
 </div>
 
+<!-- Supplier Request Modal -->
+<div class="modal-overlay" id="supplierRequestModal">
+  <div class="modal-box" style="max-width:520px">
+    <div class="modal-header">
+      <div class="modal-title" id="supReqModalTitle">New Supplier Request</div>
+      <button class="modal-close" onclick="closeModal('supplierRequestModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Product / Item Description</label><input type="text" id="sr_product" list="supplierPriceListDatalist" placeholder="e.g. Samsung 55&quot; QLED TV" oninput="prefillSupplierRequestPrice()"></div>
+        <datalist id="supplierPriceListDatalist"></datalist>
+        <div class="form-group"><label>Quantity</label><input type="number" id="sr_qty" value="1" min="1"></div>
+        <div class="form-group"><label>Requested By</label>
+          <select id="sr_requestedBy">
+            <option value="Admin">Me (Admin)</option>
+            <option value="Assistant">Showroom Assistant</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>Customer Name (if known)</label><input type="text" id="sr_customer" placeholder="Optional"></div>
+        <div class="form-group full"><label>Notes</label><textarea id="sr_notes" placeholder="Any details for the supplier or for pickup..." style="min-height:70px"></textarea></div>
+        <div class="form-group"><label>Status</label>
+          <select id="sr_status" onchange="toggleSupplierPriceField()">
+            <option value="requested">Requested</option>
+            <option value="sent">Sent to Supplier</option>
+            <option value="confirmed">Confirmed (has price)</option>
+            <option value="picked_up">Picked Up</option>
+            <option value="delivered">Delivered</option>
+            <option value="unavailable">Unavailable</option>
+          </select>
+        </div>
+        <div class="form-group" id="sr_priceGroup" style="display:none">
+          <label>Supplier Price (GH₵)</label>
+          <input type="number" id="sr_price" placeholder="0.00" step="0.01">
+        </div>
+      </div>
+      <div id="sr_deductNote" style="display:none;background:#eff6ff;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1d4ed8;margin-top:4px">
+        <i class="fas fa-info-circle"></i> This amount will be deducted from your supplier balance when saved.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('supplierRequestModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSupplierRequest()"><i class="fas fa-save"></i> Save Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- Supplier Top-up Modal -->
+<div class="modal-overlay" id="supplierTopupModal">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-title">Add Top-up</div>
+      <button class="modal-close" onclick="closeModal('supplierTopupModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Amount (GH₵)</label><input type="number" id="topup_amount" placeholder="50000" step="0.01" value="50000"></div>
+        <div class="form-group full"><label>Note</label><input type="text" id="topup_note" placeholder="e.g. Monthly top-up — August"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('supplierTopupModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSupplierTopup()"><i class="fas fa-save"></i> Add Top-up</button>
+    </div>
+  </div>
+</div>
+
+<!-- Price List Item Modal -->
+<div class="modal-overlay" id="priceListModal">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-title" id="priceListModalTitle">Add Price List Item</div>
+      <button class="modal-close" onclick="closeModal('priceListModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Product</label><input type="text" id="pl_product" placeholder="e.g. Samsung 55&quot; QLED TV"></div>
+        <div class="form-group full"><label>Supplier Price (GH₵)</label><input type="number" id="pl_price" placeholder="0.00" step="0.01"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('priceListModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePriceListItem()"><i class="fas fa-save"></i> Save Item</button>
+    </div>
+  </div>
+</div>
+
 <!-- Deal Modal -->
 <div class="modal-overlay" id="dealModal">
   <div class="modal-box">
@@ -932,12 +1070,26 @@ async function doLogin() {
       });
       const signupData = await signupRes.json();
       if (!signupRes.ok) {
+        const alreadyExists = /already registered|already exists/i.test(signupData.msg || signupData.error_description || signupData.error_code || '');
+        if (alreadyExists) {
+          // The account actually exists on Supabase already (e.g. this
+          // browser just hadn't synced the "admin exists" flag yet) — try
+          // signing in with what was just typed instead of giving up.
+          localStorage.setItem(ADMIN_EMAIL_FLAG_KEY, email);
+          sbPush(ADMIN_EMAIL_FLAG_KEY);
+          return doLogin();
+        }
         errEl.textContent = signupData.msg || signupData.error_description || 'Could not create account.';
         errEl.style.display = 'block';
         return;
       }
       if (!signupData.access_token) {
-        // Project has email confirmation turned on — can't sign in until confirmed.
+        // Project has email confirmation turned on — can't sign in until
+        // confirmed. Still mark that an admin account now exists so the
+        // next attempt tries to SIGN IN instead of signing up again (which
+        // would fail with "User already registered").
+        localStorage.setItem(ADMIN_EMAIL_FLAG_KEY, email);
+        sbPush(ADMIN_EMAIL_FLAG_KEY);
         errEl.textContent = 'Account created — check your email to confirm it, then sign in.';
         errEl.style.display = 'block';
         return;
@@ -992,14 +1144,20 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 });
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('admin-sw.js').catch(() => {});
+  });
+}
+
 /* ── Publish ── */
 function publishSite() {
   toast('Changes sync to all visitors via Supabase automatically.','info');
 }
 
 /* ── Navigation ── */
-const PAGES = ['dashboard','orders','deals','products','images','brands','categories','faqs','history','settings'];
-const PAGE_TITLES = {dashboard:'Dashboard',orders:'Orders',deals:'Deals & Promotions',products:'Products',images:'Image Library',brands:'Brands',categories:'Categories',faqs:'FAQs',history:'Change History',settings:'Settings'};
+const PAGES = ['dashboard','orders','deals','products','images','brands','categories','faqs','supplier','history','settings'];
+const PAGE_TITLES = {dashboard:'Dashboard',orders:'Orders',deals:'Deals & Promotions',products:'Products',images:'Image Library',brands:'Brands',categories:'Categories',faqs:'FAQs',supplier:'Supplier Requests',history:'Change History',settings:'Settings'};
 function toggleSidebar(){
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarBackdrop').classList.toggle('open');
@@ -1025,6 +1183,7 @@ function showPage(page) {
   if (page==='brands')     renderBrands();
   if (page==='categories') renderCategoriesGrid();
   if (page==='faqs')       renderFaqsGridAdmin();
+  if (page==='supplier')   renderSupplierPage();
   if (page==='history')   renderHistory();
   if (page==='settings')  loadSettings();
 }
@@ -1996,7 +2155,8 @@ const BACKUP_KEYS=[
   'obv_img_required','obv_images','obv_history',
   'obv_orders','obv_data_version',
   'obv_cat_adds','obv_cat_dels','obv_cat_edits',
-  'obv_brand_adds','obv_brand_dels','obv_faqs'
+  'obv_brand_adds','obv_brand_dels','obv_faqs',
+  'obv_supplier_requests','obv_supplier_ledger','obv_supplier_pricelist'
 ];
 // Keys too large for Supabase or irrelevant to the storefront
 const BACKUP_LOCAL_ONLY=new Set(['obv_images','obv_history','obv_orders']);
@@ -2809,6 +2969,304 @@ function deleteFaq(idx){
   lsSet('obv_faqs', faqs); sbPush('obv_faqs');
   logHistory({type:'faq_delete',label:'Removed FAQ: '+(removed[0]?.question||''),undoData:{}});
   toast('Question deleted','ok'); renderFaqsGridAdmin();
+}
+
+/* ── Supplier Requests & Balance ──
+   Requests move through: requested -> sent -> confirmed -> picked_up ->
+   delivered (or unavailable at any point). The supplier balance ledger is
+   auto-adjusted whenever a request enters or leaves a "money committed"
+   state (confirmed/picked_up/delivered) so it never double-counts or
+   silently forgets to reverse a deduction if a request falls through. */
+const SUP_COMMITTED_STATUSES = ['confirmed','picked_up','delivered'];
+let editingSupplierRequestId = null;
+let editingPriceListId = null;
+let supplierRequestFilter = '';
+
+function getSupplierRequests(){ return lsGet('obv_supplier_requests', []); }
+function getSupplierLedger(){ return lsGet('obv_supplier_ledger', []); }
+function getSupplierPriceList(){ return lsGet('obv_supplier_pricelist', []); }
+
+function getSupplierBalance(){
+  const ledger = getSupplierLedger();
+  return ledger.reduce((sum,e) => sum + (e.type === 'topup' ? e.amount : -e.amount), 0);
+}
+
+function renderSupplierPage(){
+  renderSupplierBalance();
+  renderSupplierPriceListAdmin();
+  populateSupplierPriceListDatalist();
+  filterSupplierRequests();
+  renderSupplierLedger();
+}
+
+function renderSupplierBalance(){
+  const bal = getSupplierBalance();
+  const el = document.getElementById('supBalanceDisplay');
+  el.textContent = 'GH₵ ' + bal.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+  el.style.color = bal < 0 ? '#fecaca' : '#fff';
+  const ledger = getSupplierLedger();
+  const lastTopup = [...ledger].reverse().find(e => e.type === 'topup');
+  document.getElementById('supBalanceSub').textContent = lastTopup
+    ? 'Last top-up: ' + new Date(lastTopup.date).toLocaleDateString()
+    : 'No top-ups recorded yet';
+}
+
+function filterSupplierRequests(){
+  const status = document.getElementById('supStatusFilter')?.value || '';
+  supplierRequestFilter = status;
+  const requests = getSupplierRequests().filter(r => !status || r.status === status);
+  const list = document.getElementById('supplierRequestsList');
+  if (!requests.length) {
+    list.innerHTML = '<div class="empty-state"><i class="fas fa-truck"></i><p>No supplier requests yet. Click "New Request" to log one.</p></div>';
+    return;
+  }
+  const statusMeta = {
+    requested:   {label:'Requested',       color:'#64748b', bg:'#f1f5f9'},
+    sent:        {label:'Sent to Supplier',color:'#b45309', bg:'#fef3c7'},
+    confirmed:   {label:'Confirmed',       color:'#1d4ed8', bg:'#eff6ff'},
+    picked_up:   {label:'Picked Up',       color:'#7c3aed', bg:'#f5f3ff'},
+    delivered:   {label:'Delivered',       color:'#16a34a', bg:'#f0fdf4'},
+    unavailable: {label:'Unavailable',     color:'#dc2626', bg:'#fef2f2'}
+  };
+  list.innerHTML = [...requests].reverse().map(r => {
+    const sm = statusMeta[r.status] || statusMeta.requested;
+    return `
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-weight:700;font-size:14px">${escHtml(r.product)} <span style="color:var(--muted);font-weight:500">×${r.qty}</span></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">
+          ${r.customerName ? 'For: '+escHtml(r.customerName)+' · ' : ''}Requested by ${escHtml(r.requestedBy)} · ${new Date(r.createdAt).toLocaleDateString()}
+          ${r.price ? ' · GH₵ '+r.price.toLocaleString(undefined,{minimumFractionDigits:2}) : ''}
+        </div>
+        ${r.notes ? `<div style="font-size:12px;color:var(--muted);margin-top:4px;font-style:italic">${escHtml(r.notes)}</div>` : ''}
+      </div>
+      <span style="background:${sm.bg};color:${sm.color};font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:20px;white-space:nowrap">${sm.label}</span>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-outline btn-sm" onclick="openEditSupplierRequestModal(${r.id})"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="confirmAction('Delete this request?','This cannot be undone. Any linked balance deduction will be reversed.',()=>deleteSupplierRequest(${r.id}))"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function populateSupplierPriceListDatalist(){
+  const dl = document.getElementById('supplierPriceListDatalist');
+  if (!dl) return;
+  dl.innerHTML = getSupplierPriceList().map(p => `<option value="${escHtml(p.product)}" data-price="${p.price}"></option>`).join('');
+}
+
+function prefillSupplierRequestPrice(){
+  const name = document.getElementById('sr_product').value;
+  const match = getSupplierPriceList().find(p => p.product === name);
+  if (match && !document.getElementById('sr_price').value) {
+    document.getElementById('sr_price').value = match.price;
+  }
+}
+
+function toggleSupplierPriceField(){
+  const status = document.getElementById('sr_status').value;
+  const needsPrice = SUP_COMMITTED_STATUSES.includes(status);
+  document.getElementById('sr_priceGroup').style.display = needsPrice ? 'block' : 'none';
+  document.getElementById('sr_deductNote').style.display = needsPrice ? 'block' : 'none';
+}
+
+function openAddSupplierRequestModal(){
+  editingSupplierRequestId = null;
+  document.getElementById('supReqModalTitle').textContent = 'New Supplier Request';
+  ['sr_product','sr_customer','sr_notes','sr_price'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('sr_qty').value = 1;
+  document.getElementById('sr_requestedBy').value = 'Admin';
+  document.getElementById('sr_status').value = 'requested';
+  toggleSupplierPriceField();
+  populateSupplierPriceListDatalist();
+  document.getElementById('supplierRequestModal').classList.add('open');
+}
+
+function openEditSupplierRequestModal(id){
+  const r = getSupplierRequests().find(x => x.id === id);
+  if (!r) { toast('Request not found','err'); return; }
+  editingSupplierRequestId = id;
+  document.getElementById('supReqModalTitle').textContent = 'Edit Supplier Request';
+  document.getElementById('sr_product').value = r.product;
+  document.getElementById('sr_qty').value = r.qty;
+  document.getElementById('sr_requestedBy').value = r.requestedBy;
+  document.getElementById('sr_customer').value = r.customerName || '';
+  document.getElementById('sr_notes').value = r.notes || '';
+  document.getElementById('sr_status').value = r.status;
+  document.getElementById('sr_price').value = r.price || '';
+  toggleSupplierPriceField();
+  populateSupplierPriceListDatalist();
+  document.getElementById('supplierRequestModal').classList.add('open');
+}
+
+function saveSupplierRequest(){
+  const product = document.getElementById('sr_product').value.trim();
+  const qty = parseInt(document.getElementById('sr_qty').value) || 1;
+  const requestedBy = document.getElementById('sr_requestedBy').value;
+  const customerName = document.getElementById('sr_customer').value.trim();
+  const notes = document.getElementById('sr_notes').value.trim();
+  const status = document.getElementById('sr_status').value;
+  const priceRaw = document.getElementById('sr_price').value;
+  const price = priceRaw ? parseFloat(priceRaw) : null;
+  if (!product) { toast('Enter a product description','err'); return; }
+  const isCommitted = SUP_COMMITTED_STATUSES.includes(status);
+  if (isCommitted && (price === null || isNaN(price))) { toast('Enter the supplier price for this status','err'); return; }
+
+  const requests = getSupplierRequests();
+  const ledger = getSupplierLedger();
+  let request;
+
+  if (editingSupplierRequestId !== null) {
+    request = requests.find(r => r.id === editingSupplierRequestId);
+    if (!request) { toast('Request not found','err'); return; }
+    const wasCommitted = SUP_COMMITTED_STATUSES.includes(request.status);
+    const existingEntry = ledger.find(e => e.linkedRequestId === request.id);
+
+    if (wasCommitted && isCommitted) {
+      // Still committed — just make sure the deducted amount matches the current price.
+      if (existingEntry) { existingEntry.amount = price; existingEntry.date = new Date().toISOString(); }
+    } else if (!wasCommitted && isCommitted) {
+      // Newly committed — deduct now.
+      ledger.push({ id: Date.now(), type:'deduction', amount: price, note: 'Deduction for: '+product, linkedRequestId: request.id, date: new Date().toISOString() });
+    } else if (wasCommitted && !isCommitted) {
+      // No longer committed — reverse the deduction.
+      const idx = ledger.findIndex(e => e.linkedRequestId === request.id);
+      if (idx !== -1) ledger.splice(idx,1);
+    }
+    Object.assign(request, { product, qty, requestedBy, customerName, notes, status, price: isCommitted ? price : null, updatedAt: new Date().toISOString() });
+    toast('Request updated!','ok');
+  } else {
+    request = { id: Date.now(), product, qty, requestedBy, customerName, notes, status, price: isCommitted ? price : null, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+    requests.push(request);
+    if (isCommitted) {
+      ledger.push({ id: Date.now()+1, type:'deduction', amount: price, note: 'Deduction for: '+product, linkedRequestId: request.id, date: new Date().toISOString() });
+    }
+    toast('Request added!','ok');
+  }
+
+  lsSet('obv_supplier_requests', requests); sbPush('obv_supplier_requests');
+  lsSet('obv_supplier_ledger', ledger); sbPush('obv_supplier_ledger');
+  logHistory({type:'supplier_request',label:(editingSupplierRequestId!==null?'Updated':'Added')+' supplier request: '+product,undoData:{}});
+  closeModal('supplierRequestModal');
+  renderSupplierPage();
+}
+
+function deleteSupplierRequest(id){
+  const requests = getSupplierRequests();
+  const idx = requests.findIndex(r => r.id === id);
+  if (idx === -1) return;
+  const removed = requests.splice(idx,1)[0];
+  lsSet('obv_supplier_requests', requests); sbPush('obv_supplier_requests');
+
+  // Reverse any linked deduction so a deleted request never leaves a
+  // phantom hole in the balance.
+  const ledger = getSupplierLedger();
+  const ledgerIdx = ledger.findIndex(e => e.linkedRequestId === id);
+  if (ledgerIdx !== -1) { ledger.splice(ledgerIdx,1); lsSet('obv_supplier_ledger', ledger); sbPush('obv_supplier_ledger'); }
+
+  logHistory({type:'supplier_request_delete',label:'Removed supplier request: '+(removed?.product||''),undoData:{}});
+  toast('Request deleted','ok');
+  renderSupplierPage();
+}
+
+function openAddTopupModal(){
+  document.getElementById('topup_amount').value = 50000;
+  document.getElementById('topup_note').value = 'Monthly top-up — ' + new Date().toLocaleString('default',{month:'long',year:'numeric'});
+  document.getElementById('supplierTopupModal').classList.add('open');
+}
+
+function saveSupplierTopup(){
+  const amount = parseFloat(document.getElementById('topup_amount').value);
+  const note = document.getElementById('topup_note').value.trim();
+  if (!amount || amount <= 0) { toast('Enter a valid amount','err'); return; }
+  const ledger = getSupplierLedger();
+  ledger.push({ id: Date.now(), type:'topup', amount, note: note || 'Top-up', linkedRequestId: null, date: new Date().toISOString() });
+  lsSet('obv_supplier_ledger', ledger); sbPush('obv_supplier_ledger');
+  logHistory({type:'supplier_topup',label:'Added supplier top-up: GH₵ '+amount,undoData:{}});
+  toast('Top-up added!','ok');
+  closeModal('supplierTopupModal');
+  renderSupplierPage();
+}
+
+function renderSupplierLedger(){
+  const ledger = getSupplierLedger();
+  const list = document.getElementById('supplierLedgerList');
+  if (!ledger.length) {
+    list.innerHTML = '<div class="empty-state"><i class="fas fa-receipt"></i><p>No balance activity yet.</p></div>';
+    return;
+  }
+  list.innerHTML = [...ledger].reverse().map(e => `
+    <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px">
+      <div>
+        <span style="font-weight:600">${escHtml(e.note)}</span>
+        <span style="color:var(--muted);margin-left:8px;font-size:12px">${new Date(e.date).toLocaleDateString()}</span>
+      </div>
+      <div style="font-weight:700;color:${e.type==='topup' ? '#16a34a' : '#dc2626'}">${e.type==='topup' ? '+' : '−'} GH₵ ${e.amount.toLocaleString(undefined,{minimumFractionDigits:2})}</div>
+    </div>`).join('');
+}
+
+function renderSupplierPriceListAdmin(){
+  const items = getSupplierPriceList();
+  const grid = document.getElementById('supplierPriceList');
+  if (!items.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-tags"></i><p>No price list items yet. Add your supplier\'s monthly prices here for quick reference.</p></div>';
+    return;
+  }
+  grid.innerHTML = items.map(p => `
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <div style="min-width:0">
+        <div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(p.product)}</div>
+        <div style="font-size:13px;color:var(--primary);font-weight:700">GH₵ ${p.price.toLocaleString(undefined,{minimumFractionDigits:2})}</div>
+      </div>
+      <div style="display:flex;gap:4px;flex-shrink:0">
+        <button class="btn btn-outline btn-sm" onclick="openEditPriceListItemModal(${p.id})"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deletePriceListItem(${p.id})"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+function openAddPriceListItemModal(){
+  editingPriceListId = null;
+  document.getElementById('priceListModalTitle').textContent = 'Add Price List Item';
+  document.getElementById('pl_product').value = '';
+  document.getElementById('pl_price').value = '';
+  document.getElementById('priceListModal').classList.add('open');
+}
+
+function openEditPriceListItemModal(id){
+  const item = getSupplierPriceList().find(p => p.id === id);
+  if (!item) return;
+  editingPriceListId = id;
+  document.getElementById('priceListModalTitle').textContent = 'Edit Price List Item';
+  document.getElementById('pl_product').value = item.product;
+  document.getElementById('pl_price').value = item.price;
+  document.getElementById('priceListModal').classList.add('open');
+}
+
+function savePriceListItem(){
+  const product = document.getElementById('pl_product').value.trim();
+  const price = parseFloat(document.getElementById('pl_price').value);
+  if (!product || isNaN(price)) { toast('Enter both a product and a price','err'); return; }
+  const items = getSupplierPriceList();
+  if (editingPriceListId !== null) {
+    const item = items.find(p => p.id === editingPriceListId);
+    if (item) { item.product = product; item.price = price; item.updatedAt = new Date().toISOString(); }
+  } else {
+    items.push({ id: Date.now(), product, price, updatedAt: new Date().toISOString() });
+  }
+  lsSet('obv_supplier_pricelist', items); sbPush('obv_supplier_pricelist');
+  toast('Price list updated!','ok');
+  closeModal('priceListModal');
+  renderSupplierPriceListAdmin();
+  populateSupplierPriceListDatalist();
+}
+
+function deletePriceListItem(id){
+  const items = getSupplierPriceList().filter(p => p.id !== id);
+  lsSet('obv_supplier_pricelist', items); sbPush('obv_supplier_pricelist');
+  toast('Item deleted','ok');
+  renderSupplierPriceListAdmin();
+  populateSupplierPriceListDatalist();
 }
 
 

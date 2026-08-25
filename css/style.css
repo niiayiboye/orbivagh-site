@@ -1993,8 +1993,6 @@ input, select, textarea { font-family: inherit; }
   .header-actions { gap: 0; }
   /* Minimise search bar so wishlist + cart fit beside it */
   .search-bar { flex: 0 1 140px; min-width: 80px; }
-  /* Hide account button in header on mobile — already in bottom nav */
-  #accountToggle { display: none; }
 
   /* Trust strip — compact horizontal scroll */
   .trust-inner { gap: 0; }

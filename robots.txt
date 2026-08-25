@@ -3,5 +3,6 @@ Allow: /
 Disallow: /admin.html
 Disallow: /checkout.html
 Disallow: /confirmation.html
+Disallow: /requests.html
 
 Sitemap: https://orbivagh.com/sitemap.xml

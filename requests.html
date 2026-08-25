@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Supplier Requests — Orbiva Technologies</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="img/logo.jpeg">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="manifest" href="requests-manifest.json">
+<meta name="theme-color" content="#1d4ed8">
+<style>
+  :root { --primary:#1d4ed8; --primary-dark:#1e40af; --bg:#f8fafc; --border:#e2e8f0; --text-dark:#0f172a; --muted:#64748b; --success:#16a34a; --danger:#dc2626; --radius:12px; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text-dark); -webkit-tap-highlight-color:transparent; }
+  h1,h2,h3 { font-family:'Poppins',sans-serif; }
+
+  /* ── Login screen ── */
+  #loginScreen { min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,#0f172a,#1e293b); padding:20px; }
+  .login-box { background:#1e293b; border-radius:20px; padding:36px 28px; width:100%; max-width:360px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+  .login-box img { height:52px; border-radius:8px; margin-bottom:16px; background:#fff; padding:4px 8px; }
+  .login-box h1 { color:#fff; font-size:22px; margin-bottom:4px; }
+  .login-box p { color:#94a3b8; font-size:13px; margin-bottom:20px; }
+  .login-box input { width:100%; padding:13px 14px; border-radius:10px; border:1.5px solid #334155; background:#0f172a; color:#fff; font-size:14px; margin-bottom:10px; }
+  .login-box input::placeholder { color:#64748b; }
+  .login-box button { width:100%; padding:13px; border-radius:10px; border:none; background:var(--primary); color:#fff; font-weight:700; font-size:14.5px; cursor:pointer; margin-top:4px; }
+  .login-box button:active { background:var(--primary-dark); }
+  .login-err { color:#f87171; font-size:12.5px; margin-top:12px; display:none; }
+
+  /* ── App ── */
+  #app { display:none; padding-bottom:90px; }
+  header.top { position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--border); padding:14px 18px; display:flex; align-items:center; justify-content:space-between; }
+  header.top img { height:32px; }
+  header.top .title { font-size:15px; font-weight:800; }
+  .logout-btn { background:none; border:none; color:var(--muted); font-size:18px; padding:6px; }
+
+  .container { padding:16px; max-width:560px; margin:0 auto; }
+
+  .fab { position:fixed; bottom:24px; right:20px; width:56px; height:56px; border-radius:50%; background:var(--primary); color:#fff; border:none; font-size:20px; box-shadow:0 8px 24px rgba(29,78,216,0.4); z-index:40; }
+  .fab:active { background:var(--primary-dark); }
+
+  .filter-row { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; margin-bottom:14px; -webkit-overflow-scrolling:touch; }
+  .filter-row::-webkit-scrollbar { display:none; }
+  .chip { flex-shrink:0; padding:7px 14px; border-radius:20px; border:1.5px solid var(--border); background:#fff; font-size:12.5px; font-weight:600; color:var(--muted); white-space:nowrap; }
+  .chip.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+
+  .req-card { background:#fff; border:1.5px solid var(--border); border-radius:var(--radius); padding:14px 16px; margin-bottom:10px; }
+  .req-card .top-row { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
+  .req-card .product { font-weight:700; font-size:14.5px; }
+  .req-card .meta { font-size:12px; color:var(--muted); line-height:1.5; }
+  .status-badge { font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; white-space:nowrap; }
+
+  .empty { text-align:center; padding:50px 20px; color:var(--muted); }
+  .empty i { font-size:32px; margin-bottom:10px; opacity:0.4; }
+
+  /* ── Modal ── */
+  .modal-overlay { position:fixed; inset:0; background:rgba(15,23,42,0.5); display:none; align-items:flex-end; justify-content:center; z-index:100; }
+  .modal-overlay.open { display:flex; }
+  .modal-box { background:#fff; border-radius:20px 20px 0 0; width:100%; max-width:560px; max-height:88vh; overflow-y:auto; padding:20px; animation:slideUp 0.25s ease; }
+  @keyframes slideUp { from { transform:translateY(30px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+  .modal-box h2 { font-size:17px; margin-bottom:16px; }
+  .form-group { margin-bottom:14px; }
+  .form-group label { display:block; font-size:12.5px; font-weight:700; margin-bottom:6px; color:var(--muted); }
+  .form-group input, .form-group select, .form-group textarea { width:100%; padding:12px 13px; border-radius:10px; border:1.5px solid var(--border); font-size:14px; font-family:inherit; }
+  .form-group textarea { min-height:70px; resize:vertical; }
+  .btn-primary-full { width:100%; padding:14px; border-radius:10px; border:none; background:var(--primary); color:#fff; font-weight:700; font-size:14.5px; margin-top:6px; }
+  .btn-cancel { width:100%; padding:12px; border-radius:10px; border:none; background:none; color:var(--muted); font-weight:600; font-size:14px; margin-top:6px; }
+
+  .toast { position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; padding:12px 20px; border-radius:10px; font-size:13.5px; z-index:200; display:none; }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <img src="img/logo.jpeg" alt="Orbiva">
+    <h1>Supplier Requests</h1>
+    <p>Sign in to log or check on a request</p>
+    <input type="email" id="loginEmail" placeholder="Your email" autocomplete="username">
+    <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+    <div class="login-err" id="loginErr">Incorrect email or password.</div>
+  </div>
+</div>
+
+<div id="app">
+  <header class="top">
+    <img src="img/logo.jpeg" alt="Orbiva">
+    <div class="title">Supplier Requests</div>
+    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+  </header>
+
+  <div class="container">
+    <div class="filter-row" id="filterRow">
+      <button class="chip active" data-status="">All</button>
+      <button class="chip" data-status="requested">Requested</button>
+      <button class="chip" data-status="sent">Sent to Supplier</button>
+      <button class="chip" data-status="confirmed">Confirmed</button>
+      <button class="chip" data-status="picked_up">Picked Up</button>
+      <button class="chip" data-status="delivered">Delivered</button>
+    </div>
+    <div id="requestsList"></div>
+  </div>
+
+  <button class="fab" onclick="openNewRequestModal()"><i class="fas fa-plus"></i></button>
+</div>
+
+<!-- New/Edit Request Modal -->
+<div class="modal-overlay" id="reqModal">
+  <div class="modal-box">
+    <h2 id="reqModalTitle">New Request</h2>
+    <div class="form-group"><label>Product / Item</label><input type="text" id="f_product" placeholder="e.g. Samsung 55&quot; QLED TV"></div>
+    <div class="form-group"><label>Quantity</label><input type="number" id="f_qty" value="1" min="1"></div>
+    <div class="form-group"><label>Customer Name (if known)</label><input type="text" id="f_customer" placeholder="Optional"></div>
+    <div class="form-group"><label>Notes</label><textarea id="f_notes" placeholder="Anything the admin or warehouse should know..."></textarea></div>
+    <div class="form-group"><label>Status</label>
+      <select id="f_status">
+        <option value="requested">Requested</option>
+        <option value="sent">Sent to Supplier</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="picked_up">Picked Up</option>
+        <option value="delivered">Delivered</option>
+        <option value="unavailable">Unavailable</option>
+      </select>
+    </div>
+    <button class="btn-primary-full" onclick="saveRequest()">Save Request</button>
+    <button class="btn-cancel" onclick="closeReqModal()">Cancel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/supabase.js"></script>
+<script>
+const STATUS_META = {
+  requested:   {label:'Requested',        color:'#64748b', bg:'#f1f5f9'},
+  sent:        {label:'Sent to Supplier', color:'#b45309', bg:'#fef3c7'},
+  confirmed:   {label:'Confirmed',        color:'#1d4ed8', bg:'#eff6ff'},
+  picked_up:   {label:'Picked Up',        color:'#7c3aed', bg:'#f5f3ff'},
+  delivered:   {label:'Delivered',        color:'#16a34a', bg:'#f0fdf4'},
+  unavailable: {label:'Unavailable',      color:'#dc2626', bg:'#fef2f2'}
+};
+const ASSISTANT_SESSION_KEY = 'obv_admin_session'; // shares the same session store as admin.html — same underlying account system
+let editingId = null;
+let activeFilter = '';
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2200);
+}
+
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+async function doLogin(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  errEl.style.display = 'none';
+  if (!email || !pass) { errEl.textContent = 'Enter both email and password.'; errEl.style.display = 'block'; return; }
+  try {
+    const res = await fetch(`${SB_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+    const data = await res.json();
+    if (!res.ok) { errEl.textContent = 'Incorrect email or password.'; errEl.style.display = 'block'; return; }
+    localStorage.setItem(ASSISTANT_SESSION_KEY, JSON.stringify({
+      access_token: data.access_token, refresh_token: data.refresh_token,
+      expires_at: Date.now() + (data.expires_in * 1000)
+    }));
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  } catch(e) {
+    errEl.textContent = 'Network error — check your connection.';
+    errEl.style.display = 'block';
+  }
+}
+
+function logout(){ localStorage.removeItem(ASSISTANT_SESSION_KEY); location.reload(); }
+
+function getRequests(){ return JSON.parse(localStorage.getItem('obv_supplier_requests') || '[]'); }
+function getPriceList(){ return JSON.parse(localStorage.getItem('obv_supplier_pricelist') || '[]'); }
+
+function renderList(){
+  const requests = getRequests().filter(r => !activeFilter || r.status === activeFilter);
+  const list = document.getElementById('requestsList');
+  if (!requests.length) {
+    list.innerHTML = '<div class="empty"><i class="fas fa-truck"></i><p>No requests here yet.<br>Tap + to log one.</p></div>';
+    return;
+  }
+  list.innerHTML = [...requests].reverse().map(r => {
+    const sm = STATUS_META[r.status] || STATUS_META.requested;
+    return `
+    <div class="req-card" onclick="openEditRequestModal(${r.id})">
+      <div class="top-row">
+        <div class="product">${escHtml(r.product)} <span style="color:var(--muted);font-weight:500">×${r.qty}</span></div>
+        <span class="status-badge" style="background:${sm.bg};color:${sm.color}">${sm.label}</span>
+      </div>
+      <div class="meta">${r.customerName ? 'For '+escHtml(r.customerName)+' · ' : ''}${new Date(r.createdAt).toLocaleDateString()}</div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('filterRow').addEventListener('click', e => {
+  const btn = e.target.closest('.chip');
+  if (!btn) return;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.status;
+  renderList();
+});
+
+function openNewRequestModal(){
+  editingId = null;
+  document.getElementById('reqModalTitle').textContent = 'New Request';
+  document.getElementById('f_product').value = '';
+  document.getElementById('f_qty').value = 1;
+  document.getElementById('f_customer').value = '';
+  document.getElementById('f_notes').value = '';
+  document.getElementById('f_status').value = 'requested';
+  document.getElementById('reqModal').classList.add('open');
+}
+
+function openEditRequestModal(id){
+  const r = getRequests().find(x => x.id === id);
+  if (!r) return;
+  editingId = id;
+  document.getElementById('reqModalTitle').textContent = 'Edit Request';
+  document.getElementById('f_product').value = r.product;
+  document.getElementById('f_qty').value = r.qty;
+  document.getElementById('f_customer').value = r.customerName || '';
+  document.getElementById('f_notes').value = r.notes || '';
+  document.getElementById('f_status').value = r.status;
+  document.getElementById('reqModal').classList.add('open');
+}
+
+function closeReqModal(){ document.getElementById('reqModal').classList.remove('open'); }
+
+// Note: pricing and the supplier balance ledger are managed from the admin
+// panel only — this page intentionally keeps to logging and status updates,
+// so a price never gets set (or a deduction triggered) from here by mistake.
+function saveRequest(){
+  const product = document.getElementById('f_product').value.trim();
+  const qty = parseInt(document.getElementById('f_qty').value) || 1;
+  const customerName = document.getElementById('f_customer').value.trim();
+  const notes = document.getElementById('f_notes').value.trim();
+  const status = document.getElementById('f_status').value;
+  if (!product) { showToast('Enter a product'); return; }
+
+  const requests = getRequests();
+  if (editingId !== null) {
+    const r = requests.find(x => x.id === editingId);
+    if (r) Object.assign(r, { product, qty, customerName, notes, status, updatedAt: new Date().toISOString() });
+    showToast('Request updated');
+  } else {
+    requests.push({ id: Date.now(), product, qty, requestedBy: 'Assistant', customerName, notes, status, price: null, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+    showToast('Request added');
+  }
+  localStorage.setItem('obv_supplier_requests', JSON.stringify(requests));
+  sbPush('obv_supplier_requests');
+  closeReqModal();
+  renderList();
+}
+
+async function initApp(){
+  await (window.obvSyncPromise || Promise.resolve());
+  renderList();
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await (window.obvSyncPromise || Promise.resolve());
+  const session = JSON.parse(localStorage.getItem(ASSISTANT_SESSION_KEY) || 'null');
+  if (session && session.access_token && session.expires_at > Date.now()) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  }
+});
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('requests-sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
