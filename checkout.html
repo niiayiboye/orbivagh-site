@@ -25,7 +25,6 @@
       <span style="display:flex;align-items:center;gap:6px;background:#eff6ff;color:var(--primary);padding:6px 12px;border-radius:20px;font-weight:600"><i class="fas fa-shield-alt"></i> Safe Checkout</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
-      <button class="action-btn" id="accountToggle" title="Account"><i class="fas fa-user"></i></button>
       <a href="shop.html" class="btn-outline" style="font-size:13px;padding:8px 18px"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
     </div>
   </div>
@@ -511,47 +510,7 @@ function placeOrder() {
 <!-- ============================================================
      ACCOUNT MODAL
 ============================================================ -->
-<div class="modal" id="accountModal">
-  <div class="modal-box">
-    <button class="close-btn modal-close" id="closeAccount"><i class="fas fa-times"></i></button>
-    <div id="signupFormView">
-      <h2>Stay Updated</h2>
-      <p class="modal-sub">Get notified about new products &amp; promotions</p>
-      <form class="auth-form" id="registerForm">
-        <div class="form-row-2">
-          <div class="form-group">
-            <label for="reg_fname">First Name</label>
-            <input type="text" id="reg_fname" name="first_name" autocomplete="given-name" placeholder="John" required />
-          </div>
-          <div class="form-group">
-            <label for="reg_lname">Last Name</label>
-            <input type="text" id="reg_lname" name="last_name" autocomplete="family-name" placeholder="Doe" required />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="reg_email">Email Address</label>
-          <input type="email" id="reg_email" name="email" autocomplete="email" placeholder="Enter your email" required />
-        </div>
-        <div class="form-group">
-          <label for="reg_phone">Phone Number</label>
-          <input type="tel" id="reg_phone" name="phone" autocomplete="tel" placeholder="+233 XX XXX XXXX" />
-        </div>
-        <p style="font-size:12px;color:var(--text-muted);line-height:1.5;margin:2px 0 14px">
-          <i class="fas fa-info-circle"></i> We'll only use this to let you know about new products and promotions — nothing else, no spam.
-        </p>
-        <button type="submit" class="btn-primary btn-block">Sign Me Up</button>
-      </form>
-    </div>
-    <div id="signupWelcomeView" style="display:none;text-align:center;padding:12px 4px">
-      <div style="width:64px;height:64px;border-radius:50%;background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 18px">
-        <i class="fas fa-check"></i>
-      </div>
-      <h2>Welcome, <span id="welcomeName"></span>!</h2>
-      <p class="modal-sub" style="margin-bottom:22px">You're on the list — we'll let you know the moment new products and promotions land.</p>
-      <button type="button" class="btn-primary btn-block" onclick="document.getElementById('accountModal').classList.remove('open');document.body.style.overflow=''">Continue Shopping</button>
-    </div>
-  </div>
-</div>
+
 
 </body>
 </html>

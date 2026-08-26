@@ -246,8 +246,8 @@
 <div class="top-bar">
   <div class="container top-bar-inner">
     <div class="top-bar-left">
-      <span><i class="fas fa-phone-alt"></i> <a href="tel:0502578905" style="color:inherit;text-decoration:none" data-store-phone>050 257 8905</a></span>
-      <span><i class="fas fa-envelope"></i> <a href="mailto:info@orbivagh.com" style="color:inherit;text-decoration:none" data-store-email>info@orbivagh.com</a></span>
+      <a href="tel:0502578905"><i class="fas fa-phone-alt"></i> 050 257 8905</a>
+      <a href="mailto:info@orbivagh.com"><i class="fas fa-envelope"></i> info@orbivagh.com</a>
     </div>
     <div class="top-bar-right">
       <a href="contact.html">Track Order</a>
@@ -409,7 +409,7 @@
     <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="contact.html">Contact</a></li></ul></div>
     <div class="footer-col"><h4>Categories</h4><ul id="footerCatLinks"></ul></div>
     <div class="footer-col"><h4>Support</h4><ul><li><a href="contact.html">FAQs</a></li><li><a href="contact.html">Returns</a></li><li><a href="contact.html">Track Order</a></li></ul></div>
-    <div class="footer-col footer-contact-col"><h4>Contact</h4><div class="footer-contact-item"><i class="fas fa-phone-alt"></i><a href="tel:0502578905" style="color:inherit;text-decoration:none" data-store-phone>050 257 8905</a></div><div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:info@orbivagh.com" style="color:inherit;text-decoration:none" data-store-email>info@orbivagh.com</a></div></div>
+    <div class="footer-col footer-contact-col"><h4>Contact</h4><div class="footer-contact-item"><i class="fas fa-phone-alt"></i><a href="tel:0502578905" data-store-phone>050 257 8905</a></div><div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:info@orbivagh.com" data-store-email>info@orbivagh.com</a></div></div>
   </div>
   <div class="footer-bottom"><div class="container footer-bottom-inner"><p>&copy; <span id="footerYear">2025</span> Orbiva Technologies.</p></div></div>
 </footer>
@@ -520,6 +520,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     setMeta('twDescription', shortDesc);
     setMeta('twImage', imgUrl);
 
+    const settings = JSON.parse(localStorage.getItem('obv_settings') || '{}');
+    const deliveryFee = settings.deliveryFee !== undefined ? parseFloat(settings.deliveryFee) : 0;
+
     const schema = {
       '@context': 'https://schema.org',
       '@type': 'Product',
@@ -535,7 +538,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         priceCurrency: 'GHS',
         price: p.price || 0,
         availability: 'https://schema.org/InStock',
-        itemCondition: 'https://schema.org/NewCondition'
+        itemCondition: 'https://schema.org/NewCondition',
+        // 30-day return policy, matching what's published on the Contact
+        // page's "Common Questions" — kept in sync manually since it's a
+        // real store policy, not something computed from settings.
+        hasMerchantReturnPolicy: {
+          '@type': 'MerchantReturnPolicy',
+          applicableCountry: 'GH',
+          returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+          merchantReturnDays: 30,
+          returnMethod: 'https://schema.org/ReturnInStore',
+          returnFees: 'https://schema.org/FreeReturn'
+        },
+        // Real delivery fee pulled from the same admin setting checkout
+        // itself uses — orders above the free-delivery threshold pay
+        // nothing, so this reflects the standard (below-threshold) rate.
+        shippingDetails: {
+          '@type': 'OfferShippingDetails',
+          shippingRate: { '@type': 'MonetaryAmount', value: deliveryFee, currency: 'GHS' },
+          shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'GH' },
+          deliveryTime: {
+            '@type': 'ShippingDeliveryTime',
+            handlingTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 1, unitCode: 'DAY' },
+            transitTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 3, unitCode: 'DAY' }
+          }
+        }
       }
     };
     if (p.rating) {
@@ -646,7 +673,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const mainWrap = document.getElementById('ppMainImgWrap');
   mainWrap.addEventListener('click', () => {
     const img = document.getElementById('ppMainImg');
-    if (img && img.style.display !== 'none') openLightbox(img.src, p.name);
+    if (img && img.style.display !== 'none') openLightbox(imgs, currentIdx, p.name);
   });
 
   // Thumbnails

@@ -124,7 +124,13 @@ function applyOverrides() {
       document.querySelectorAll('[data-store-hours]').forEach(el => { el.innerHTML = hoursHtml; });
     }
     if (s.storeWhatsapp || s.storePhone) {
-      const wa = (s.storeWhatsapp || s.storePhone).replace(/\D/g,'');
+      // The admin settings field is filled in local Ghana format (e.g.
+      // "050 257 8905"), but wa.me links need the full international
+      // number with no leading 0 — otherwise WhatsApp can't resolve it at
+      // all, which silently breaks the chat button.
+      let wa = (s.storeWhatsapp || s.storePhone).replace(/\D/g, '');
+      if (wa.startsWith('0')) wa = '233' + wa.slice(1);
+      else if (!wa.startsWith('233')) wa = '233' + wa;
       document.querySelectorAll('a.whatsapp-float, a[href*="wa.me"]').forEach(el => { el.href = 'https://wa.me/' + wa; });
     }
     if (s.storeName) {
@@ -324,10 +330,9 @@ function showProductModal(p) {
   // Wire up tap-to-zoom after inserting into DOM
   const zoomEl = modal.querySelector('#mainImgZoom');
   if (zoomEl) {
-    const imgEl = zoomEl.querySelector('img');
     zoomEl.addEventListener('click', () => {
-      const src = imgEl ? imgEl.src : null;
-      if (src) openLightbox(src, p.name);
+      const curIdx = parseInt(zoomEl.dataset.current) || 0;
+      if (imgs.length) openLightbox(imgs, curIdx, p.name);
     });
   }
 }
@@ -358,20 +363,81 @@ function stepModalImg(dir) {
 }
 
 /* ── Image lightbox ── */
-function openLightbox(src, name) {
+// Opens a full-screen image viewer. Accepts the full image list and a
+// starting index so people can navigate between all of a product's photos
+// — via swipe on mobile, arrow buttons/keys on desktop — without closing
+// and reopening the lightbox each time.
+function openLightbox(images, startIndex, name) {
+  // Backward-compatible: allow the old single-image call signature too.
+  if (typeof images === 'string') { name = startIndex; images = [images]; startIndex = 0; }
+  images = (images || []).filter(Boolean);
+  if (!images.length) return;
+  let idx = Math.max(0, Math.min(startIndex || 0, images.length - 1));
+
   const lb = document.createElement('div');
   lb.className = 'lightbox';
   lb.innerHTML = `
     <div class="lightbox-backdrop"></div>
     <div class="lightbox-content">
-      <button class="lightbox-close" onclick="this.closest('.lightbox').remove()"><i class="fas fa-times"></i></button>
-      <img src="${src}" alt="${name}" class="lightbox-img" onerror="this.src=''">
-      <div class="lightbox-caption">${name}</div>
+      <div class="lightbox-img-wrap">
+        <button class="lightbox-close" onclick="this.closest('.lightbox').remove()"><i class="fas fa-times"></i></button>
+        ${images.length > 1 ? '<button class="lightbox-nav lightbox-prev"><i class="fas fa-chevron-left"></i></button>' : ''}
+        <img src="${images[idx]}" alt="${name}" class="lightbox-img" onerror="this.src=''">
+        ${images.length > 1 ? '<button class="lightbox-nav lightbox-next"><i class="fas fa-chevron-right"></i></button>' : ''}
+      </div>
+      <div class="lightbox-caption">${name}${images.length > 1 ? ` <span class="lightbox-counter">${idx + 1} / ${images.length}</span>` : ''}</div>
     </div>
   `;
   lb.querySelector('.lightbox-backdrop').addEventListener('click', () => lb.remove());
   document.body.appendChild(lb);
   requestAnimationFrame(() => lb.classList.add('open'));
+
+  const imgEl = lb.querySelector('.lightbox-img');
+  const captionEl = lb.querySelector('.lightbox-caption');
+
+  function show(newIdx) {
+    idx = (newIdx + images.length) % images.length; // wrap around both ends
+    imgEl.src = images[idx];
+    captionEl.innerHTML = `${name} <span class="lightbox-counter">${idx + 1} / ${images.length}</span>`;
+  }
+
+  if (images.length > 1) {
+    lb.querySelector('.lightbox-prev').addEventListener('click', e => { e.stopPropagation(); show(idx - 1); });
+    lb.querySelector('.lightbox-next').addEventListener('click', e => { e.stopPropagation(); show(idx + 1); });
+
+    // Swipe left/right to navigate, same gesture people already expect
+    // from every native photo viewer.
+    let touchStartX = 0, touchStartY = 0;
+    lb.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    lb.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      // Require a clearly horizontal swipe so vertical scroll/dismiss
+      // gestures aren't accidentally read as prev/next.
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        show(dx < 0 ? idx + 1 : idx - 1);
+      }
+    }, { passive: true });
+
+    // Arrow keys for desktop/keyboard users.
+    const keyHandler = e => {
+      if (e.key === 'ArrowLeft') show(idx - 1);
+      else if (e.key === 'ArrowRight') show(idx + 1);
+      else if (e.key === 'Escape') lb.remove();
+    };
+    document.addEventListener('keydown', keyHandler);
+    // Clean up the listener once the lightbox is closed, however it closes.
+    new MutationObserver((_, obs) => {
+      if (!document.body.contains(lb)) { document.removeEventListener('keydown', keyHandler); obs.disconnect(); }
+    }).observe(document.body, { childList: true });
+  } else {
+    document.addEventListener('keydown', function escOnly(e) {
+      if (e.key === 'Escape') { lb.remove(); document.removeEventListener('keydown', escOnly); }
+    });
+  }
 }
 
 /* ════════════════════════════════════════
