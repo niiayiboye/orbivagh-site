@@ -260,6 +260,36 @@ textarea{resize:vertical;min-height:70px}
   .topbar-right .btn{ padding:6px 8px; }
   .confirm-box{ width:88vw; }
 }
+
+/* ── Category management: grouped cards, subcategories nested within
+   their own parent's card so they can never visually drift away from it
+   when the grid wraps ── */
+.cat-group-card {
+  background:#fff; border:1.5px solid var(--border); border-radius:14px;
+  overflow:hidden; transition: box-shadow .2s ease, border-color .2s ease;
+}
+.cat-group-card:hover { box-shadow: 0 8px 24px rgba(15,23,42,0.08); border-color: transparent; }
+.cat-group-head { display:flex; align-items:center; gap:14px; padding:16px 18px; }
+.cat-group-icon {
+  width:44px; height:44px; border-radius:11px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:17px;
+}
+.cat-group-name { font-weight:700; font-size:14.5px; }
+.cat-group-count { font-size:12px; color:var(--muted); margin-top:2px; }
+.cat-group-actions { display:flex; gap:6px; flex-shrink:0; }
+.cat-sub-list { border-top:1px solid var(--border); background:var(--bg); }
+.cat-sub-row {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 18px 9px 24px; font-size:13px;
+}
+.cat-sub-row + .cat-sub-row { border-top:1px solid var(--border-light,#e2e8f0); }
+.cat-sub-icon {
+  width:26px; height:26px; border-radius:7px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:11px;
+}
+.cat-sub-name { flex:1; min-width:0; color:var(--text); font-weight:500; }
+.cat-sub-count { color:var(--muted); font-size:11.5px; white-space:nowrap; }
+.cat-sub-actions { display:flex; gap:4px; flex-shrink:0; }
 </style>
 </head>
 <body>
@@ -598,7 +628,7 @@ textarea{resize:vertical;min-height:70px}
         <div><h2 style="font-size:18px;font-weight:800">Category Management</h2><p style="font-size:13px;color:var(--muted)">Add or remove categories available site-wide. Changes appear immediately in the admin dropdowns and, once synced, on the live site's nav, filters, and shop page.</p></div>
         <button class="btn btn-primary" onclick="openAddCategoryModal()"><i class="fas fa-plus"></i> Add Category</button>
       </div>
-      <div id="categoriesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px"></div>
+      <div id="categoriesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;align-items:start"></div>
     </div>
 
     <!-- FAQS -->
@@ -718,6 +748,13 @@ textarea{resize:vertical;min-height:70px}
           <select id="f_badge"><option value="">None</option><option value="new">New</option><option value="sale">Sale</option><option value="hot">Hot</option><option value="best">Best Seller</option><option value="soldout">Sold Out</option></select>
         </div>
         <div class="form-group"><label>Rating (1–5)</label><input type="number" id="f_rating" min="1" max="5" step="0.1" value="4.5"></div>
+        <div class="form-group full" style="background:#fef3c7;border-radius:8px;padding:12px 14px">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600">
+            <input type="checkbox" id="f_hidden" style="width:16px;height:16px">
+            Hide from site
+          </label>
+          <p style="font-size:12px;color:var(--muted);margin:4px 0 0 26px">Stays in your catalog and admin — customers just won't see it anywhere on the live site. Use this instead of deleting when a supplier discontinues something you might restock later.</p>
+        </div>
         <div class="form-group full">
           <label>Specifications</label>
           <div id="specsContainer"></div>
@@ -1899,11 +1936,11 @@ function renderTable(){
   document.getElementById('productsTable').innerHTML=page.length?page.map((p,i)=>{
     const rowNum = start + i + 1;
     const img=p.images&&p.images[0];
-    const rowBg=img?'':'background:#fff8f0;';
+    const rowBg=p.hidden?'background:#f1f5f9;opacity:0.7;':(img?'':'background:#fff8f0;');
     return `<tr style="${rowBg}">
       <td style="text-align:center;font-size:12px;color:var(--muted);font-weight:600">${rowNum}</td>
       <td>${img?`<img class="prod-thumb" src="${img}" onerror="this.style.display='none'">`:`<div class="prod-thumb-icon" style="background:#fff0e0;border-color:#fdba74">${p.icon||'📦'}</div>`}</td>
-      <td><div class="prod-name" title="${escHtml(p.name)}">${escHtml(p.name)}</div><div class="prod-model">${escHtml(p.model||'')} · ID ${p.id}</div></td>
+      <td><div class="prod-name" title="${escHtml(p.name)}">${escHtml(p.name)}${p.hidden?' <span style="background:#64748b;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;vertical-align:middle">HIDDEN</span>':''}</div><div class="prod-model">${escHtml(p.model||'')} · ID ${p.id}</div></td>
       <td><span class="cat-pill ${CAT_CLASS[p.category]||''}">${CAT_LABELS[p.category]||p.category}</span></td>
       <td><span class="brand-badge" style="background:${brandBg(p.brandId)}">${escHtml(p.brand)}</span></td>
       <td><div class="price-main">${fmt(p.price)}</div>${p.oldPrice?`<div class="price-old">${fmt(p.oldPrice)}</div>`:''}</td>
@@ -1911,12 +1948,24 @@ function renderTable(){
         ?'<span style="color:var(--success);font-size:12px;font-weight:600"><i class="fas fa-check-circle"></i> Yes</span>'
         :'<span style="color:#ea580c;font-size:12px;font-weight:700"><i class="fas fa-exclamation-triangle"></i> No image</span>'}</td>
       <td><div class="actions-cell">
+        <button class="btn btn-outline btn-sm" onclick="toggleProductHidden('${p.id}')" title="${p.hidden?'Unhide':'Hide from site'}"><i class="fas ${p.hidden?'fa-eye':'fa-eye-slash'}"></i></button>
         <button class="btn btn-outline btn-sm" onclick="openEditModal('${p.id}')"><i class="fas fa-edit"></i></button>
         <button class="btn btn-danger btn-sm" onclick="confirmAction('Delete product?','Cannot be undone.',()=>deleteProduct('${p.id}'))"><i class="fas fa-trash"></i></button>
       </div></td>
     </tr>`;}).join('')
     :'<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">No products found</td></tr>';
   renderPagination();
+}
+function toggleProductHidden(id){
+  const edits=lsGet('obv_prod_edits',{});
+  const p=adminProds.find(x=>x.id===id);
+  if(!p)return;
+  const newHidden=!p.hidden;
+  edits[id]=Object.assign({},edits[id]||{},{hidden:newHidden});
+  lsSet('obv_prod_edits',edits);sbPush('obv_prod_edits');
+  toast(newHidden?'Product hidden from site':'Product visible on site again','ok');
+  logHistory({type:'toggle_hidden',label:(newHidden?'Hid':'Unhid')+': '+p.name,undoData:{productId:id}});
+  loadProducts();filterProducts();
 }
 function brandBg(id){return{samsung:'#1428a0',tcl:'#cc0000',midea:'#00a0e9',nasco:'#003087'}[id]||'#64748b';}
 function renderPagination(){
@@ -1951,6 +2000,7 @@ function openAddModal(){
   document.getElementById('modalTitle').textContent='Add Product';
   ['f_name','f_model','f_price','f_oldPrice','f_description'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f_badge').value='';document.getElementById('f_rating').value=4.5;
+  document.getElementById('f_hidden').checked=false;
   document.getElementById('specsContainer').innerHTML='';
   clearImageSlots();addImageSlot();
   populateBrandSelect();
@@ -1964,6 +2014,7 @@ function openEditModal(id){
   document.getElementById('f_price').value=p.price;document.getElementById('f_oldPrice').value=p.oldPrice||'';
   document.getElementById('f_description').value=p.description||'';document.getElementById('f_badge').value=p.badge||'';
   document.getElementById('f_rating').value=p.rating||4.5;
+  document.getElementById('f_hidden').checked=!!p.hidden;
   document.getElementById('f_name').value=p.name;
   document.getElementById('specsContainer').innerHTML='';
   if(p.specs)Object.entries(p.specs).forEach(([k,v])=>addSpecRow(k,v));
@@ -2112,6 +2163,7 @@ function _doSaveProduct(stayOpen, name, price, _sku, _imgs){
     icon:cIcons[cat]||'📦',tags:[..._tSet],
     description:document.getElementById('f_description').value.trim(),
     badge:document.getElementById('f_badge').value||'',
+    hidden:document.getElementById('f_hidden').checked,
     specs:Object.keys(specs).length?specs:undefined};
   if(op){product.oldPrice=op;product.discount=disc;}
   try {
@@ -2333,6 +2385,7 @@ function importProductsCSV(input){
       const iDi    = col('discount');
       const iImgs  = col('image urls','images');
       const iDesc  = col('description');
+      const iHidden= col('hidden');
       // Spec columns: any header starting with 'spec:'
       const specCols=hdrs.map((h,i)=>h.startsWith('spec:')?{i,key:h.replace('spec:','').trim()}:null).filter(Boolean);
 
@@ -2388,6 +2441,10 @@ function importProductsCSV(input){
           };
           if(iOp>=0){const n=parseFloat(cols[iOp]);if(!isNaN(n)&&n>0)newProd.oldPrice=n;}
           if(iDi>=0){const n=parseInt(cols[iDi]);if(!isNaN(n))newProd.discount=n;}
+          if(iHidden>=0&&cols[iHidden]!==undefined&&cols[iHidden].trim()!==''){
+            const v=cols[iHidden].trim().toLowerCase();
+            newProd.hidden=(v==='y'||v==='yes'||v==='true'||v==='1');
+          }
           newAdds.push(newProd);
           added++;
           continue;
@@ -2418,6 +2475,11 @@ function importProductsCSV(input){
         applyField(iOp,   v=>{const n=parseFloat(v);if(!isNaN(n)&&n>0)edits[id].oldPrice=n;});
         applyField(iDi,   v=>{const n=parseInt(v);if(!isNaN(n))edits[id].discount=n;});
         applyField(iDesc, v=>{edits[id].description=v.replace(/ \| /g,'\n');});
+        if(iHidden>=0&&cols[iHidden]!==undefined&&cols[iHidden].trim()!==''){
+          const v=cols[iHidden].trim().toLowerCase();
+          edits[id].hidden=(v==='y'||v==='yes'||v==='true'||v==='1');
+          changed=true;
+        }
 
         // Images: apply URLs from CSV; fall back to SKU map if column is empty
         if(iImgs>=0&&cols[iImgs]!==undefined){
@@ -2833,29 +2895,46 @@ function renderCategoriesGrid(){
   const byParent={};
   cats.filter(c=>c.parentId).forEach(c=>{ (byParent[c.parentId]=byParent[c.parentId]||[]).push(c); });
 
-  function cardHtml(c, isSub){
-    const count=(typeof PRODUCTS!=='undefined'?PRODUCTS:[]).filter(p=>p.category===c.id).length;
-    return `<div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:18px;display:flex;align-items:center;gap:14px;${isSub?'margin-left:28px;border-style:dashed':''}">
-      <div style="width:44px;height:44px;border-radius:10px;background:${c.bg||'#1d4ed8'};display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="${c.icon||'fas fa-tag'}" style="color:${c.color||'#fff'};font-size:16px"></i>
-      </div>
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:700;font-size:14px">${isSub?'&#8618; ':''}${escHtml(c.name)}</div>
-        <div style="font-size:12px;color:var(--muted)">${count} product${count===1?'':'s'}</div>
-      </div>
-      <div style="display:flex;gap:6px">
-        <button class="btn btn-outline btn-sm" onclick="openEditCategoryModal('${c.id}')"><i class="fas fa-pen"></i></button>
-        <button class="btn btn-danger btn-sm" onclick="confirmAction('Delete category ${escHtml(c.name)}?','It will no longer appear anywhere on the site. Products already assigned to it will keep the category ID until reassigned.',()=>deleteCategory('${c.id}'))"><i class="fas fa-trash"></i></button>
+  function subRow(s){
+    const count=(typeof PRODUCTS!=='undefined'?PRODUCTS:[]).filter(p=>p.category===s.id).length;
+    return `<div class="cat-sub-row">
+      <span class="cat-sub-icon" style="background:${s.bg||'#1d4ed8'};color:${s.color||'#fff'}"><i class="${s.icon||'fas fa-tag'}"></i></span>
+      <span class="cat-sub-name">${escHtml(s.name)}</span>
+      <span class="cat-sub-count">${count} product${count===1?'':'s'}</span>
+      <div class="cat-sub-actions">
+        <button class="btn btn-outline btn-sm" onclick="openEditCategoryModal('${s.id}')"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="confirmAction('Delete category ${escHtml(s.name)}?','It will no longer appear anywhere on the site. Products already assigned to it will keep the category ID until reassigned.',()=>deleteCategory('${s.id}'))"><i class="fas fa-trash"></i></button>
       </div>
     </div>`;
   }
 
-  let html='';
-  topLevel.forEach(c=>{
-    html+=cardHtml(c,false);
-    (byParent[c.id]||[]).forEach(sub=>{ html+=cardHtml(sub,true); });
-  });
-  grid.innerHTML=html;
+  // Subcategories now render nested INSIDE their parent's own card, rather
+  // than as separate grid cells with just a visual indent — previously,
+  // once there were enough top-level categories to wrap the grid onto a
+  // new row, an indented subcategory could end up rendered nowhere near
+  // its actual parent, since CSS Grid doesn't know they're related.
+  function groupCard(c){
+    const count=(typeof PRODUCTS!=='undefined'?PRODUCTS:[]).filter(p=>p.category===c.id).length;
+    const subs=byParent[c.id]||[];
+    return `<div class="cat-group-card">
+      <div class="cat-group-head">
+        <div class="cat-group-icon" style="background:${c.bg||'#1d4ed8'}">
+          <i class="${c.icon||'fas fa-tag'}" style="color:${c.color||'#fff'}"></i>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="cat-group-name">${escHtml(c.name)}</div>
+          <div class="cat-group-count">${count} product${count===1?'':'s'}${subs.length?' · '+subs.length+' subcategor'+(subs.length===1?'y':'ies'):''}</div>
+        </div>
+        <div class="cat-group-actions">
+          <button class="btn btn-outline btn-sm" onclick="openEditCategoryModal('${c.id}')"><i class="fas fa-pen"></i></button>
+          <button class="btn btn-danger btn-sm" onclick="confirmAction('Delete category ${escHtml(c.name)}?','It will no longer appear anywhere on the site. Products already assigned to it will keep the category ID until reassigned.',()=>deleteCategory('${c.id}'))"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+      ${subs.length?`<div class="cat-sub-list">${subs.map(subRow).join('')}</div>`:''}
+    </div>`;
+  }
+
+  grid.innerHTML=topLevel.map(groupCard).join('');
 }
 
 function populateParentCategorySelect(excludeId){

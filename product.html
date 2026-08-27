@@ -268,9 +268,9 @@
         <a href="shop.html" class="desktop-nav-link">Brands <i class="fas fa-chevron-down fa-xs"></i></a>
         <ul class="desktop-dropdown" id="desktopBrandDropdown"></ul>
       </div>
-      <div class="desktop-nav-item">
+      <div class="desktop-nav-item desktop-nav-item-cat">
         <a href="shop.html" class="desktop-nav-link">Categories <i class="fas fa-chevron-down fa-xs"></i></a>
-        <ul class="desktop-dropdown" id="desktopCatDropdown"></ul>
+        <div class="category-mega-menu" id="desktopCatDropdown"></div>
       </div>
     </nav>
     <div class="header-actions">
@@ -464,7 +464,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const catDd = document.getElementById('catDropdown');
   if (catDd) catDd.innerHTML = buildCategoryDropdownHtml(CATEGORIES);
   const deskCatDd = document.getElementById('desktopCatDropdown');
-  if (deskCatDd) deskCatDd.innerHTML = buildCategoryDropdownHtml(CATEGORIES);
+  if (deskCatDd) deskCatDd.innerHTML = buildCategoryMegaMenuHtml(CATEGORIES);
   const brandDd = document.getElementById('brandDropdown');
   if (brandDd) brandDd.innerHTML = BRANDS.map(b => `<li><a href="shop.html?brand=${b.id}">${b.name}</a></li>`).join('');
   const footerCats = document.getElementById('footerCatLinks');

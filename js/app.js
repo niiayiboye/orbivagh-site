@@ -3,6 +3,21 @@
 ================================================================ */
 
 /* ── Toast system ── */
+// Normalizes any reasonable Ghana phone number format (with/without
+// spaces, with/without the +233 country code, with/without a leading 0)
+// into one consistent "0XX XXX XXXX" display format. Used so the number
+// always looks the same regardless of exactly how it was typed into
+// admin settings — avoiding a visible reformat-flash on page load.
+function formatGhPhone(raw) {
+  let digits = String(raw).replace(/\D/g, '');
+  if (digits.startsWith('233')) digits = '0' + digits.slice(3);
+  else if (!digits.startsWith('0')) digits = '0' + digits;
+  if (digits.length === 10) {
+    return digits.slice(0,3) + ' ' + digits.slice(3,6) + ' ' + digits.slice(6);
+  }
+  return raw; // unexpected format — leave as-is rather than mangling it
+}
+
 function showToast(type, title, msg, icon) {
   const container = document.getElementById('toastContainer');
   if (!container) return;
@@ -89,12 +104,23 @@ function applyOverrides() {
       if (!(imgs && imgs.some(u => u && u.trim()))) PRODUCTS.splice(i, 1);
     }
   }
+  // Hide products explicitly marked "hidden" in admin — kept in the
+  // catalog/database for reference, just not shown to customers anywhere
+  // on the live site. Always enforced, no setting to turn this one off.
+  for (let i = PRODUCTS.length - 1; i >= 0; i--) {
+    if (PRODUCTS[i].hidden) PRODUCTS.splice(i, 1);
+  }
   // Apply store settings (WhatsApp, phone, email, store name)
   try {
     const s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
     if (s.storePhone) {
-      const ph = s.storePhone;
-      const telHref = 'tel:' + ph.replace(/\D/g, '');
+      // Normalize to one consistent "0XX XXX XXXX" display format no
+      // matter how the admin actually typed it into Settings (with or
+      // without spaces, with or without the country code). Without this,
+      // the page's nicely-formatted default number visibly flashes into
+      // whatever raw formatting was typed in, the instant sync finishes.
+      const ph = formatGhPhone(s.storePhone);
+      const telHref = 'tel:' + ph.replace(/\D/g,'');
       document.querySelectorAll('[data-store-phone]').forEach(el => {
         el.textContent = ph;
         if (el.tagName === 'A') el.href = telHref; // link is clickable itself
@@ -506,13 +532,39 @@ function startCardMarquee(track, wrap, speed) {
 // with subcategories nested (indented) under their parent category.
 function buildCategoryDropdownHtml(cats) {
   const topLevel = cats.filter(c => !c.parentId);
-  const itemHtml = (c, isSub) => `<li><a href="shop.html?cat=${c.id}" style="${isSub ? 'padding-left:28px;font-size:13px' : ''}"><i class="${c.icon}" style="color:${c.color};margin-right:8px;width:16px"></i>${c.name}</a></li>`;
+  const itemHtml = (c, isSub) => `
+    <li class="${isSub ? 'dd-sub' : ''}">
+      <a href="shop.html?cat=${c.id}">
+        <span class="dd-icon" style="background:${c.bg};color:${c.color}"><i class="${c.icon}"></i></span>
+        ${c.name}
+      </a>
+    </li>`;
   let html = '';
   topLevel.forEach(c => {
     html += itemHtml(c, false);
     cats.filter(s => s.parentId === c.id).forEach(s => { html += itemHtml(s, true); });
   });
   return html;
+}
+
+// Full-width "mega menu" version of the category browser — each top-level
+// category becomes its own column, with subcategories (once any exist)
+// listed underneath. Columns with no subcategories yet just show the
+// category link on its own, so this fills in automatically the moment
+// subcategories get added in admin — nothing here needs updating by hand.
+function buildCategoryMegaMenuHtml(cats) {
+  const topLevel = cats.filter(c => !c.parentId);
+  return topLevel.map(c => {
+    const subs = cats.filter(s => s.parentId === c.id);
+    return `
+      <div class="mega-col">
+        <a href="shop.html?cat=${c.id}" class="mega-col-head">
+          <span class="dd-icon" style="background:${c.bg};color:${c.color}"><i class="${c.icon}"></i></span>
+          ${c.name}
+        </a>
+        ${subs.length ? `<ul>${subs.map(s => `<li><a href="shop.html?cat=${s.id}">${s.name}</a></li>`).join('')}</ul>` : ''}
+      </div>`;
+  }).join('');
 }
 
 // Mobile category drawer — quick category browsing from the bottom nav
@@ -1284,7 +1336,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const catDd = document.getElementById('catDropdown');
     if (catDd) catDd.innerHTML = catHtml;
     const deskCatDd = document.getElementById('desktopCatDropdown');
-    if (deskCatDd) deskCatDd.innerHTML = catHtml;
+    if (deskCatDd) deskCatDd.innerHTML = buildCategoryMegaMenuHtml(CATEGORIES);
     const footerCatList = document.getElementById('footerCatList');
     if (footerCatList) footerCatList.innerHTML = CATEGORIES.filter(c => !c.parentId).map(c => `<li><a href="shop.html?cat=${c.id}">${c.name}</a></li>`).join('');
   } catch(e) {}
