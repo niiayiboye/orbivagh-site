@@ -550,8 +550,24 @@ function startCardMarquee(track, wrap, speed) {
 
 // Shared by shop.html and product.html — builds the category dropdown menu
 // with subcategories nested (indented) under their parent category.
+// Live count of visible products directly in a category — matches
+// PRODUCTS exactly as already filtered (hidden, no-image, etc. excluded),
+// so this is always accurate to what's actually on the site right now,
+// unlike the static "count" field baked into each category at catalog
+// build time, which never gets recalculated as products change.
+function categoryProductCount(catId) {
+  return PRODUCTS.filter(p => p.category === catId).length;
+}
+// Whether a top-level category should be shown at all — true if it has
+// products directly, or any of its subcategories do (a category shouldn't
+// vanish just because all its products moved into subcategories).
+function categoryHasVisibleProducts(catId, cats) {
+  if (categoryProductCount(catId) > 0) return true;
+  return cats.filter(s => s.parentId === catId).some(s => categoryProductCount(s.id) > 0);
+}
+
 function buildCategoryDropdownHtml(cats) {
-  const topLevel = cats.filter(c => !c.parentId);
+  const topLevel = cats.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, cats));
   const itemHtml = (c, isSub) => `
     <li class="${isSub ? 'dd-sub' : ''}">
       <a href="shop.html?cat=${c.id}">
@@ -562,7 +578,7 @@ function buildCategoryDropdownHtml(cats) {
   let html = '';
   topLevel.forEach(c => {
     html += itemHtml(c, false);
-    cats.filter(s => s.parentId === c.id).forEach(s => { html += itemHtml(s, true); });
+    cats.filter(s => s.parentId === c.id && categoryProductCount(s.id) > 0).forEach(s => { html += itemHtml(s, true); });
   });
   return html;
 }
@@ -573,9 +589,9 @@ function buildCategoryDropdownHtml(cats) {
 // category link on its own, so this fills in automatically the moment
 // subcategories get added in admin — nothing here needs updating by hand.
 function buildCategoryMegaMenuHtml(cats) {
-  const topLevel = cats.filter(c => !c.parentId);
+  const topLevel = cats.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, cats));
   return topLevel.map(c => {
-    const subs = cats.filter(s => s.parentId === c.id);
+    const subs = cats.filter(s => s.parentId === c.id && categoryProductCount(s.id) > 0);
     return `
       <div class="mega-col">
         <a href="shop.html?cat=${c.id}" class="mega-col-head">
@@ -592,7 +608,7 @@ function openCategoryDrawer() {
   const list = document.getElementById('catDrawerList');
   if (list) {
     const cats = typeof CATEGORIES !== 'undefined' ? CATEGORIES : [];
-    const topLevel = cats.filter(c => !c.parentId);
+    const topLevel = cats.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, cats));
     let html = '';
     topLevel.forEach(c => {
       html += `<a href="shop.html?cat=${c.id}" class="cat-drawer-item">
@@ -636,16 +652,10 @@ function renderFaqs() {
 function renderCategories() {
   const grid = document.getElementById('categoriesGrid');
   if (!grid) return;
-  const countMap = {};
-  PRODUCTS.forEach(p => { countMap[p.category] = (countMap[p.category] || 0) + 1; });
   // Homepage promo tiles stay top-level only — subcategories are still fully
   // browsable via the nav dropdown and shop page filters, just not as their
   // own big tile here, to keep this grid from getting cluttered.
-  grid.innerHTML = CATEGORIES.filter(c => !c.parentId).map(c => {
-    // A parent's count includes its subcategories' products too
-    const subIds = CATEGORIES.filter(s => s.parentId === c.id).map(s => s.id);
-    const count = (countMap[c.id] || 0) + subIds.reduce((sum, id) => sum + (countMap[id] || 0), 0);
-    if (!count) return '';
+  grid.innerHTML = CATEGORIES.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, CATEGORIES)).map(c => {
     return `<div class="category-card" onclick="window.location='shop.html?cat=${c.id}'">
       <div class="cat-icon" style="background:${c.bg};color:${c.color}"><i class="${c.icon}"></i></div>
       <div class="cat-name">${c.name}</div>
@@ -755,9 +765,14 @@ function renderBrands() {
     midea:   'img/midea.webp',
     nasco:   'https://cdn.ghanafa.org/2023/05/NASCO.png',
   };
-  const brandFallback = {};
 
-  grid.innerHTML = BRANDS.map(b => {
+  // Live count, not the static "products" field baked in at catalog build
+  // time — a brand with nothing currently visible is left out entirely
+  // rather than linking to an empty filtered shop page.
+  const brandCounts = {};
+  PRODUCTS.forEach(p => { brandCounts[p.brandId] = (brandCounts[p.brandId] || 0) + 1; });
+
+  grid.innerHTML = BRANDS.filter(b => brandCounts[b.id] > 0).map(b => {
     const logoSrc = brandLogos[b.id];
     const logoHtml = logoSrc
       ? `<img src="${logoSrc}" alt="${b.name}" class="brand-logo-img" onerror="this.onerror=null;this.style.display='none';this.nextSibling.style.display='block'">`
@@ -1341,7 +1356,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { renderBrands(); } catch(e) {}
   try { renderRecentlyViewed(); } catch(e) {}
   try {
-    const html = BRANDS.map(b => `<li><a href="shop.html?brand=${b.id}">${b.name}</a></li>`).join('');
+    // Live count from PRODUCTS (not the static "products" field baked into
+    // each brand at catalog build time, which goes stale the same way
+    // category counts did) — and brands with nothing currently visible are
+    // left out entirely rather than linking to an empty shop page.
+    const brandCounts = {};
+    PRODUCTS.forEach(p => { brandCounts[p.brandId] = (brandCounts[p.brandId] || 0) + 1; });
+    const visibleBrands = BRANDS.filter(b => brandCounts[b.id] > 0);
+    const html = visibleBrands.map(b => `
+      <li>
+        <a href="shop.html?brand=${b.id}">
+          <span class="dd-icon brand-dd-icon" style="background:${b.color || '#1d4ed8'}">
+            ${b.logo ? `<img src="${b.logo}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">${b.name[0]}</span>` : b.name[0]}
+          </span>
+          <span style="flex:1">${b.name}</span>
+          <span class="dd-count">${brandCounts[b.id]}</span>
+        </a>
+      </li>`).join('');
     const brandDd = document.getElementById('brandDropdown');
     if (brandDd) brandDd.innerHTML = html;
     /* Also populate the desktop nav brand dropdown */
@@ -1358,7 +1389,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const deskCatDd = document.getElementById('desktopCatDropdown');
     if (deskCatDd) deskCatDd.innerHTML = buildCategoryMegaMenuHtml(CATEGORIES);
     const footerCatList = document.getElementById('footerCatList');
-    if (footerCatList) footerCatList.innerHTML = CATEGORIES.filter(c => !c.parentId).map(c => `<li><a href="shop.html?cat=${c.id}">${c.name}</a></li>`).join('');
+    if (footerCatList) footerCatList.innerHTML = CATEGORIES.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, CATEGORIES)).map(c => `<li><a href="shop.html?cat=${c.id}">${c.name}</a></li>`).join('');
   } catch(e) {}
   try { startCountdown(); } catch(e) {}
   try { initSearch(); } catch(e) {}

@@ -384,12 +384,11 @@ function renderShopFilters() {
   // Populate category filter (subcategories shown indented under their parent)
   const catList = document.getElementById('catFilterList');
   if (catList) {
-    const visible = CATEGORIES.filter(c => _catCount[c.id] > 0);
-    const topLevel = visible.filter(c => !c.parentId);
+    const topLevel = CATEGORIES.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, CATEGORIES));
     const orderedCats = [];
     topLevel.forEach(c => {
       orderedCats.push(c);
-      visible.filter(s => s.parentId === c.id).forEach(s => orderedCats.push(s));
+      CATEGORIES.filter(s => s.parentId === c.id && _catCount[s.id] > 0).forEach(s => orderedCats.push(s));
     });
     catList.innerHTML = orderedCats.map(c => `
       <label class="filter-item" ${c.parentId ? 'style="padding-left:20px;font-size:12.5px"' : ''}>
