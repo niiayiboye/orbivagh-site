@@ -442,10 +442,12 @@ textarea{resize:vertical;min-height:70px}
         <select class="filter-sel" id="filterImg" onchange="filterProducts()">
           <option value="">All Products</option>
           <option value="noimg">No Image</option><option value="hasimg">Has Image</option>
+          <option value="hidden">Hidden from Site</option><option value="visible">Visible on Site</option>
         </select>
         <button class="btn btn-outline btn-sm" id="clearFiltersBtn" onclick="clearProductFilters()" style="display:none"><i class="fas fa-times"></i> Clear</button>
         <span style="margin-left:auto;font-size:13px;color:var(--muted)" id="countLabel"></span>
         <button class="btn btn-outline btn-sm" onclick="exportProductsCSV()" title="Download all products as CSV"><i class="fas fa-file-download"></i> Export CSV</button>
+        <button class="btn btn-outline btn-sm" onclick="exportSitemap()" title="Download a fresh sitemap.xml — excludes hidden and no-image products so Google stops being pointed at them"><i class="fas fa-sitemap"></i> Export Sitemap</button>
         <label class="btn btn-outline btn-sm" style="cursor:pointer" title="Upload edited CSV to update prices">
           <i class="fas fa-file-upload"></i> Import CSV
           <input type="file" accept=".csv" style="display:none" onchange="importProductsCSV(this)">
@@ -1912,6 +1914,8 @@ function filterProducts(){
     const hasImg=p.images&&p.images[0];
     if(img==='noimg'&&hasImg) return false;
     if(img==='hasimg'&&!hasImg) return false;
+    if(img==='hidden'&&!p.hidden) return false;
+    if(img==='visible'&&p.hidden) return false;
     return true;
   });
   currentPage=1;renderTable();
@@ -1931,8 +1935,10 @@ function clearProductFilters(){
 function renderTable(){
   const start=(currentPage-1)*PAGE_SIZE,page=filtered.slice(start,start+PAGE_SIZE);
   const missingCount=filtered.filter(p=>!(p.images&&p.images[0])).length;
+  const hiddenCount=filtered.filter(p=>p.hidden).length;
   document.getElementById('countLabel').innerHTML=filtered.length+' products'
-    +(missingCount?` &nbsp;<span style="color:#ea580c;font-size:12px;font-weight:700;background:#fff7ed;border:1px solid #fdba74;border-radius:4px;padding:1px 7px"><i class="fas fa-exclamation-triangle"></i> ${missingCount} no image</span>`:'');
+    +(missingCount?` &nbsp;<span style="color:#ea580c;font-size:12px;font-weight:700;background:#fff7ed;border:1px solid #fdba74;border-radius:4px;padding:1px 7px"><i class="fas fa-exclamation-triangle"></i> ${missingCount} no image</span>`:'')
+    +(hiddenCount?` &nbsp;<span style="color:#64748b;font-size:12px;font-weight:700;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:4px;padding:1px 7px"><i class="fas fa-eye-slash"></i> ${hiddenCount} hidden</span>`:'');
   document.getElementById('productsTable').innerHTML=page.length?page.map((p,i)=>{
     const rowNum = start + i + 1;
     const img=p.images&&p.images[0];
@@ -2300,6 +2306,40 @@ function restoreSiteData(input){
 function csvField(v){
   const s=String(v===null||v===undefined?'':v);
   return /[,"\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
+}
+function exportSitemap(){
+  const prods=adminProds.length?adminProds:getAdminProducts();
+  // Matches the exact same visibility rule the live site itself enforces —
+  // hidden products, and (when the setting is on) no-image products, never
+  // actually render anywhere on the site, so there's no reason to keep
+  // pointing Google at their URLs. A stale sitemap that still lists them
+  // works directly against the noindex tag those pages already carry.
+  const imgRequired = localStorage.getItem('obv_img_required') !== 'off';
+  const visible = prods.filter(p => {
+    if (p.hidden) return false;
+    if (imgRequired && !(p.images && p.images.some(u => u && u.trim()))) return false;
+    return true;
+  });
+
+  const cats = (typeof CATEGORIES!=='undefined'?CATEGORIES:[]).filter(c=>!c.parentId);
+  const today = new Date().toISOString().slice(0,10);
+  const urlXml = (loc, changefreq, priority) =>
+    `  <url>\n    <loc>${loc}</loc>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+
+  const parts = [
+    urlXml('https://orbivagh.com/', 'daily', '1.0'),
+    urlXml('https://orbivagh.com/shop.html', 'daily', '0.9'),
+    ...cats.map(c => urlXml(`https://orbivagh.com/shop.html?cat=${c.id}`, 'daily', '0.8')),
+    urlXml('https://orbivagh.com/contact.html', 'monthly', '0.5'),
+    ...visible.map(p => urlXml(`https://orbivagh.com/product.html?id=${p.id}`, 'weekly', '0.7'))
+  ];
+
+  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + parts.join('\n') + '\n</urlset>\n';
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([xml],{type:'application/xml;charset=utf-8'}));
+  a.download='sitemap.xml';
+  a.click();
+  toast(`Sitemap downloaded — ${visible.length} products included, ${prods.length - visible.length} hidden/no-image excluded. Replace sitemap.xml in your repo with this file.`,'ok');
 }
 function exportProductsCSV(){
   // Use adminProds: edits applied, deleted products excluded, added products included

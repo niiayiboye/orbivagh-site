@@ -110,6 +110,26 @@ function applyOverrides() {
   for (let i = PRODUCTS.length - 1; i >= 0; i--) {
     if (PRODUCTS[i].hidden) PRODUCTS.splice(i, 1);
   }
+  // SEARCH_INDEX is built from PRODUCTS/CATEGORIES/BRANDS once, when
+  // data.js first loads — before any admin edits/adds/hides/deletes are
+  // applied above. Left alone, it drifts out of sync in every direction: a
+  // hidden or deleted product stays permanently findable (a dead end once
+  // clicked), a newly admin-added product is never findable at all, and a
+  // renamed product/category/brand stays searchable only under its old
+  // name. Rebuilding it here from the final, fully-processed live data
+  // keeps search exactly in sync with whatever's actually live.
+  if (typeof SEARCH_INDEX !== 'undefined') {
+    const productEntries = PRODUCTS.map(p => {
+      const catName = (CATEGORIES.find(c => c.id === p.category) || {}).name || '';
+      const searchText = [p.name, p.brand, catName, p.model, (p.tags || []).join(' '), (p.description || '').slice(0, 150)]
+        .filter(Boolean).join(' ').toLowerCase();
+      return { type: 'product', id: p.id, text: p.name, sub: p.brand, icon: p.icon, searchText };
+    });
+    const categoryEntries = CATEGORIES.map(c => ({ type: 'category', id: c.id, text: c.name, sub: c.count + ' products', icon: '📂', searchText: c.name.toLowerCase() }));
+    const brandEntries = BRANDS.map(b => ({ type: 'brand', id: b.id, text: b.name, sub: b.products + ' products', icon: '🏷️', searchText: b.name.toLowerCase() }));
+    SEARCH_INDEX.length = 0;
+    SEARCH_INDEX.push(...productEntries, ...categoryEntries, ...brandEntries);
+  }
   // Apply store settings (WhatsApp, phone, email, store name)
   try {
     const s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
