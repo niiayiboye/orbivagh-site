@@ -1149,6 +1149,7 @@ input, select, textarea { font-family: inherit; }
   border-bottom: 1px solid var(--border);
   overflow: hidden;
   max-width: 100vw;
+  touch-action: pan-y;
 }
 .trust-inner {
   display: flex;
@@ -1214,6 +1215,7 @@ input, select, textarea { font-family: inherit; }
 .categories-marquee-wrap {
   overflow: hidden;
   width: 100%;
+  touch-action: pan-y;
 }
 
 /* Single scrolling row — JS drives the scroll, no CSS animation needed */
@@ -1635,7 +1637,7 @@ input, select, textarea { font-family: inherit; }
    BRANDS — horizontal scroll
 ================================================================ */
 .brands-section { background: #fff; padding: 24px 0; }
-.brands-marquee-wrap { overflow: hidden; width: 100%; }
+.brands-marquee-wrap { overflow: hidden; width: 100%; touch-action: pan-y; }
 .brands-grid {
   display: flex;
   gap: 12px;

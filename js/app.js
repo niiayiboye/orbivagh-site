@@ -550,12 +550,32 @@ function startCardMarquee(track, wrap, speed) {
   });
 
   /* touch swipe */
+  let touchIsHorizontal = null; // undecided until there's been enough movement to tell
+  let touchStartY = 0;
   wrap.addEventListener('touchstart', e => {
-    dragActive = true; autoRunning = false; prevX = e.touches[0].clientX;
+    dragActive = true; autoRunning = false;
+    prevX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchIsHorizontal = null;
   }, {passive:true});
   wrap.addEventListener('touchmove', e => {
     if (!dragActive) return;
-    shift(prevX - e.touches[0].clientX); prevX = e.touches[0].clientX;
+    const curX = e.touches[0].clientX, curY = e.touches[0].clientY;
+    if (touchIsHorizontal === null) {
+      // A real-world swipe is never perfectly straight, so wait for a
+      // small amount of movement before deciding which direction it
+      // actually is, rather than guessing off the very first pixel.
+      const dx = Math.abs(curX - prevX), dy = Math.abs(curY - touchStartY);
+      if (dx < 6 && dy < 6) return;
+      touchIsHorizontal = dx > dy;
+      if (!touchIsHorizontal) {
+        // This is someone scrolling the page, not dragging the marquee —
+        // hand it back cleanly instead of hijacking their scroll.
+        dragActive = false; autoRunning = true;
+        return;
+      }
+    }
+    shift(prevX - curX); prevX = curX;
   }, {passive:true});
   wrap.addEventListener('touchend', () => {
     dragActive = false; setTimeout(() => { autoRunning = true; }, 800);
