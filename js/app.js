@@ -501,11 +501,22 @@ function startCardMarquee(track, wrap, speed) {
   track.style.transform = 'translateX(0)';
   let offset = 0, autoRunning = true, dragActive = false, prevX = 0;
 
+  // Cards now use a genuinely fixed CSS width (not just min-width), so this
+  // only needs measuring once instead of forcing a layout recalculation on
+  // every single animation frame — reading offsetWidth 60 times a second
+  // was needless work, and previously (before fixed widths existed) it was
+  // also unreliable, since a card of a different actual width could cycle
+  // to the front and throw the shift-per-frame math off, causing the
+  // stutter/jump this whole approach is now fixed to avoid.
+  let cachedWidth = null;
   function cardW() {
+    if (cachedWidth !== null) return cachedWidth;
     const first = track.firstElementChild;
     if (!first) return 0;
-    return first.offsetWidth + (parseFloat(getComputedStyle(track).gap) || 12);
+    cachedWidth = first.offsetWidth + (parseFloat(getComputedStyle(track).gap) || 12);
+    return cachedWidth;
   }
+  window.addEventListener('resize', () => { cachedWidth = null; });
 
   function shift(delta) {
     const cw = cardW();
