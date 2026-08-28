@@ -1491,6 +1491,16 @@ input, select, textarea { font-family: inherit; }
 }
 
 .product-badges { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px; }
+.product-brand-badge {
+  position: absolute; bottom: 10px; left: 10px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  padding: 4px 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex; align-items: center;
+  max-width: 64px; max-height: 26px;
+}
+.product-brand-badge img { max-width: 100%; max-height: 18px; object-fit: contain; display: block; }
 .badge-tag { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: var(--radius-full); }
 .badge-sale { background: var(--accent); color: #fff; }
 .badge-new { background: var(--success); color: #fff; }

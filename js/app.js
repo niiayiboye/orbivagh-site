@@ -208,12 +208,15 @@ function renderProductCard(product) {
   const catLabel = CAT_NAMES[product.category] || product.brand;
   const specTags = product.specs ? Object.values(product.specs).slice(0, 4).map(v =>
     `<span class="spec-tag">${v}</span>`).join('') : '';
+  const brandLogo = (typeof BRANDS !== 'undefined' ? BRANDS.find(b => b.id === product.brandId) : null)?.logo;
+  const brandBadge = brandLogo ? `<div class="product-brand-badge"><img src="${brandLogo}" alt="${product.brand}" onerror="this.parentElement.remove()"></div>` : '';
 
   return `
     <div class="product-card reveal" data-tags="${product.tags.join(',')}" data-id="${product.id}" onclick="openProduct('${product.id}')">
       <div class="product-img-wrap${(product.images && product.images.length) ? ' img-loading' : ''}">
         ${(product.images && product.images.length) ? `<img src="${product.images[0]}" alt="${product.name}" class="product-img-photo" loading="lazy" onload="this.parentNode.classList.remove('img-loading')" onerror="this.onerror=null;this.parentNode.classList.remove('img-loading');this.parentNode.innerHTML='<div class=\\'product-img-icon\\'>${product.icon}</div>'">` : `<div class="product-img-icon">${product.icon}</div>`}
         <div class="product-badges">${badge}</div>
+        ${brandBadge}
         <div class="product-actions">
           <button class="prod-action-btn${wishlisted}" data-wishlist="${product.id}" title="Add to Wishlist" onclick="event.stopPropagation();toggleWishlist('${product.id}')">
             <i class="fas fa-heart"></i>
@@ -759,13 +762,6 @@ function renderBrands() {
   const grid = document.getElementById('brandsGrid');
   if (!grid) return;
 
-  const brandLogos = {
-    samsung: 'img/samsung.webp',
-    tcl:     'img/tcl.webp',
-    midea:   'img/midea.webp',
-    nasco:   'https://cdn.ghanafa.org/2023/05/NASCO.png',
-  };
-
   // Live count, not the static "products" field baked in at catalog build
   // time — a brand with nothing currently visible is left out entirely
   // rather than linking to an empty filtered shop page.
@@ -773,11 +769,10 @@ function renderBrands() {
   PRODUCTS.forEach(p => { brandCounts[p.brandId] = (brandCounts[p.brandId] || 0) + 1; });
 
   grid.innerHTML = BRANDS.filter(b => brandCounts[b.id] > 0).map(b => {
-    const logoSrc = brandLogos[b.id];
-    const logoHtml = logoSrc
-      ? `<img src="${logoSrc}" alt="${b.name}" class="brand-logo-img" onerror="this.onerror=null;this.style.display='none';this.nextSibling.style.display='block'">`
+    const logoHtml = b.logo
+      ? `<img src="${b.logo}" alt="${b.name}" class="brand-logo-img" onerror="this.onerror=null;this.style.display='none';this.nextSibling.style.display='block'">`
       : '';
-    const textHtml = `<div style="font-size:20px;font-weight:800;color:var(--text-dark);text-align:center;width:100%;${logoSrc ? 'display:none' : ''}">${b.name}</div>`;
+    const textHtml = `<div style="font-size:20px;font-weight:800;color:var(--text-dark);text-align:center;width:100%;${b.logo ? 'display:none' : ''}">${b.name}</div>`;
     return `<div class="brand-card" onclick="window.location='shop.html?brand=${b.id}'">${logoHtml}${textHtml}</div>`;
   }).join('');
   if (window.innerWidth < 1024) startCardMarquee(grid, grid.parentElement, 0.5);

@@ -90,21 +90,21 @@ const BRANDS = [
   {
     "id": "samsung",
     "name": "Samsung",
-    "logo": "",
+    "logo": "img/samsung.webp",
     "color": "#1428a0",
     "products": 64
   },
   {
     "id": "tcl",
     "name": "TCL",
-    "logo": "",
+    "logo": "img/tcl.webp",
     "color": "#d40000",
     "products": 65
   },
   {
     "id": "midea",
     "name": "Midea",
-    "logo": "",
+    "logo": "img/midea.webp",
     "color": "#0066cc",
     "products": 61
   },
@@ -127,9 +127,9 @@ const PRODUCTS = [
     "model": "UA32H5000FUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1lLdH4PFVBBthv9Bz68NFvA2nm7C0-Zn3&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Z4dIsjD-6xiSJIEQ819L4e1xp5Dkc-Xk&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Zfv_cmPzIHUu_zc-kA7lLRpGtVn2P2Qn&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lLdH4PFVBBthv9Bz68NFvA2nm7C0-Zn3%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Z4dIsjD-6xiSJIEQ819L4e1xp5Dkc-Xk%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Zfv_cmPzIHUu_zc-kA7lLRpGtVn2P2Qn%26sz%3Dw1000"
     ],
     "price": 2700.0,
     "rating": 4.5,
@@ -151,9 +151,9 @@ const PRODUCTS = [
     "model": "UA43F6000FUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1GSjB4ONf8q_ei5cU8dePOLYJ6gQFXSrL&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ovZ5aGbnhtq-u7wIK4XRCLsxhw7DwXVt&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1_1d7kJ_IN3d2ZQ-hWzrxxxT8pYseGVf1&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GSjB4ONf8q_ei5cU8dePOLYJ6gQFXSrL%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ovZ5aGbnhtq-u7wIK4XRCLsxhw7DwXVt%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_1d7kJ_IN3d2ZQ-hWzrxxxT8pYseGVf1%26sz%3Dw1000"
     ],
     "price": 3870.0,
     "rating": 4.5,
@@ -175,7 +175,7 @@ const PRODUCTS = [
     "model": "UA43U8000FUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1iJ5Zrv5lDmJjPxziFvfqLzfjqZTwdQQX&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1iJ5Zrv5lDmJjPxziFvfqLzfjqZTwdQQX%26sz%3Dw1000"
     ],
     "price": 5299.0,
     "rating": 4.5,
@@ -197,9 +197,9 @@ const PRODUCTS = [
     "model": "UA50U8000FUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1BD5b7KRF5JLf0_jqaTQKbf3zJIN-wgWd&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1G-FCo-Zw1V-1xEDRL1OIqJv2FeI6xiJv&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19aYO3cZz9DCXt8U2PWcd0iYCHsavmc57&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1BD5b7KRF5JLf0_jqaTQKbf3zJIN-wgWd%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1G-FCo-Zw1V-1xEDRL1OIqJv2FeI6xiJv%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19aYO3cZz9DCXt8U2PWcd0iYCHsavmc57%26sz%3Dw1000"
     ],
     "price": 5800.0,
     "rating": 4.5,
@@ -221,9 +221,9 @@ const PRODUCTS = [
     "model": "UA55U8000FUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1y-K6poZlAiuTlykeKlk4xaXuQboVahXn&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1O-ep0Q-iJbQHaw05tqUKFnaGSDt5m1_4&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1AprDF-vOPsi1cv-ovLA0z61O_1HKFp59&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1y-K6poZlAiuTlykeKlk4xaXuQboVahXn%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1O-ep0Q-iJbQHaw05tqUKFnaGSDt5m1_4%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1AprDF-vOPsi1cv-ovLA0z61O_1HKFp59%26sz%3Dw1000"
     ],
     "price": 6699.0,
     "rating": 4.5,
@@ -245,9 +245,9 @@ const PRODUCTS = [
     "model": "UA65U8000FUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1AprDF-vOPsi1cv-ovLA0z61O_1HKFp59&sz=w1000",
-      "https://drive.google.com/thumbnail?id=157wWX-asts_8D6GpPGNKgRperjH-Ml6d&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1N1l5UhIbutAD0PGZtEUm5TbgOHxw7MsS&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1AprDF-vOPsi1cv-ovLA0z61O_1HKFp59%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D157wWX-asts_8D6GpPGNKgRperjH-Ml6d%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1N1l5UhIbutAD0PGZtEUm5TbgOHxw7MsS%26sz%3Dw1000"
     ],
     "price": 8750.0,
     "rating": 4.5,
@@ -269,9 +269,9 @@ const PRODUCTS = [
     "model": "UA75U8000FUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1_5QyixNagyCzIOL3moN5ZLxVmKH_oC6c&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1RH8lZWDJgV7-m-oWdoLZ5d5Y8FXRVwL6&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1O-ep0Q-iJbQHaw05tqUKFnaGSDt5m1_4&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_5QyixNagyCzIOL3moN5ZLxVmKH_oC6c%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1RH8lZWDJgV7-m-oWdoLZ5d5Y8FXRVwL6%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1O-ep0Q-iJbQHaw05tqUKFnaGSDt5m1_4%26sz%3Dw1000"
     ],
     "price": 13850.0,
     "rating": 4.5,
@@ -293,8 +293,8 @@ const PRODUCTS = [
     "model": "UA85U8000FUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1lXlaBoUKw7W-BPfDyhUuKunlClOd_eId&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1RH8lZWDJgV7-m-oWdoLZ5d5Y8FXRVwL6&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lXlaBoUKw7W-BPfDyhUuKunlClOd_eId%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1RH8lZWDJgV7-m-oWdoLZ5d5Y8FXRVwL6%26sz%3Dw1000"
     ],
     "price": 22900.0,
     "rating": 4.5,
@@ -316,9 +316,9 @@ const PRODUCTS = [
     "model": "UA98DU9000UXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1AprDF-vOPsi1cv-ovLA0z61O_1HKFp59&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1j4Toh1OKCmqVm50wrh_3xuRv9E7-8eLR&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1_5QyixNagyCzIOL3moN5ZLxVmKH_oC6c&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1AprDF-vOPsi1cv-ovLA0z61O_1HKFp59%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1j4Toh1OKCmqVm50wrh_3xuRv9E7-8eLR%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_5QyixNagyCzIOL3moN5ZLxVmKH_oC6c%26sz%3Dw1000"
     ],
     "price": 51000.0,
     "rating": 4.5,
@@ -340,10 +340,10 @@ const PRODUCTS = [
     "model": "QA55Q6FAAUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=14fF4Zqaw_0A9QRIo-x5E5mJI9khM59n3&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1CZ_AzMqUfZnDwa1P8qz_pn3irNaaIpey&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1z9WvF0rvbTOS-joTBjBiCViF-eC84svr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1H73K-Te3ApLqiKUgZgjh9nWUr7YkX4Hg&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14fF4Zqaw_0A9QRIo-x5E5mJI9khM59n3%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1CZ_AzMqUfZnDwa1P8qz_pn3irNaaIpey%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1z9WvF0rvbTOS-joTBjBiCViF-eC84svr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1H73K-Te3ApLqiKUgZgjh9nWUr7YkX4Hg%26sz%3Dw1000"
     ],
     "price": 8750.0,
     "rating": 4.5,
@@ -365,10 +365,10 @@ const PRODUCTS = [
     "model": "QA55Q7FAAUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1GipBjwFxyKavmI-W5Ssyd2qO46MkVi4f&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ZcIhJT6ZMxJDKUUsfLeSR7v4eG7ushoD&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1SdL1DUETI7usLU1UaPXta-f81KlJ9ItC&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1U4AkP0cVeSQ0bZ4PiQ-CLSWBEzgD4WJb&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GipBjwFxyKavmI-W5Ssyd2qO46MkVi4f%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ZcIhJT6ZMxJDKUUsfLeSR7v4eG7ushoD%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1SdL1DUETI7usLU1UaPXta-f81KlJ9ItC%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1U4AkP0cVeSQ0bZ4PiQ-CLSWBEzgD4WJb%26sz%3Dw1000"
     ],
     "price": 9650.0,
     "rating": 4.5,
@@ -390,10 +390,10 @@ const PRODUCTS = [
     "model": "QA65Q6FAAUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1zpS01glvVJRomTYYlGPnBGaL2Nii3JvF&sz=w1000",
-      "https://drive.google.com/thumbnail?id=14s6rX1ISK25MUeYtTD1AM-kY0bETpgYB&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1vtCwxqgKNhTLeN2i3PSmjHoh8DId_vq9&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1g23TjXSWDQiIwGZ5nKLOtfp8406-bCo7&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1zpS01glvVJRomTYYlGPnBGaL2Nii3JvF%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14s6rX1ISK25MUeYtTD1AM-kY0bETpgYB%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vtCwxqgKNhTLeN2i3PSmjHoh8DId_vq9%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1g23TjXSWDQiIwGZ5nKLOtfp8406-bCo7%26sz%3Dw1000"
     ],
     "price": 11800.0,
     "rating": 4.5,
@@ -415,9 +415,9 @@ const PRODUCTS = [
     "model": "QA65Q7FAAUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Fgkw0e_5QmefICbs88fthDWdY-KvnPf6&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1WoRsc3Fl_ysl8LqlzogqLjmQBPf2MM6Z&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1nB7uoMLpE4k6zu6zoRYup4tB3sr0DbUZ&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Fgkw0e_5QmefICbs88fthDWdY-KvnPf6%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WoRsc3Fl_ysl8LqlzogqLjmQBPf2MM6Z%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1nB7uoMLpE4k6zu6zoRYup4tB3sr0DbUZ%26sz%3Dw1000"
     ],
     "price": 11100.0,
     "rating": 4.5,
@@ -439,10 +439,10 @@ const PRODUCTS = [
     "model": "QA85Q7FAAUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1THXeq9TZ0qR5KzlDP08_dAPLPUdCGqvK&sz=w1000",
-      "https://drive.google.com/thumbnail?id=17oN_gav-XywK3BNC6fenI7DLTFXSvScg&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1BdBFFqJw3acTbqjT4Cjm4O9v-BXDMOfw&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1F472Iw5hOdv6QTriP4fyVStO3SSlcZ-5&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1THXeq9TZ0qR5KzlDP08_dAPLPUdCGqvK%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17oN_gav-XywK3BNC6fenI7DLTFXSvScg%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1BdBFFqJw3acTbqjT4Cjm4O9v-BXDMOfw%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1F472Iw5hOdv6QTriP4fyVStO3SSlcZ-5%26sz%3Dw1000"
     ],
     "price": 31200.0,
     "rating": 4.5,
@@ -464,7 +464,7 @@ const PRODUCTS = [
     "model": "QA65QN85DBUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=11fCspgvNoZG51xX0I2JakBQ7bB-O5ECX&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D11fCspgvNoZG51xX0I2JakBQ7bB-O5ECX%26sz%3Dw1000"
     ],
     "price": 16500.0,
     "rating": 4.5,
@@ -486,13 +486,13 @@ const PRODUCTS = [
     "model": "QA85QN900FUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1WUh-bXwYXDNMNSuH5CEFEBlIElHJXAGZ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1sDEhbmC4KhvgB0XQi_7DUixSpN4rsgwF&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1OAV4UOV2a2mttPL5hr3iZRpNHsJb_mrh&sz=w1000",
-      "https://drive.google.com/thumbnail?id=17QSCzg2oWpLwOdcvqkYXGByVJJogfigW&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ouxyMQH1H-Pdr4PqgX24nFj6K6Fdr1Gk&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19O7VLq1Co5CWEjs1VhiIL3bFIXQ76Z_T&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1zCfzMvuOJKOehwfTliNxpX9YrNBKi2Wg&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WUh-bXwYXDNMNSuH5CEFEBlIElHJXAGZ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1sDEhbmC4KhvgB0XQi_7DUixSpN4rsgwF%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1OAV4UOV2a2mttPL5hr3iZRpNHsJb_mrh%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17QSCzg2oWpLwOdcvqkYXGByVJJogfigW%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ouxyMQH1H-Pdr4PqgX24nFj6K6Fdr1Gk%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19O7VLq1Co5CWEjs1VhiIL3bFIXQ76Z_T%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1zCfzMvuOJKOehwfTliNxpX9YrNBKi2Wg%26sz%3Dw1000"
     ],
     "price": 98000.0,
     "rating": 4.5,
@@ -514,9 +514,9 @@ const PRODUCTS = [
     "model": "MX-ST40F/ZN",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=17-LNJCJBaaNMHg5--jKwMpvUimax4IUz&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1eG9YJoSxHS37e7gS4nlizzB_U9VTxCJy&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Lx4rrR8lZxBVAWQ9plfYjBDJ3vwhNGaf&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17-LNJCJBaaNMHg5--jKwMpvUimax4IUz%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1eG9YJoSxHS37e7gS4nlizzB_U9VTxCJy%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Lx4rrR8lZxBVAWQ9plfYjBDJ3vwhNGaf%26sz%3Dw1000"
     ],
     "price": 4650.0,
     "rating": 4.5,
@@ -538,9 +538,9 @@ const PRODUCTS = [
     "model": "MX-ST50F/ZN",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=1jl4HjdtAx9xAxhPunl2mHZSctbex_eqj&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Fi7TNihZXxmc0YqmtRF9mfAaO76KIu3L&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1o6we8XIEbzVPQvXpsDNBqLyvIgVcle3T&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1jl4HjdtAx9xAxhPunl2mHZSctbex_eqj%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Fi7TNihZXxmc0YqmtRF9mfAaO76KIu3L%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1o6we8XIEbzVPQvXpsDNBqLyvIgVcle3T%26sz%3Dw1000"
     ],
     "price": 5350.0,
     "rating": 4.5,
@@ -562,10 +562,10 @@ const PRODUCTS = [
     "model": "HW-B450F/KE",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=1EfmU_TxnBlkf84b-ioGtmNAJEhL-goOd&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1O88498p-yrQKFBCVIi8GxOITngrEaaes&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1vFNxrm6AwNlDc-CM99B1Z_rmW3hvVsXn&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1TJfb8fSc48Wqe6P59UvpVtAKP64jzgTC&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1EfmU_TxnBlkf84b-ioGtmNAJEhL-goOd%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1O88498p-yrQKFBCVIi8GxOITngrEaaes%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vFNxrm6AwNlDc-CM99B1Z_rmW3hvVsXn%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1TJfb8fSc48Wqe6P59UvpVtAKP64jzgTC%26sz%3Dw1000"
     ],
     "price": 2800.0,
     "rating": 4.5,
@@ -587,9 +587,9 @@ const PRODUCTS = [
     "model": "HW-Q600F/KE",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=1gJPaYXIHHeqSygdT4vCCJWXl-otH1h-F&sz=w1000",
-      "https://drive.google.com/thumbnail?id=113mdHKuoSBC2HqSp1ZjEgbfRzeUCfoO6&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1O1W5ksNJsIjnuIvfPYroYLjHnECzYG9z&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1gJPaYXIHHeqSygdT4vCCJWXl-otH1h-F%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D113mdHKuoSBC2HqSp1ZjEgbfRzeUCfoO6%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1O1W5ksNJsIjnuIvfPYroYLjHnECzYG9z%26sz%3Dw1000"
     ],
     "price": 5400.0,
     "rating": 4.5,
@@ -611,10 +611,10 @@ const PRODUCTS = [
     "model": "RT20HAR2DSA",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1yIAyfvtO1xFEdc74MVtyxa1uNBzsd4I3&sz=w1000",
-      "https://drive.google.com/thumbnail?id=11rPYWcb_Dtohg_DZxZ6lndE4aU3dbYE2&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1jpDr-VR4Y81Mo_sSyo_BzF3CHVbAj14z&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1jnFJ-TMs3QzSN6c2_fC91avAD3HDzlcO&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1yIAyfvtO1xFEdc74MVtyxa1uNBzsd4I3%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D11rPYWcb_Dtohg_DZxZ6lndE4aU3dbYE2%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1jpDr-VR4Y81Mo_sSyo_BzF3CHVbAj14z%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1jnFJ-TMs3QzSN6c2_fC91avAD3HDzlcO%26sz%3Dw1000"
     ],
     "price": 5350.0,
     "rating": 4.5,
@@ -636,10 +636,10 @@ const PRODUCTS = [
     "model": "RT22HAR4DSA/GH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Obuo2scJEI7yttjRyjiAhoc8st7BHnoz&sz=w1000",
-      "https://drive.google.com/thumbnail?id=199wfZDZURsh6bSFD7VwgFs5JnzS_rywE&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1z9uomji3zHpHb-T5CCMi6OrZvBvpfND2&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1dpnWRmxVae9xqi9ONJMMCgjAe1J52bqC&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Obuo2scJEI7yttjRyjiAhoc8st7BHnoz%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D199wfZDZURsh6bSFD7VwgFs5JnzS_rywE%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1z9uomji3zHpHb-T5CCMi6OrZvBvpfND2%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1dpnWRmxVae9xqi9ONJMMCgjAe1J52bqC%26sz%3Dw1000"
     ],
     "price": 5799.0,
     "rating": 4.5,
@@ -661,11 +661,11 @@ const PRODUCTS = [
     "model": "RT31CG5421S9GH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1rhFFplFLtKQ0JWFjW_FFFgSESRVLllp2&sz=w1000",
-      "https://drive.google.com/thumbnail?id=118CZ6sOOYfV716rq4dOYnUPSGKrjingh&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19vjEb16h7TBF5hOzANlCB-Ku3Modl1hH&sz=w1000",
-      "https://drive.google.com/thumbnail?id=10IVkK2z6AbtXlYbItythZq44qb_0Zb7G&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1l117HBY6GamhFzhFModYs3X2xQuEXbJf&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1rhFFplFLtKQ0JWFjW_FFFgSESRVLllp2%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D118CZ6sOOYfV716rq4dOYnUPSGKrjingh%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19vjEb16h7TBF5hOzANlCB-Ku3Modl1hH%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D10IVkK2z6AbtXlYbItythZq44qb_0Zb7G%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1l117HBY6GamhFzhFModYs3X2xQuEXbJf%26sz%3Dw1000"
     ],
     "price": 7800.0,
     "rating": 4.5,
@@ -687,12 +687,12 @@ const PRODUCTS = [
     "model": "RT35CG5421S9GH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Sx3eYF2mW7CnpFf1QEgukCgd8jUJuHlG&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1oHJUJS90dsp2aymHYQab2mEwJdQSEIja&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1uQ00vRVG7rZdrqEGJLsrmn-k_4mOOkCm&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1I9SftMHPw4IpyvHOcSsJDy9Kfz1LXV6H&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1lIm9zGp89hJS76WZnvDICPl2D3mQuVHK&sz=w1000",
-      "https://drive.google.com/thumbnail?id=198CH56fFcRaiZzgyivrc62rA1Y1R9JGo&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Sx3eYF2mW7CnpFf1QEgukCgd8jUJuHlG%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1oHJUJS90dsp2aymHYQab2mEwJdQSEIja%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1uQ00vRVG7rZdrqEGJLsrmn-k_4mOOkCm%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1I9SftMHPw4IpyvHOcSsJDy9Kfz1LXV6H%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lIm9zGp89hJS76WZnvDICPl2D3mQuVHK%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D198CH56fFcRaiZzgyivrc62rA1Y1R9JGo%26sz%3Dw1000"
     ],
     "price": 8600.0,
     "rating": 4.5,
@@ -714,9 +714,9 @@ const PRODUCTS = [
     "model": "RT38CG6421S9GH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1FnuMSHjWbhk_-dFkD0xvlFuxFice3Hve&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1iUQma3Q-hj-VD1F0F9xxdD9ec_jvbh2u&sz=w1000",
-      "https://drive.google.com/thumbnail?id=11ft82erzLxVZo3jpXy3fQQ2De9w39GDJ&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1FnuMSHjWbhk_-dFkD0xvlFuxFice3Hve%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1iUQma3Q-hj-VD1F0F9xxdD9ec_jvbh2u%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D11ft82erzLxVZo3jpXy3fQQ2De9w39GDJ%26sz%3Dw1000"
     ],
     "price": 9500.0,
     "rating": 4.5,
@@ -738,9 +738,9 @@ const PRODUCTS = [
     "model": "RT42CG6621S9GH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1dm9giKOTfzJJ3SB1_zbPax5PIZWrssz-&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1gI39_Uz-YuLG20KbghnSdkeyT4Mb-egY&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1SR1YC7ZaecvZ9VuMsBbS17H8j_p5ADkF&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1dm9giKOTfzJJ3SB1_zbPax5PIZWrssz-%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1gI39_Uz-YuLG20KbghnSdkeyT4Mb-egY%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1SR1YC7ZaecvZ9VuMsBbS17H8j_p5ADkF%26sz%3Dw1000"
     ],
     "price": 10200.0,
     "rating": 4.5,
@@ -762,11 +762,11 @@ const PRODUCTS = [
     "model": "RT47CG6631B1UT",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1dPCr4nolEhlwMsdXWGkTYk-mfrLxjBYL&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1TRn-_1PLbkehLscQ8bFeX1b6E4yLsqXv&sz=w1000",
-      "https://drive.google.com/thumbnail?id=17lVAbF07ueTctgFvB_VNHEaSW6QTWmwC&sz=w1000",
-      "https://drive.google.com/thumbnail?id=18xAomnUl4iPosX0yvwy5VFwJcaqeVtsr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1xUGp4iQJNKHoUZGh9XzOkpk3FeaL4MtE&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1dPCr4nolEhlwMsdXWGkTYk-mfrLxjBYL%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1TRn-_1PLbkehLscQ8bFeX1b6E4yLsqXv%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17lVAbF07ueTctgFvB_VNHEaSW6QTWmwC%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D18xAomnUl4iPosX0yvwy5VFwJcaqeVtsr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1xUGp4iQJNKHoUZGh9XzOkpk3FeaL4MtE%26sz%3Dw1000"
     ],
     "price": 10899.0,
     "rating": 4.5,
@@ -788,9 +788,9 @@ const PRODUCTS = [
     "model": "RT53DG7B60B1UT",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1foJCUDyrO7wOUXyEeE8QQMAp5kOTdWVa&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1vtdtICZrqhv1bp5ZvRail0rcoCG4Gfdr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1cc2OmzovMDo0-3HfGrrRrJ7rkxxTiOhb&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1foJCUDyrO7wOUXyEeE8QQMAp5kOTdWVa%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vtdtICZrqhv1bp5ZvRail0rcoCG4Gfdr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1cc2OmzovMDo0-3HfGrrRrJ7rkxxTiOhb%26sz%3Dw1000"
     ],
     "price": 15400.0,
     "rating": 4.5,
@@ -812,12 +812,12 @@ const PRODUCTS = [
     "model": "RS57DG4000B4GH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1eFMMsGFSkClIQOs0HpuMuq15brpHMw6K&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1wVJYac6gQ1v0NIU73U_jzcziHH_zdz16&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1e-C9nUrZfeJLvlPFi6e9n_5xvgfiavQK&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1uv18AN4qug0AagT1B1aJOB_HeziMZD4i&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1uebwRkGvrmIWjK6Qfxhlv5-62lFBl3M2&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1QiiKcciiB9QbdPjWKMUgrC7DNfHjkziL&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1eFMMsGFSkClIQOs0HpuMuq15brpHMw6K%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1wVJYac6gQ1v0NIU73U_jzcziHH_zdz16%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1e-C9nUrZfeJLvlPFi6e9n_5xvgfiavQK%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1uv18AN4qug0AagT1B1aJOB_HeziMZD4i%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1uebwRkGvrmIWjK6Qfxhlv5-62lFBl3M2%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1QiiKcciiB9QbdPjWKMUgrC7DNfHjkziL%26sz%3Dw1000"
     ],
     "price": 14600.0,
     "rating": 4.5,
@@ -839,12 +839,12 @@ const PRODUCTS = [
     "model": "RS57DG4100B4GH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=13muRRZ5q-rPjIDeZbV7TZ_ibVSS6fk-V&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1b8AbG22K5vgByTLW-THDRKmhMIhdBd9C&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1vIpdMAD9uVPYDC5POOx-ftBK72uHrDfQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1m7jWaG-l-VZfHlcWQHVmnFdTyCmJ2ZJm&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1nho0Np9r01OCoD_LHe7VexOqmGVMLSqw&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1hrMNXcjnm_tdRydyomudZy26o_ZoOPSB&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D13muRRZ5q-rPjIDeZbV7TZ_ibVSS6fk-V%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1b8AbG22K5vgByTLW-THDRKmhMIhdBd9C%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vIpdMAD9uVPYDC5POOx-ftBK72uHrDfQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1m7jWaG-l-VZfHlcWQHVmnFdTyCmJ2ZJm%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1nho0Np9r01OCoD_LHe7VexOqmGVMLSqw%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1hrMNXcjnm_tdRydyomudZy26o_ZoOPSB%26sz%3Dw1000"
     ],
     "price": 15500.0,
     "rating": 4.5,
@@ -866,9 +866,9 @@ const PRODUCTS = [
     "model": "RS70F65K4TGH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1vXncdZKxzYLCjCqw6BTu2wgVmnRJ-mrL&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1x5ujrWQHiSSgGhqcQRv5yVgwzE_PWF9y&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1xPEf_ohncVUi3vp8RYR7MlhAj5snaLyE&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vXncdZKxzYLCjCqw6BTu2wgVmnRJ-mrL%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1x5ujrWQHiSSgGhqcQRv5yVgwzE_PWF9y%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1xPEf_ohncVUi3vp8RYR7MlhAj5snaLyE%26sz%3Dw1000"
     ],
     "price": 18500.0,
     "rating": 4.5,
@@ -890,10 +890,10 @@ const PRODUCTS = [
     "model": "RS80F65G4FGH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1s0nkwnHX00Rc41TjX2JWL6SiV3Ybez5A&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1XyiE_kF4j7_fj3bg-ZRlfhSaHn65HMDV&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1-Um3KdA54cwO_RteVEbGCgsKwlullMb3&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1fLBlJfoCSSDkTpU_lNQDY8IpBZGdHrJJ&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1s0nkwnHX00Rc41TjX2JWL6SiV3Ybez5A%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1XyiE_kF4j7_fj3bg-ZRlfhSaHn65HMDV%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1-Um3KdA54cwO_RteVEbGCgsKwlullMb3%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1fLBlJfoCSSDkTpU_lNQDY8IpBZGdHrJJ%26sz%3Dw1000"
     ],
     "price": 24500.0,
     "rating": 4.5,
@@ -915,10 +915,10 @@ const PRODUCTS = [
     "model": "RF65DB970E22",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1SE-9gwwzE7mrQgNTfqdk3WKvituH5eaV&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1GH-SLeEtd1Uk_TXNz5UtLikd1OrqO6DG&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1xKCu2rSVWcVs6dA1_CxdksZLOLMAOr1W&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1K6BH21Z4xQctTy399jzM1ZViGQThxOdm&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1SE-9gwwzE7mrQgNTfqdk3WKvituH5eaV%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GH-SLeEtd1Uk_TXNz5UtLikd1OrqO6DG%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1xKCu2rSVWcVs6dA1_CxdksZLOLMAOr1W%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1K6BH21Z4xQctTy399jzM1ZViGQThxOdm%26sz%3Dw1000"
     ],
     "price": 38500.0,
     "rating": 4.5,
@@ -940,9 +940,9 @@ const PRODUCTS = [
     "model": "RF65DG9H0EB1EU",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1rD9ZV3jYnlHIoSpwKKTLVMl3JHtOgXKQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1bzql6aUxUx3wQAkZtoi9r8FEP3cVnTmX&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19qPTD3No-3okzqbGmvtrbmJh6s-7DZW9&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1rD9ZV3jYnlHIoSpwKKTLVMl3JHtOgXKQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1bzql6aUxUx3wQAkZtoi9r8FEP3cVnTmX%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19qPTD3No-3okzqbGmvtrbmJh6s-7DZW9%26sz%3Dw1000"
     ],
     "price": 43000.0,
     "rating": 4.5,
@@ -964,10 +964,10 @@ const PRODUCTS = [
     "model": "RF48A4000M9/GH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1SMdfHhnmlxsqe9ov6a7YbF5Q-4GrEPRo&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1LB6VSyo7OpveSalD7M3IxcCpS6nOOEVo&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1RkKVdlvGDa4jjpbIbZnf1NQEygkE5_rB&sz=w1000",
-      "https://drive.google.com/thumbnail?id=18_DHJdBRLZC1Y-g54nmh37IgR6OASvRh&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1SMdfHhnmlxsqe9ov6a7YbF5Q-4GrEPRo%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1LB6VSyo7OpveSalD7M3IxcCpS6nOOEVo%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1RkKVdlvGDa4jjpbIbZnf1NQEygkE5_rB%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D18_DHJdBRLZC1Y-g54nmh37IgR6OASvRh%26sz%3Dw1000"
     ],
     "price": 14500.0,
     "rating": 4.5,
@@ -989,8 +989,8 @@ const PRODUCTS = [
     "model": "RI70F20V1GAGH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1OridJ9CPEZvUAmtBs7iseSL8GsFNu1TT&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1IJ32a-0R6pvIL55eyaFxUSPJeWKqQzqm&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1OridJ9CPEZvUAmtBs7iseSL8GsFNu1TT%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1IJ32a-0R6pvIL55eyaFxUSPJeWKqQzqm%26sz%3Dw1000"
     ],
     "price": 4750.0,
     "rating": 4.5,
@@ -1012,9 +1012,9 @@ const PRODUCTS = [
     "model": "RI70F29V1GAGH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1kGJooee3PbTkrlFtHCuyJZyC2fIvlUjP&sz=w1000",
-      "https://drive.google.com/thumbnail?id=15bgI4Lw4ClzufvfbxquSKv_489hD7mqZ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1xdzi-3eRiAYF06EDn4-F4cRF86_0w8JR&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kGJooee3PbTkrlFtHCuyJZyC2fIvlUjP%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D15bgI4Lw4ClzufvfbxquSKv_489hD7mqZ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1xdzi-3eRiAYF06EDn4-F4cRF86_0w8JR%26sz%3Dw1000"
     ],
     "price": 5700.0,
     "rating": 4.5,
@@ -1036,9 +1036,9 @@ const PRODUCTS = [
     "model": "RI70F37V1GAGH",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1xdzi-3eRiAYF06EDn4-F4cRF86_0w8JR&sz=w1000",
-      "https://drive.google.com/thumbnail?id=15bgI4Lw4ClzufvfbxquSKv_489hD7mqZ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kGJooee3PbTkrlFtHCuyJZyC2fIvlUjP&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1xdzi-3eRiAYF06EDn4-F4cRF86_0w8JR%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D15bgI4Lw4ClzufvfbxquSKv_489hD7mqZ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kGJooee3PbTkrlFtHCuyJZyC2fIvlUjP%26sz%3Dw1000"
     ],
     "price": 6700.0,
     "rating": 4.5,
@@ -1060,9 +1060,9 @@ const PRODUCTS = [
     "model": "AR12CRHGAWK/AF",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1KpdFTkP0UxrXfoDyUXKZ_BttfZ3jUzF-&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1GYMZb1W8sYrpk4T8kUxFiR1tzpfm94Pm&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kdKjsyCY1EEsW6QClFMyTD0FBOuMybp5&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KpdFTkP0UxrXfoDyUXKZ_BttfZ3jUzF-%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GYMZb1W8sYrpk4T8kUxFiR1tzpfm94Pm%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kdKjsyCY1EEsW6QClFMyTD0FBOuMybp5%26sz%3Dw1000"
     ],
     "price": 4450.0,
     "rating": 4.5,
@@ -1084,9 +1084,9 @@ const PRODUCTS = [
     "model": "AR18CRHGAWK/AF",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1KpdFTkP0UxrXfoDyUXKZ_BttfZ3jUzF-&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1GYMZb1W8sYrpk4T8kUxFiR1tzpfm94Pm&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kdKjsyCY1EEsW6QClFMyTD0FBOuMybp5&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KpdFTkP0UxrXfoDyUXKZ_BttfZ3jUzF-%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GYMZb1W8sYrpk4T8kUxFiR1tzpfm94Pm%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kdKjsyCY1EEsW6QClFMyTD0FBOuMybp5%26sz%3Dw1000"
     ],
     "price": 6750.0,
     "rating": 4.5,
@@ -1108,9 +1108,9 @@ const PRODUCTS = [
     "model": "AR24CRHGAWK/AF",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1kdKjsyCY1EEsW6QClFMyTD0FBOuMybp5&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1GYMZb1W8sYrpk4T8kUxFiR1tzpfm94Pm&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kdKjsyCY1EEsW6QClFMyTD0FBOuMybp5&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kdKjsyCY1EEsW6QClFMyTD0FBOuMybp5%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GYMZb1W8sYrpk4T8kUxFiR1tzpfm94Pm%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kdKjsyCY1EEsW6QClFMyTD0FBOuMybp5%26sz%3Dw1000"
     ],
     "price": 9650.0,
     "rating": 4.5,
@@ -1132,8 +1132,8 @@ const PRODUCTS = [
     "model": "AR40F12D0AG/AF",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1WaADuA3KN5qFQFfa92MuecjXr_Mot-Wh&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1WHksqqp3Pq8179YnqBE9lSm-bsmk3XLT&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WaADuA3KN5qFQFfa92MuecjXr_Mot-Wh%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WHksqqp3Pq8179YnqBE9lSm-bsmk3XLT%26sz%3Dw1000"
     ],
     "price": 5750.0,
     "rating": 4.5,
@@ -1155,8 +1155,8 @@ const PRODUCTS = [
     "model": "AR40F18D0AG/AF",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1WHksqqp3Pq8179YnqBE9lSm-bsmk3XLT&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1WaADuA3KN5qFQFfa92MuecjXr_Mot-Wh&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WHksqqp3Pq8179YnqBE9lSm-bsmk3XLT%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WaADuA3KN5qFQFfa92MuecjXr_Mot-Wh%26sz%3Dw1000"
     ],
     "price": 7750.0,
     "rating": 4.5,
@@ -1178,8 +1178,8 @@ const PRODUCTS = [
     "model": "AR40F24D0AG/AF",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1WaADuA3KN5qFQFfa92MuecjXr_Mot-Wh&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1WHksqqp3Pq8179YnqBE9lSm-bsmk3XLT&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WaADuA3KN5qFQFfa92MuecjXr_Mot-Wh%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WHksqqp3Pq8179YnqBE9lSm-bsmk3XLT%26sz%3Dw1000"
     ],
     "price": 9600.0,
     "rating": 4.5,
@@ -1201,8 +1201,8 @@ const PRODUCTS = [
     "model": "WT60H2500",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1YS879ljU21iPt3QwKGEsJj-mQuIoRSlQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=198zmmYQvJMMH5AUf4zmYOCR06rhBC9HM&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1YS879ljU21iPt3QwKGEsJj-mQuIoRSlQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D198zmmYQvJMMH5AUf4zmYOCR06rhBC9HM%26sz%3Dw1000"
     ],
     "price": 2799.0,
     "rating": 4.5,
@@ -1224,9 +1224,9 @@ const PRODUCTS = [
     "model": "WT90H3230MG",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1lBacpHi4JqLX4KAmHpf_KMp80QcdLPjg&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Q7f2MZkCaFoqUV1Fa8f91TERmtXSlxfx&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Zbe0mT3PQvSjoi2Np5baWh8wVZ5VFoEn&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lBacpHi4JqLX4KAmHpf_KMp80QcdLPjg%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Q7f2MZkCaFoqUV1Fa8f91TERmtXSlxfx%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Zbe0mT3PQvSjoi2Np5baWh8wVZ5VFoEn%26sz%3Dw1000"
     ],
     "price": 3399.0,
     "rating": 4.5,
@@ -1248,11 +1248,11 @@ const PRODUCTS = [
     "model": "WT12J4200MR",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1cBHWfRwVXyQG4RYedHlLdgnG7s3LJWwA&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1NXvWjVa9I0Kr7KnXVk-GyBd3bz5QpfcA&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Ivmn4gaTaaD-py7GB1R5Q5g1jfgg3kqN&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1rFmmN2QNdUGxkOLkneotO_BLpX_jaqDy&sz=w1000",
-      "https://drive.google.com/thumbnail?id=10FYiDJfhWqzwYrdE3ZfYz-HpA9scxz9e&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1cBHWfRwVXyQG4RYedHlLdgnG7s3LJWwA%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1NXvWjVa9I0Kr7KnXVk-GyBd3bz5QpfcA%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Ivmn4gaTaaD-py7GB1R5Q5g1jfgg3kqN%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1rFmmN2QNdUGxkOLkneotO_BLpX_jaqDy%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D10FYiDJfhWqzwYrdE3ZfYz-HpA9scxz9e%26sz%3Dw1000"
     ],
     "price": 4750.0,
     "rating": 4.5,
@@ -1274,10 +1274,10 @@ const PRODUCTS = [
     "model": "WA80F19S8BNQ",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1KS47ICvSUkP9twpEkRbYhJoeOSDwshMo&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1XYeTJG1SwDcjd9TAoO4T6CExXisuQoHj&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1FuCaEg4OHZvNxWsnyTUnQ1w40fewMzAS&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1H5Ofs5W64q9AOv2vYRjAQkuf5ZSMwl86&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KS47ICvSUkP9twpEkRbYhJoeOSDwshMo%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1XYeTJG1SwDcjd9TAoO4T6CExXisuQoHj%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1FuCaEg4OHZvNxWsnyTUnQ1w40fewMzAS%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1H5Ofs5W64q9AOv2vYRjAQkuf5ZSMwl86%26sz%3Dw1000"
     ],
     "price": 9600.0,
     "rating": 4.5,
@@ -1299,8 +1299,8 @@ const PRODUCTS = [
     "model": "WA80F17S8CNQ",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1HKuT-cuWrG1WXHVhyg1d66SChiZ2dJ31&sz=w1000",
-      "https://drive.google.com/thumbnail?id=13N5nkwXN2OKX-W0rW5b8RcOxmwz1DaFR&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1HKuT-cuWrG1WXHVhyg1d66SChiZ2dJ31%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D13N5nkwXN2OKX-W0rW5b8RcOxmwz1DaFR%26sz%3Dw1000"
     ],
     "price": 8600.0,
     "rating": 4.5,
@@ -1322,8 +1322,8 @@ const PRODUCTS = [
     "model": "WA80F13S5CNQ",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=13NS1NT0NT-6xSv8xgb_qnXXgv0nsWdQI&sz=w1000",
-      "https://drive.google.com/thumbnail?id=10FCee_0sCUW5Y1kr8Z1DrNfXr5jh5T5R&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D13NS1NT0NT-6xSv8xgb_qnXXgv0nsWdQI%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D10FCee_0sCUW5Y1kr8Z1DrNfXr5jh5T5R%26sz%3Dw1000"
     ],
     "price": 7100.0,
     "rating": 4.5,
@@ -1345,9 +1345,9 @@ const PRODUCTS = [
     "model": "WA80CG4240BWNQ",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1M1k54m4DZmxovNgyFrpy3wRq5_VOGK0Y&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1W8fo4M7VFXYjJgwcReVtX4mvVWLzr5XH&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1EaKN0QP8NpWXGn60E8Hhpy04KAz_1PxP&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1M1k54m4DZmxovNgyFrpy3wRq5_VOGK0Y%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1W8fo4M7VFXYjJgwcReVtX4mvVWLzr5XH%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1EaKN0QP8NpWXGn60E8Hhpy04KAz_1PxP%26sz%3Dw1000"
     ],
     "price": 4300.0,
     "rating": 4.5,
@@ -1369,11 +1369,11 @@ const PRODUCTS = [
     "model": "WF90F26ADSNQ",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1sq82aHBw4RIApxRxgW5-4ElioPfKb-A9&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1pg2sFSchvMevJusY--5wOHa_uehcQnJD&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1imZ8A2Ym_LplrkrXuWnBHEeN7vrGKn6C&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1pGYcukQbWWc4X9JQuZ-t2KxMFYasmjq1&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1UCLoyiDPgcLxpVwDAe638EZWwzogOEmV&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1sq82aHBw4RIApxRxgW5-4ElioPfKb-A9%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1pg2sFSchvMevJusY--5wOHa_uehcQnJD%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1imZ8A2Ym_LplrkrXuWnBHEeN7vrGKn6C%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1pGYcukQbWWc4X9JQuZ-t2KxMFYasmjq1%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UCLoyiDPgcLxpVwDAe638EZWwzogOEmV%26sz%3Dw1000"
     ],
     "price": 18799.0,
     "rating": 4.5,
@@ -1395,11 +1395,11 @@ const PRODUCTS = [
     "model": "WW11CGC04DABSG",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=178vyeXisEdXkJvXSTEzxGs_awxKpYZHA&sz=w1000",
-      "https://drive.google.com/thumbnail?id=106xk9l98Fx8wG1sn9qS_zvSBMtMgjvvn&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1VO-iKKYp1NTS-Q_y-2be6impSKUZ118G&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1G2i8LG5tf2QnnGgJeaPtZI_ZjefwCVSp&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ZFgvtgxtt7aHZQ0wDdRb9N2gU4XtVX4Z&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D178vyeXisEdXkJvXSTEzxGs_awxKpYZHA%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D106xk9l98Fx8wG1sn9qS_zvSBMtMgjvvn%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1VO-iKKYp1NTS-Q_y-2be6impSKUZ118G%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1G2i8LG5tf2QnnGgJeaPtZI_ZjefwCVSp%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ZFgvtgxtt7aHZQ0wDdRb9N2gU4XtVX4Z%26sz%3Dw1000"
     ],
     "price": 8999.0,
     "rating": 4.5,
@@ -1421,10 +1421,10 @@ const PRODUCTS = [
     "model": "WW10DG6U94LBNQ",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1hOLY2M9JqXYPnehSzARoeWKuVRt8O8QF&sz=w1000",
-      "https://drive.google.com/thumbnail?id=154yWtrMFSwadP0Mee-NFZmI24aQr-3wC&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1c8i1FKiGp0B78hRPHk7tq4M5AOAH4pPo&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1lw9p8yuP-pwXzaVxVcy4Pshmk1aXavHc&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1hOLY2M9JqXYPnehSzARoeWKuVRt8O8QF%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D154yWtrMFSwadP0Mee-NFZmI24aQr-3wC%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1c8i1FKiGp0B78hRPHk7tq4M5AOAH4pPo%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lw9p8yuP-pwXzaVxVcy4Pshmk1aXavHc%26sz%3Dw1000"
     ],
     "price": 8699.0,
     "rating": 4.5,
@@ -1446,9 +1446,9 @@ const PRODUCTS = [
     "model": "WW80T3040BS/NQ",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=14MyG66SOH2yScnD9xWRkx_YvIVBBiCTx&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1vpWctf6ZopCV_YP-NKQ7iWEPtnD-_7Kr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=16v3K0c7Ikf5eCGLtzv3JQRds06wsXhFe&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14MyG66SOH2yScnD9xWRkx_YvIVBBiCTx%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vpWctf6ZopCV_YP-NKQ7iWEPtnD-_7Kr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D16v3K0c7Ikf5eCGLtzv3JQRds06wsXhFe%26sz%3Dw1000"
     ],
     "price": 5700.0,
     "rating": 4.5,
@@ -1470,10 +1470,10 @@ const PRODUCTS = [
     "model": "WW70T3010BS/NQ",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1g5SLQAEv4GtI1kZFHrtIXmpByW-5OcNj&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1jH1NHZ3MycQ7sy_sHRbgCVz2zXh_G8Ot&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1LGurkLa3z1WBgwTZmmpUmrAuuzbcUO-H&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1miAYi37FOZV1hl_c-jqHeOpT6wJvP1XR&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1g5SLQAEv4GtI1kZFHrtIXmpByW-5OcNj%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1jH1NHZ3MycQ7sy_sHRbgCVz2zXh_G8Ot%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1LGurkLa3z1WBgwTZmmpUmrAuuzbcUO-H%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1miAYi37FOZV1hl_c-jqHeOpT6wJvP1XR%26sz%3Dw1000"
     ],
     "price": 4800.0,
     "rating": 4.5,
@@ -1495,9 +1495,9 @@ const PRODUCTS = [
     "model": "WD90F22BCSNQ",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1FvzhEL-pY2blA2Sb8s0mhZIdlM97IHF2&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1YddMnLUsveyB2ls_Kovz7B0qzYpgrbvO&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1zGztLTKFMt5sAS7IqfJWJxz4cy9uT3G1&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1FvzhEL-pY2blA2Sb8s0mhZIdlM97IHF2%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1YddMnLUsveyB2ls_Kovz7B0qzYpgrbvO%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1zGztLTKFMt5sAS7IqfJWJxz4cy9uT3G1%26sz%3Dw1000"
     ],
     "price": 21999.0,
     "rating": 4.5,
@@ -1519,8 +1519,8 @@ const PRODUCTS = [
     "model": "WD21T6300GV/NQ",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1BaBYH7RG4NdQYjz6sg_Y1tgiFMyeFAfL&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1KWo6L8KOj_HD9Ov_mhpyggvvqJhUZvr5&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1BaBYH7RG4NdQYjz6sg_Y1tgiFMyeFAfL%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KWo6L8KOj_HD9Ov_mhpyggvvqJhUZvr5%26sz%3Dw1000"
     ],
     "price": 18000.0,
     "rating": 4.5,
@@ -1542,9 +1542,9 @@ const PRODUCTS = [
     "model": "32S5K",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1deqYYHaMNTbnUuhmUaudY9nfMosbILOy&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1I6IiYXaJWweRqY13NzLjM4yhtBJGC1Vv&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1UORMx70sBtWiHu5RXHMtC_0MgwEeoDa0&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1deqYYHaMNTbnUuhmUaudY9nfMosbILOy%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1I6IiYXaJWweRqY13NzLjM4yhtBJGC1Vv%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UORMx70sBtWiHu5RXHMtC_0MgwEeoDa0%26sz%3Dw1000"
     ],
     "price": 2250.0,
     "rating": 4.5,
@@ -1566,9 +1566,9 @@ const PRODUCTS = [
     "model": "43S5K",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1I6IiYXaJWweRqY13NzLjM4yhtBJGC1Vv&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1deqYYHaMNTbnUuhmUaudY9nfMosbILOy&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1UORMx70sBtWiHu5RXHMtC_0MgwEeoDa0&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1I6IiYXaJWweRqY13NzLjM4yhtBJGC1Vv%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1deqYYHaMNTbnUuhmUaudY9nfMosbILOy%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UORMx70sBtWiHu5RXHMtC_0MgwEeoDa0%26sz%3Dw1000"
     ],
     "price": 2900.0,
     "rating": 4.5,
@@ -1590,9 +1590,9 @@ const PRODUCTS = [
     "model": "50S5K",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1I6IiYXaJWweRqY13NzLjM4yhtBJGC1Vv&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1deqYYHaMNTbnUuhmUaudY9nfMosbILOy&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1UORMx70sBtWiHu5RXHMtC_0MgwEeoDa0&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1I6IiYXaJWweRqY13NzLjM4yhtBJGC1Vv%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1deqYYHaMNTbnUuhmUaudY9nfMosbILOy%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UORMx70sBtWiHu5RXHMtC_0MgwEeoDa0%26sz%3Dw1000"
     ],
     "price": 3850.0,
     "rating": 4.5,
@@ -1614,9 +1614,9 @@ const PRODUCTS = [
     "model": "55P6L",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=12x95GxzwMlroJyjpnYs_mUDffMW7JZMb&sz=w1000",
-      "https://drive.google.com/thumbnail?id=14Nf2af9OiQnHFmUJNCOw3FyWuMQtJji5&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1u7gUtMHbC4Q3CCfKJZ4Kzkk-U1Ti2Af9&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D12x95GxzwMlroJyjpnYs_mUDffMW7JZMb%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14Nf2af9OiQnHFmUJNCOw3FyWuMQtJji5%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1u7gUtMHbC4Q3CCfKJZ4Kzkk-U1Ti2Af9%26sz%3Dw1000"
     ],
     "price": 5200.0,
     "rating": 4.5,
@@ -1638,9 +1638,9 @@ const PRODUCTS = [
     "model": "65P755",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1u7gUtMHbC4Q3CCfKJZ4Kzkk-U1Ti2Af9&sz=w1000",
-      "https://drive.google.com/thumbnail?id=14Nf2af9OiQnHFmUJNCOw3FyWuMQtJji5&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1u7gUtMHbC4Q3CCfKJZ4Kzkk-U1Ti2Af9&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1u7gUtMHbC4Q3CCfKJZ4Kzkk-U1Ti2Af9%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14Nf2af9OiQnHFmUJNCOw3FyWuMQtJji5%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1u7gUtMHbC4Q3CCfKJZ4Kzkk-U1Ti2Af9%26sz%3Dw1000"
     ],
     "price": 7799.0,
     "rating": 4.5,
@@ -1662,8 +1662,8 @@ const PRODUCTS = [
     "model": "75P6L",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1u7gUtMHbC4Q3CCfKJZ4Kzkk-U1Ti2Af9&sz=w1000",
-      "https://drive.google.com/thumbnail?id=12x95GxzwMlroJyjpnYs_mUDffMW7JZMb&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1u7gUtMHbC4Q3CCfKJZ4Kzkk-U1Ti2Af9%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D12x95GxzwMlroJyjpnYs_mUDffMW7JZMb%26sz%3Dw1000"
     ],
     "price": 9400.0,
     "rating": 4.5,
@@ -1685,7 +1685,7 @@ const PRODUCTS = [
     "model": "55T6D",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1p1wQv-vwvDlgrUno9oNWwggngiB9u4q-&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1p1wQv-vwvDlgrUno9oNWwggngiB9u4q-%26sz%3Dw1000"
     ],
     "price": 6450.0,
     "rating": 4.5,
@@ -1707,10 +1707,10 @@ const PRODUCTS = [
     "model": "75P7K",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1MkD8fIYdgI1lNtaPgqhhZJUZ_zu4WJWs&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Z-j1DD7zj8vlahrmgq9hFAVyyLvzkh43&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19RIiPYfy_wZMjbpAvb9qiOagcaCRNHIh&sz=w1000",
-      "https://drive.google.com/thumbnail?id=17Uws_ewMNPmQTB-mH1wSOeRsi54_TzYO&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1MkD8fIYdgI1lNtaPgqhhZJUZ_zu4WJWs%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Z-j1DD7zj8vlahrmgq9hFAVyyLvzkh43%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19RIiPYfy_wZMjbpAvb9qiOagcaCRNHIh%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17Uws_ewMNPmQTB-mH1wSOeRsi54_TzYO%26sz%3Dw1000"
     ],
     "price": 11500.0,
     "rating": 4.5,
@@ -1735,9 +1735,9 @@ const PRODUCTS = [
     "model": "85P7L",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1MkD8fIYdgI1lNtaPgqhhZJUZ_zu4WJWs&sz=w1000",
-      "https://drive.google.com/thumbnail?id=17Uws_ewMNPmQTB-mH1wSOeRsi54_TzYO&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19RIiPYfy_wZMjbpAvb9qiOagcaCRNHIh&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1MkD8fIYdgI1lNtaPgqhhZJUZ_zu4WJWs%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17Uws_ewMNPmQTB-mH1wSOeRsi54_TzYO%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19RIiPYfy_wZMjbpAvb9qiOagcaCRNHIh%26sz%3Dw1000"
     ],
     "price": 19000.0,
     "rating": 4.5,
@@ -1759,7 +1759,7 @@ const PRODUCTS = [
     "model": "98P8K",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1MkD8fIYdgI1lNtaPgqhhZJUZ_zu4WJWs&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1MkD8fIYdgI1lNtaPgqhhZJUZ_zu4WJWs%26sz%3Dw1000"
     ],
     "price": 28499.0,
     "rating": 4.5,
@@ -1781,7 +1781,7 @@ const PRODUCTS = [
     "model": "65C6K",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=153Vi_DNOtXTXSgigKG76yOzMgmsF04XG&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D153Vi_DNOtXTXSgigKG76yOzMgmsF04XG%26sz%3Dw1000"
     ],
     "price": 10599.0,
     "rating": 4.5,
@@ -1803,10 +1803,10 @@ const PRODUCTS = [
     "model": "75C6K",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=153Vi_DNOtXTXSgigKG76yOzMgmsF04XG&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1SThw2nKtWyjF1CF1QvQaLvpa3oxzaTpc&sz=w1000",
-      "https://drive.google.com/thumbnail?id=10Z2vMGlOHQutXFYynKxyUVkz4-uF9OPF&sz=w1000",
-      "https://drive.google.com/thumbnail?id=14Qd_MLj3VPhPFilhB2FTG4uXqvvB24Ih&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D153Vi_DNOtXTXSgigKG76yOzMgmsF04XG%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1SThw2nKtWyjF1CF1QvQaLvpa3oxzaTpc%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D10Z2vMGlOHQutXFYynKxyUVkz4-uF9OPF%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14Qd_MLj3VPhPFilhB2FTG4uXqvvB24Ih%26sz%3Dw1000"
     ],
     "price": 14300.0,
     "rating": 4.5,
@@ -1828,10 +1828,10 @@ const PRODUCTS = [
     "model": "85C6K",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=153Vi_DNOtXTXSgigKG76yOzMgmsF04XG&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kAS_Vgfj0bY7RigMjgB3lPCJQSQbCZ0u&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1m-t5MPOF3D5AOX9vt8lPwYYQEUm-roqW&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1pBUutrhh7iJy45d5aqnYGteFBdU11izp&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D153Vi_DNOtXTXSgigKG76yOzMgmsF04XG%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kAS_Vgfj0bY7RigMjgB3lPCJQSQbCZ0u%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1m-t5MPOF3D5AOX9vt8lPwYYQEUm-roqW%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1pBUutrhh7iJy45d5aqnYGteFBdU11izp%26sz%3Dw1000"
     ],
     "price": 23500.0,
     "rating": 4.5,
@@ -1853,7 +1853,7 @@ const PRODUCTS = [
     "model": "98C6K",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=153Vi_DNOtXTXSgigKG76yOzMgmsF04XG&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D153Vi_DNOtXTXSgigKG76yOzMgmsF04XG%26sz%3Dw1000"
     ],
     "price": 38799.0,
     "rating": 4.5,
@@ -1875,10 +1875,10 @@ const PRODUCTS = [
     "model": "115C7K",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1kuVwbiGU_NCO8HSluP0zvgEH3aiqwNG7&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1gQCrXbzcf1zilWdkk0Z04sfwXrsQZKxL&sz=w1000",
-      "https://drive.google.com/thumbnail?id=11_fSldr3JWgZ0fKCff_HEEAobCgMCQJG&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1mZJv-DBTMKrq4aWUEbsVFfKRw93NNLuC&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kuVwbiGU_NCO8HSluP0zvgEH3aiqwNG7%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1gQCrXbzcf1zilWdkk0Z04sfwXrsQZKxL%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D11_fSldr3JWgZ0fKCff_HEEAobCgMCQJG%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1mZJv-DBTMKrq4aWUEbsVFfKRw93NNLuC%26sz%3Dw1000"
     ],
     "price": 199999.0,
     "rating": 4.5,
@@ -1900,10 +1900,10 @@ const PRODUCTS = [
     "model": "27R73Q",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1WMm8QUK9QoqmdhZJAw-FDbLAG5I6Z7w0&sz=w1000",
-      "https://drive.google.com/thumbnail?id=187idJZzFiDF0cpKArhMcSbrQPTbBbuNp&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1iv5dCwqMWcTOyIl_Cab7JQJ8gDf10_kL&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1KvWY1DIA7o7VwhRM1xpBeE3iYnrr0PU1&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WMm8QUK9QoqmdhZJAw-FDbLAG5I6Z7w0%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D187idJZzFiDF0cpKArhMcSbrQPTbBbuNp%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1iv5dCwqMWcTOyIl_Cab7JQJ8gDf10_kL%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KvWY1DIA7o7VwhRM1xpBeE3iYnrr0PU1%26sz%3Dw1000"
     ],
     "price": 7900.0,
     "rating": 4.5,
@@ -1925,8 +1925,8 @@ const PRODUCTS = [
     "model": "S45H",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=1WdvmzCTSt2ZeAeDVgGG0l9u9d2iLdYlv&sz=w1000",
-      "https://drive.google.com/thumbnail?id=15ZHeJ5Fv3O2PqXUv-WO1U0PYwurHsiBW&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WdvmzCTSt2ZeAeDVgGG0l9u9d2iLdYlv%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D15ZHeJ5Fv3O2PqXUv-WO1U0PYwurHsiBW%26sz%3Dw1000"
     ],
     "price": 1380.0,
     "rating": 4.5,
@@ -1948,10 +1948,10 @@ const PRODUCTS = [
     "model": "S55H",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=13tIp1yyEavxH-qpWdEVJS4SHgd3X_2mb&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1_gCGbVTlFE0pOpzrOIthi1PqE4_ATbGH&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1v_4KVA09lJOWIaIDvRtUoYgkNaYjFYAD&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1wkKk4emQIsrGj4yheT-SadJJAfG4Gnc9&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D13tIp1yyEavxH-qpWdEVJS4SHgd3X_2mb%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_gCGbVTlFE0pOpzrOIthi1PqE4_ATbGH%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1v_4KVA09lJOWIaIDvRtUoYgkNaYjFYAD%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1wkKk4emQIsrGj4yheT-SadJJAfG4Gnc9%26sz%3Dw1000"
     ],
     "price": 2150.0,
     "rating": 4.5,
@@ -1973,10 +1973,10 @@ const PRODUCTS = [
     "model": "Q65H",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=1UdJ5ELXdWodHH_TmwEd5P2nQTQ7rMX7B&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1KgkmO23CQMg1yhKjBY442QjTVI01LSty&sz=w1000",
-      "https://drive.google.com/thumbnail?id=11AnXBnwK6ADUn4K3HIzYXscsqAvz5HdW&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1bSMWgxrTEYziZZggZSohX5Xx96sxgNlc&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UdJ5ELXdWodHH_TmwEd5P2nQTQ7rMX7B%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KgkmO23CQMg1yhKjBY442QjTVI01LSty%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D11AnXBnwK6ADUn4K3HIzYXscsqAvz5HdW%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1bSMWgxrTEYziZZggZSohX5Xx96sxgNlc%26sz%3Dw1000"
     ],
     "price": 4150.0,
     "rating": 4.5,
@@ -1998,10 +1998,10 @@ const PRODUCTS = [
     "model": "Q75H",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=1b-LJcK2txPAVI3-r1-fYW7Mx90d2foNH&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Kez8en-J0yl_roKc5zJB__BFmM67DJXI&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1mxGBbkI_rqMUpZpBTd0MIrBsRRTpBSdc&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1O21BhbcMGbh_pYB9IYgkyRVZxAksLZVL&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1b-LJcK2txPAVI3-r1-fYW7Mx90d2foNH%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Kez8en-J0yl_roKc5zJB__BFmM67DJXI%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1mxGBbkI_rqMUpZpBTd0MIrBsRRTpBSdc%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1O21BhbcMGbh_pYB9IYgkyRVZxAksLZVL%26sz%3Dw1000"
     ],
     "price": 6700.0,
     "rating": 4.5,
@@ -2023,10 +2023,10 @@ const PRODUCTS = [
     "model": "Q85H",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=1uunxeAwwckPt15ffdUbbOB-W7-FSGJ1n&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1esB4ynly_VzPN6u1iJdpoSU6eHmwfw3o&sz=w1000",
-      "https://drive.google.com/thumbnail?id=13hGPXbhZXFHJRRzunY3QgP0h866MpOV4&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1HQTyL-mEk-nF4reppFUTIHV4VffPD7ci&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1uunxeAwwckPt15ffdUbbOB-W7-FSGJ1n%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1esB4ynly_VzPN6u1iJdpoSU6eHmwfw3o%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D13hGPXbhZXFHJRRzunY3QgP0h866MpOV4%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1HQTyL-mEk-nF4reppFUTIHV4VffPD7ci%26sz%3Dw1000"
     ],
     "price": 8700.0,
     "rating": 4.5,
@@ -2048,11 +2048,11 @@ const PRODUCTS = [
     "model": "TP200K",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=15JrwUPxpIsWBMGRDWWFA6oxutJKkgHP-&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ZQLzsN9yzQhSFqBIoiY-WFQ6_6DzNqgY&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1B4p5T2zYbfqcHwp2mvo0b7WpKXowoGNr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1y-ucMO-g4gMycbUNcXgqSxmMAeiMvnil&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1H4PFzOiV3Axe3ws653UmWneh1U288ucb&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D15JrwUPxpIsWBMGRDWWFA6oxutJKkgHP-%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ZQLzsN9yzQhSFqBIoiY-WFQ6_6DzNqgY%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1B4p5T2zYbfqcHwp2mvo0b7WpKXowoGNr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1y-ucMO-g4gMycbUNcXgqSxmMAeiMvnil%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1H4PFzOiV3Axe3ws653UmWneh1U288ucb%26sz%3Dw1000"
     ],
     "price": 3350.0,
     "rating": 4.5,
@@ -2074,10 +2074,10 @@ const PRODUCTS = [
     "model": "TP300K",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=1oRQxWZimhWKOoZz4NHvLF3l1f7QDPyhs&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ZTtoxFNFhmn1eOHZKSbQFUnF5cV_1dZd&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ZWEufqsUjEs0cUE-t5Yk75jlRmqq2L4i&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1n6jfXJwZ3si5tqRJnbzBhlGhVefRhz3h&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1oRQxWZimhWKOoZz4NHvLF3l1f7QDPyhs%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ZTtoxFNFhmn1eOHZKSbQFUnF5cV_1dZd%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ZWEufqsUjEs0cUE-t5Yk75jlRmqq2L4i%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1n6jfXJwZ3si5tqRJnbzBhlGhVefRhz3h%26sz%3Dw1000"
     ],
     "price": 5350.0,
     "rating": 4.5,
@@ -2099,9 +2099,9 @@ const PRODUCTS = [
     "model": "TY-LYR47W",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1M-NJgeZGg9unQkA02cGysuEk6NbPjbCW&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1V1-2hl2MrZv_VRSICVCG5NYGl4Sebs_o&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1M-NJgeZGg9unQkA02cGysuEk6NbPjbCW&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1M-NJgeZGg9unQkA02cGysuEk6NbPjbCW%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1V1-2hl2MrZv_VRSICVCG5NYGl4Sebs_o%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1M-NJgeZGg9unQkA02cGysuEk6NbPjbCW%26sz%3Dw1000"
     ],
     "price": 1399.0,
     "rating": 4.5,
@@ -2123,9 +2123,9 @@ const PRODUCTS = [
     "model": "TY-LWYR109W",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1B7J7SEtHChP7OkVRsspesmRzPjnIbpyj&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1NA8k8UE_xJv9-QD9QKHprNCmx1s6EXsI&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1E5JOqpgcNLnRvvPpiZj0ZlcMV_I-FhKk&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1B7J7SEtHChP7OkVRsspesmRzPjnIbpyj%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1NA8k8UE_xJv9-QD9QKHprNCmx1s6EXsI%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1E5JOqpgcNLnRvvPpiZj0ZlcMV_I-FhKk%26sz%3Dw1000"
     ],
     "price": 1550.0,
     "rating": 4.5,
@@ -2147,9 +2147,9 @@ const PRODUCTS = [
     "model": "TAC-12CSD/ZG11",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1hzxPZeD9f3Pcgqru01BGte5lis2yuRnW&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1lBFL1o2-kSkY6-qVz_EwR2lhgLUa_GqU&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kWEXTI8pVOFb4aImW6qYmZKuTghTWUSd&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1hzxPZeD9f3Pcgqru01BGte5lis2yuRnW%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lBFL1o2-kSkY6-qVz_EwR2lhgLUa_GqU%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kWEXTI8pVOFb4aImW6qYmZKuTghTWUSd%26sz%3Dw1000"
     ],
     "price": 3350.0,
     "rating": 4.5,
@@ -2171,9 +2171,9 @@ const PRODUCTS = [
     "model": "TAC-18CSD/ZG11",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1lBFL1o2-kSkY6-qVz_EwR2lhgLUa_GqU&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1hzxPZeD9f3Pcgqru01BGte5lis2yuRnW&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kWEXTI8pVOFb4aImW6qYmZKuTghTWUSd&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lBFL1o2-kSkY6-qVz_EwR2lhgLUa_GqU%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1hzxPZeD9f3Pcgqru01BGte5lis2yuRnW%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kWEXTI8pVOFb4aImW6qYmZKuTghTWUSd%26sz%3Dw1000"
     ],
     "price": 5300.0,
     "rating": 4.5,
@@ -2195,9 +2195,9 @@ const PRODUCTS = [
     "model": "TAC-24CSD/ZG11",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1kWEXTI8pVOFb4aImW6qYmZKuTghTWUSd&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1hzxPZeD9f3Pcgqru01BGte5lis2yuRnW&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1lBFL1o2-kSkY6-qVz_EwR2lhgLUa_GqU&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kWEXTI8pVOFb4aImW6qYmZKuTghTWUSd%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1hzxPZeD9f3Pcgqru01BGte5lis2yuRnW%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lBFL1o2-kSkY6-qVz_EwR2lhgLUa_GqU%26sz%3Dw1000"
     ],
     "price": 7450.0,
     "rating": 4.5,
@@ -2219,10 +2219,10 @@ const PRODUCTS = [
     "model": "TAC-12CSD/ZG21I",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1meDPlLxj79mx5Ub9zNy4VZCRepjeMHvr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1zspXOAVf0q81yJTh6G3vieQ5bg-Fe39o&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1jp3042VgtBL9QYB0Vonzr8-dj6JzLjGZ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1WBF8Hc8t1JTTEcuYu3hbG0IVoMlMgGmo&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1meDPlLxj79mx5Ub9zNy4VZCRepjeMHvr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1zspXOAVf0q81yJTh6G3vieQ5bg-Fe39o%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1jp3042VgtBL9QYB0Vonzr8-dj6JzLjGZ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WBF8Hc8t1JTTEcuYu3hbG0IVoMlMgGmo%26sz%3Dw1000"
     ],
     "price": 3800.0,
     "rating": 4.5,
@@ -2244,10 +2244,10 @@ const PRODUCTS = [
     "model": "TAC-18CSD/ZG21I",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1WBF8Hc8t1JTTEcuYu3hbG0IVoMlMgGmo&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1jp3042VgtBL9QYB0Vonzr8-dj6JzLjGZ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1zspXOAVf0q81yJTh6G3vieQ5bg-Fe39o&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1meDPlLxj79mx5Ub9zNy4VZCRepjeMHvr&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WBF8Hc8t1JTTEcuYu3hbG0IVoMlMgGmo%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1jp3042VgtBL9QYB0Vonzr8-dj6JzLjGZ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1zspXOAVf0q81yJTh6G3vieQ5bg-Fe39o%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1meDPlLxj79mx5Ub9zNy4VZCRepjeMHvr%26sz%3Dw1000"
     ],
     "price": 5800.0,
     "rating": 4.5,
@@ -2269,9 +2269,9 @@ const PRODUCTS = [
     "model": "TAC-24CSD/ZG21I",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1meDPlLxj79mx5Ub9zNy4VZCRepjeMHvr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1zspXOAVf0q81yJTh6G3vieQ5bg-Fe39o&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1jp3042VgtBL9QYB0Vonzr8-dj6JzLjGZ&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1meDPlLxj79mx5Ub9zNy4VZCRepjeMHvr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1zspXOAVf0q81yJTh6G3vieQ5bg-Fe39o%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1jp3042VgtBL9QYB0Vonzr8-dj6JzLjGZ%26sz%3Dw1000"
     ],
     "price": 7200.0,
     "rating": 4.5,
@@ -2293,8 +2293,8 @@ const PRODUCTS = [
     "model": "TAC-12CSA/XA82I",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1LmQn-5QFiNXNLhJgST5brn0L_BVmFv4C&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1slqhl5C-ym5CvfIJIkcJ4ZOXHRz5BFq7&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1LmQn-5QFiNXNLhJgST5brn0L_BVmFv4C%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1slqhl5C-ym5CvfIJIkcJ4ZOXHRz5BFq7%26sz%3Dw1000"
     ],
     "price": 4800.0,
     "rating": 4.5,
@@ -2316,8 +2316,8 @@ const PRODUCTS = [
     "model": "TAC-18CSA/XA82I",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1slqhl5C-ym5CvfIJIkcJ4ZOXHRz5BFq7&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1LmQn-5QFiNXNLhJgST5brn0L_BVmFv4C&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1slqhl5C-ym5CvfIJIkcJ4ZOXHRz5BFq7%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1LmQn-5QFiNXNLhJgST5brn0L_BVmFv4C%26sz%3Dw1000"
     ],
     "price": 6700.0,
     "rating": 4.5,
@@ -2339,8 +2339,8 @@ const PRODUCTS = [
     "model": "TAC-24CSA/XA82I",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1LmQn-5QFiNXNLhJgST5brn0L_BVmFv4C&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1slqhl5C-ym5CvfIJIkcJ4ZOXHRz5BFq7&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1LmQn-5QFiNXNLhJgST5brn0L_BVmFv4C%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1slqhl5C-ym5CvfIJIkcJ4ZOXHRz5BFq7%26sz%3Dw1000"
     ],
     "price": 8500.0,
     "rating": 4.5,
@@ -2362,8 +2362,8 @@ const PRODUCTS = [
     "model": "TAC-18CFD/MCI",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1ErRV9_BCmW0jgE9P7zRgZsyJjWKHM0QD&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1w5l-Gclua-S4i0w4djN7k2PandULlWzP&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ErRV9_BCmW0jgE9P7zRgZsyJjWKHM0QD%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1w5l-Gclua-S4i0w4djN7k2PandULlWzP%26sz%3Dw1000"
     ],
     "price": 9600.0,
     "rating": 4.5,
@@ -2385,11 +2385,11 @@ const PRODUCTS = [
     "model": "TAC-24CFD/V7I",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=19KPcfcjnRMgpwrDbikaeB5tC4TgNN9kv&sz=w1000",
-      "https://drive.google.com/thumbnail?id=14A4E7zv2fTOg__XEgVeU_xyn1oWk7eMQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1PttiAGBg4B8Rq7sb_JMj8-2ExNOUwhZ6&sz=w1000",
-      "https://drive.google.com/thumbnail?id=11goWsS0tufoVpsF96aJlNKM835-f0Tkl&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19WF5DaBnuhNVhVzZfdKXHg15OobXEMoX&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19KPcfcjnRMgpwrDbikaeB5tC4TgNN9kv%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14A4E7zv2fTOg__XEgVeU_xyn1oWk7eMQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1PttiAGBg4B8Rq7sb_JMj8-2ExNOUwhZ6%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D11goWsS0tufoVpsF96aJlNKM835-f0Tkl%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19WF5DaBnuhNVhVzZfdKXHg15OobXEMoX%26sz%3Dw1000"
     ],
     "price": 11200.0,
     "rating": 4.5,
@@ -2411,9 +2411,9 @@ const PRODUCTS = [
     "model": "F117SDS",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1GADhtcSn8oRJRgtZOMDU13W4lwfea93k&sz=w1000",
-      "https://drive.google.com/thumbnail?id=135cvjHMXIqlfVFKl4qolpqr3NnMs-Enp&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1x1ZUYj9ZFbqr-CizpyerhA9aKHUgnwea&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GADhtcSn8oRJRgtZOMDU13W4lwfea93k%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D135cvjHMXIqlfVFKl4qolpqr3NnMs-Enp%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1x1ZUYj9ZFbqr-CizpyerhA9aKHUgnwea%26sz%3Dw1000"
     ],
     "price": 1899.0,
     "rating": 4.5,
@@ -2435,9 +2435,9 @@ const PRODUCTS = [
     "model": "F216TMS",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1DULJXOmW-peMcpQA492u1WVQ8ZfRvdWE&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1z-IdAO-Zeo1nEbZyjnQs5hY98U2RNXRK&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1W_665rlfpS1E65wMejG7UhRCvgl1c6Bz&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1DULJXOmW-peMcpQA492u1WVQ8ZfRvdWE%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1z-IdAO-Zeo1nEbZyjnQs5hY98U2RNXRK%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1W_665rlfpS1E65wMejG7UhRCvgl1c6Bz%26sz%3Dw1000"
     ],
     "price": 2850.0,
     "rating": 4.5,
@@ -2459,10 +2459,10 @@ const PRODUCTS = [
     "model": "P540TMGWD",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1hNc9838HDVY3FUq9rsPZ-OrlG0wK9zpv&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1WViHgFxxTcluaBKY6ovrVeB1i6INf3kx&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1J7_zHBJqGrhOg168pr7EX_N3QmAdXTSx&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1dDMNrRsDvgicADh3Gjce6fY5IwU77KZQ&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1hNc9838HDVY3FUq9rsPZ-OrlG0wK9zpv%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WViHgFxxTcluaBKY6ovrVeB1i6INf3kx%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1J7_zHBJqGrhOg168pr7EX_N3QmAdXTSx%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1dDMNrRsDvgicADh3Gjce6fY5IwU77KZQ%26sz%3Dw1000"
     ],
     "price": 7700.0,
     "rating": 4.5,
@@ -2484,10 +2484,10 @@ const PRODUCTS = [
     "model": "P540TMG",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=16xf0DM3RY66KPNvROVzVJDT2HpjWRScL&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1gv70wj4iOkaCpE4S7THZghnuXb1uwL1e&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1D_pzdSs7CfUbM89QZeEOMw1sEe5D-LEz&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1l3Y1gnh6aZ_H9_DUEtm2KAPnSVAbhuq2&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D16xf0DM3RY66KPNvROVzVJDT2HpjWRScL%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1gv70wj4iOkaCpE4S7THZghnuXb1uwL1e%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1D_pzdSs7CfUbM89QZeEOMw1sEe5D-LEz%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1l3Y1gnh6aZ_H9_DUEtm2KAPnSVAbhuq2%26sz%3Dw1000"
     ],
     "price": 7200.0,
     "rating": 4.5,
@@ -2509,9 +2509,9 @@ const PRODUCTS = [
     "model": "P624TMN",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1wvzuiRsr-ba5NRxLjsu47JUwHV4xfv8m&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1JLe6p_qs1keGj9YKMcyNEaWHEnq-oV-H&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1h0BG76-IlTOgE837TlO8GMVlXexerDvR&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1wvzuiRsr-ba5NRxLjsu47JUwHV4xfv8m%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1JLe6p_qs1keGj9YKMcyNEaWHEnq-oV-H%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1h0BG76-IlTOgE837TlO8GMVlXexerDvR%26sz%3Dw1000"
     ],
     "price": 9250.0,
     "rating": 4.5,
@@ -2533,10 +2533,10 @@ const PRODUCTS = [
     "model": "P826TMN",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1LLiHO-SQPNx8wNQ91GJl3LraXe0dwgWk&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1xWIdvJsbLFt6n7UwrTS8tSo4YPMVqQ8O&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1_9KkyeuEX1JGMhXaVOK675ijCFtfO3c_&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1PItwdXv1YTX8h-QwYLak_FtDPyfb9I4o&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1LLiHO-SQPNx8wNQ91GJl3LraXe0dwgWk%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1xWIdvJsbLFt6n7UwrTS8tSo4YPMVqQ8O%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_9KkyeuEX1JGMhXaVOK675ijCFtfO3c_%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1PItwdXv1YTX8h-QwYLak_FtDPyfb9I4o%26sz%3Dw1000"
     ],
     "price": 10500.0,
     "rating": 4.5,
@@ -2558,10 +2558,10 @@ const PRODUCTS = [
     "model": "F141BFS",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=16laeZmjvF_EKfSMZuQLBy4LjhgILGTGU&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1gzBqTER4xy7CzRaSmjSvQzscxyVstgJf&sz=w1000",
-      "https://drive.google.com/thumbnail?id=128IElHzZxuyksYJyeOzaYOX3UJkcgJr_&sz=w1000",
-      "https://drive.google.com/thumbnail?id=10ITamT1SmARQigSdzHyFI_qsRj_WtBT1&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D16laeZmjvF_EKfSMZuQLBy4LjhgILGTGU%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1gzBqTER4xy7CzRaSmjSvQzscxyVstgJf%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D128IElHzZxuyksYJyeOzaYOX3UJkcgJr_%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D10ITamT1SmARQigSdzHyFI_qsRj_WtBT1%26sz%3Dw1000"
     ],
     "price": 2550.0,
     "rating": 4.5,
@@ -2583,9 +2583,9 @@ const PRODUCTS = [
     "model": "F185BFG",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=17Wp0F15NIhwAtYYaSpYSZmKoKa7X0Qs9&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1u15-WCIJYUcB1iuRCHBwNZ3QJ79NTS7a&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ZHo6kN45ReVeBgpNhneaJqMSdtTqXwCe&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17Wp0F15NIhwAtYYaSpYSZmKoKa7X0Qs9%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1u15-WCIJYUcB1iuRCHBwNZ3QJ79NTS7a%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ZHo6kN45ReVeBgpNhneaJqMSdtTqXwCe%26sz%3Dw1000"
     ],
     "price": 2999.0,
     "rating": 4.5,
@@ -2607,11 +2607,11 @@ const PRODUCTS = [
     "model": "F410BFS",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1OMsm1fAuR78TIhrzbArV0kTTMM62SZOT&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19s4CbGt3OgGmMngEIn_SY83tnIFHy-lX&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1F9aQ9EmVhsGBACKgsaboGhOPBjByXwFZ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=12d_QnkYd-CeoSRn0oS0xsdbs8tKwLILN&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1LvRB-RoXy-_PuxuubUZjyPH3DCReoN_r&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1OMsm1fAuR78TIhrzbArV0kTTMM62SZOT%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19s4CbGt3OgGmMngEIn_SY83tnIFHy-lX%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1F9aQ9EmVhsGBACKgsaboGhOPBjByXwFZ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D12d_QnkYd-CeoSRn0oS0xsdbs8tKwLILN%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1LvRB-RoXy-_PuxuubUZjyPH3DCReoN_r%26sz%3Dw1000"
     ],
     "price": 5000.0,
     "rating": 4.5,
@@ -2633,10 +2633,10 @@ const PRODUCTS = [
     "model": "P575SBGWD",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1UJuTQC8f6_4HQjmx87ieQv1ISxEfSoEQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1a7QlTNtf_Yc14UxWe4rmskabjT-jXkA-&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Z1nTjUG3DPjwz7dcpAOltk6t58m0weKr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1cWLKkYnH9KYM4HEnbuBv7SrONou-lSVW&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UJuTQC8f6_4HQjmx87ieQv1ISxEfSoEQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1a7QlTNtf_Yc14UxWe4rmskabjT-jXkA-%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Z1nTjUG3DPjwz7dcpAOltk6t58m0weKr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1cWLKkYnH9KYM4HEnbuBv7SrONou-lSVW%26sz%3Dw1000"
     ],
     "price": 9700.0,
     "rating": 4.5,
@@ -2658,10 +2658,10 @@ const PRODUCTS = [
     "model": "P692SBNWD",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1bKY6aON8Ko43Um9eun4eSvyXyAYtZiq7&sz=w1000",
-      "https://drive.google.com/thumbnail?id=13BQq6JI7q6waBiFP4kJv3zXiTvaYIRnS&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kCVdOu3LJmngXxpE5WGPPo7ozcx-zzCA&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1BTObAuAILPsnqqM_Pw4rp8b2QH2L01nu&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1bKY6aON8Ko43Um9eun4eSvyXyAYtZiq7%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D13BQq6JI7q6waBiFP4kJv3zXiTvaYIRnS%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kCVdOu3LJmngXxpE5WGPPo7ozcx-zzCA%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1BTObAuAILPsnqqM_Pw4rp8b2QH2L01nu%26sz%3Dw1000"
     ],
     "price": 9850.0,
     "rating": 4.5,
@@ -2683,10 +2683,10 @@ const PRODUCTS = [
     "model": "P692SBBG",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1KithAvCVjjIZGJ5AkS71RBC_fkhkQlKQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=18C4rpUsBNE6i0ENJNq_1s9GHg6HSq0I8&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1BD3Ted__kc7Iul99LK8cUQst1XFtSLCk&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1c4vRyflZwUjc6H-FiSg9B8iXbbr0GuF9&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KithAvCVjjIZGJ5AkS71RBC_fkhkQlKQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D18C4rpUsBNE6i0ENJNq_1s9GHg6HSq0I8%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1BD3Ted__kc7Iul99LK8cUQst1XFtSLCk%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1c4vRyflZwUjc6H-FiSg9B8iXbbr0GuF9%26sz%3Dw1000"
     ],
     "price": 10700.0,
     "rating": 4.5,
@@ -2708,11 +2708,11 @@ const PRODUCTS = [
     "model": "P547FDBG",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1KmXvlnyCnsh4lTnArNKxkG5KRmmTNRoS&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1MnzZ7uyPRlgXlrsXN-DHyIubnRiqjmem&sz=w1000",
-      "https://drive.google.com/thumbnail?id=13yWiXWKeON4eTUJACVHxJvLJH7Yk0Q5v&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1pgb7QvtpPjGfcxW2O8D_pnrOe8m62oon&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Cfok-Ukl0RxMHeY2vX-MbPdOwp7ICvgY&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KmXvlnyCnsh4lTnArNKxkG5KRmmTNRoS%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1MnzZ7uyPRlgXlrsXN-DHyIubnRiqjmem%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D13yWiXWKeON4eTUJACVHxJvLJH7Yk0Q5v%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1pgb7QvtpPjGfcxW2O8D_pnrOe8m62oon%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Cfok-Ukl0RxMHeY2vX-MbPdOwp7ICvgY%26sz%3Dw1000"
     ],
     "price": 11600.0,
     "rating": 4.5,
@@ -2734,9 +2734,9 @@ const PRODUCTS = [
     "model": "F208SDS",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1UiDTE2fcSw7MKXh3IatRAzeys0IWTzTm&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1IlBW42DLAFYLbuHIg3UyHATSHgmB-acW&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1d2ArzLkZyEHW2G93wwG7hJlMGRCzLK3u&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UiDTE2fcSw7MKXh3IatRAzeys0IWTzTm%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1IlBW42DLAFYLbuHIg3UyHATSHgmB-acW%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1d2ArzLkZyEHW2G93wwG7hJlMGRCzLK3u%26sz%3Dw1000"
     ],
     "price": 3399.0,
     "rating": 4.5,
@@ -2758,9 +2758,9 @@ const PRODUCTS = [
     "model": "F131CFSL",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1XCgT1XPCgN6_El8qAC9mFrVJSsoxU8R8&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19lp8jRMGSZDrvL0htnw5KVikQK4qcZmI&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1mWLXuZRl8hMeOUh6I_Gd-X5gRtiy6hMa&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1XCgT1XPCgN6_El8qAC9mFrVJSsoxU8R8%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19lp8jRMGSZDrvL0htnw5KVikQK4qcZmI%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1mWLXuZRl8hMeOUh6I_Gd-X5gRtiy6hMa%26sz%3Dw1000"
     ],
     "price": 2220.0,
     "rating": 4.5,
@@ -2782,8 +2782,8 @@ const PRODUCTS = [
     "model": "F188CFSL",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1qTKxRuO5jpdDv2Vz9uoug-jFd4t_Wdp5&sz=w1000",
-      "https://drive.google.com/thumbnail?id=12XwK9c1oEsjr1v9MRXJ22ZKmd_JwrXwo&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1qTKxRuO5jpdDv2Vz9uoug-jFd4t_Wdp5%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D12XwK9c1oEsjr1v9MRXJ22ZKmd_JwrXwo%26sz%3Dw1000"
     ],
     "price": 2520.0,
     "rating": 4.5,
@@ -2805,8 +2805,8 @@ const PRODUCTS = [
     "model": "F326CFSL",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=12XwK9c1oEsjr1v9MRXJ22ZKmd_JwrXwo&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1qTKxRuO5jpdDv2Vz9uoug-jFd4t_Wdp5&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D12XwK9c1oEsjr1v9MRXJ22ZKmd_JwrXwo%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1qTKxRuO5jpdDv2Vz9uoug-jFd4t_Wdp5%26sz%3Dw1000"
     ],
     "price": 3550.0,
     "rating": 4.5,
@@ -2828,8 +2828,8 @@ const PRODUCTS = [
     "model": "F378CFSL",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1qTKxRuO5jpdDv2Vz9uoug-jFd4t_Wdp5&sz=w1000",
-      "https://drive.google.com/thumbnail?id=12XwK9c1oEsjr1v9MRXJ22ZKmd_JwrXwo&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1qTKxRuO5jpdDv2Vz9uoug-jFd4t_Wdp5%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D12XwK9c1oEsjr1v9MRXJ22ZKmd_JwrXwo%26sz%3Dw1000"
     ],
     "price": 3850.0,
     "rating": 4.5,
@@ -2851,8 +2851,8 @@ const PRODUCTS = [
     "model": "F494CFSL",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=12XwK9c1oEsjr1v9MRXJ22ZKmd_JwrXwo&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1qTKxRuO5jpdDv2Vz9uoug-jFd4t_Wdp5&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D12XwK9c1oEsjr1v9MRXJ22ZKmd_JwrXwo%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1qTKxRuO5jpdDv2Vz9uoug-jFd4t_Wdp5%26sz%3Dw1000"
     ],
     "price": 4800.0,
     "rating": 4.5,
@@ -2874,9 +2874,9 @@ const PRODUCTS = [
     "model": "F920CFSL",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1WGYyaYfdPQzTJ7_XNIJxwO6d4Q8ShcMR&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Ka2wh1CpcSDS3_60smDkRbRKyWVmTZm0&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1nsjCsTEyk90gfk_n7w2eO6GMXiviYOTB&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WGYyaYfdPQzTJ7_XNIJxwO6d4Q8ShcMR%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Ka2wh1CpcSDS3_60smDkRbRKyWVmTZm0%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1nsjCsTEyk90gfk_n7w2eO6GMXiviYOTB%26sz%3Dw1000"
     ],
     "price": 8150.0,
     "rating": 4.5,
@@ -2898,8 +2898,8 @@ const PRODUCTS = [
     "model": "F709TL",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Zrn0La_IM1Ed207IHcm6cBUx73zvu96K&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Z913jmrsKGSleAclwBwhBhdKcvUkHwN4&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Zrn0La_IM1Ed207IHcm6cBUx73zvu96K%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Z913jmrsKGSleAclwBwhBhdKcvUkHwN4%26sz%3Dw1000"
     ],
     "price": 3300.0,
     "rating": 4.5,
@@ -2921,8 +2921,8 @@ const PRODUCTS = [
     "model": "F711TL",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1XSwWRpjT3ID4VsE5-QESO1AeQi9PWvMe&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1EVPSgFTc6gUih2440MdIVBmh7zeu774X&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1XSwWRpjT3ID4VsE5-QESO1AeQi9PWvMe%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1EVPSgFTc6gUih2440MdIVBmh7zeu774X%26sz%3Dw1000"
     ],
     "price": 3900.0,
     "rating": 4.5,
@@ -2944,9 +2944,9 @@ const PRODUCTS = [
     "model": "P607FL",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1YPL1vky_bbPAimnyjBwJ6fzksCK-3A2H&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1XWgB9fVt7pL_9lMpD5A0lqRnwecJgJE1&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ADPPPI6VN_tVEZ7IqBAfBTtprJ5bUZ50&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1YPL1vky_bbPAimnyjBwJ6fzksCK-3A2H%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1XWgB9fVt7pL_9lMpD5A0lqRnwecJgJE1%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ADPPPI6VN_tVEZ7IqBAfBTtprJ5bUZ50%26sz%3Dw1000"
     ],
     "price": 3350.0,
     "rating": 4.5,
@@ -2968,9 +2968,9 @@ const PRODUCTS = [
     "model": "P1108FLG",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1CTV0J3iESKqN2LH0J8VdKYmADYGtS0lr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=14JDQ37R5O5TCVVimrzeAzybdlZhsadBn&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1bpS5tisRw_Xu6aUc9qtSyi7IsHz5s7q5&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1CTV0J3iESKqN2LH0J8VdKYmADYGtS0lr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14JDQ37R5O5TCVVimrzeAzybdlZhsadBn%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1bpS5tisRw_Xu6aUc9qtSyi7IsHz5s7q5%26sz%3Dw1000"
     ],
     "price": 5600.0,
     "rating": 4.5,
@@ -2992,9 +2992,9 @@ const PRODUCTS = [
     "model": "P1109FLG",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1HQ32-BPpkUM65lDyJ-WXv_kU55bwcvVG&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1fACnkRSqclExF1OFfG3LBQd6Ih6IOL8p&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1PiOlU347vTTUXin-gzJaVl8Nqf9rxB5H&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1HQ32-BPpkUM65lDyJ-WXv_kU55bwcvVG%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1fACnkRSqclExF1OFfG3LBQd6Ih6IOL8p%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1PiOlU347vTTUXin-gzJaVl8Nqf9rxB5H%26sz%3Dw1000"
     ],
     "price": 6199.0,
     "rating": 4.5,
@@ -3016,10 +3016,10 @@ const PRODUCTS = [
     "model": "P211FLG",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1EfE7N1DiqyMj3UjpFkZu3-pKgEEnNNib&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1fw2OZyfU69YqemWWWHMU4Izoa34fI7bS&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1KrjVWz2gKGWFd6OSgB2tbLlOUsNGGkKH&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kR5DXFtPY81VPuhybes4XSQVC8Uidq4q&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1EfE7N1DiqyMj3UjpFkZu3-pKgEEnNNib%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1fw2OZyfU69YqemWWWHMU4Izoa34fI7bS%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KrjVWz2gKGWFd6OSgB2tbLlOUsNGGkKH%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kR5DXFtPY81VPuhybes4XSQVC8Uidq4q%26sz%3Dw1000"
     ],
     "price": 6750.0,
     "rating": 4.5,
@@ -3041,9 +3041,9 @@ const PRODUCTS = [
     "model": "C211WDG",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1xFIPDISnoxtu0FQ-jV0iHSIzG9vsPwIW&sz=w1000",
-      "https://drive.google.com/thumbnail?id=110JUEo8ZM7pcl1BiWz7Crv0QbEhhBUzG&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ronc3YGSJy-g5dNI8PuDVYceS_Wm7bdO&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1xFIPDISnoxtu0FQ-jV0iHSIzG9vsPwIW%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D110JUEo8ZM7pcl1BiWz7Crv0QbEhhBUzG%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ronc3YGSJy-g5dNI8PuDVYceS_Wm7bdO%26sz%3Dw1000"
     ],
     "price": 7900.0,
     "rating": 4.5,
@@ -3065,9 +3065,9 @@ const PRODUCTS = [
     "model": "MSAF24B-12CRDN1",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1QVmOQIqDagZ9v_nJiNMSNmAmpVo4Me4Z&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1uGId6Lag5N0AI56pT9EwNm7RMbtQ4QGc&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1if8DR4uIZf6mc5GzIxSb_PqAJQTI1E-9&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1QVmOQIqDagZ9v_nJiNMSNmAmpVo4Me4Z%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1uGId6Lag5N0AI56pT9EwNm7RMbtQ4QGc%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1if8DR4uIZf6mc5GzIxSb_PqAJQTI1E-9%26sz%3Dw1000"
     ],
     "price": 4250.0,
     "rating": 4.5,
@@ -3089,9 +3089,9 @@ const PRODUCTS = [
     "model": "MSAG-12CRDN8",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1_OcMPXJtP1jqCFUVvJXaX_KJDfccMXK-&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1lz5ZlqW2n0RDwAkbNd3hso2zqoKJV1hf&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1q1WyoilRumFBFiE3nuriZjgli-eM3zKB&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_OcMPXJtP1jqCFUVvJXaX_KJDfccMXK-%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lz5ZlqW2n0RDwAkbNd3hso2zqoKJV1hf%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1q1WyoilRumFBFiE3nuriZjgli-eM3zKB%26sz%3Dw1000"
     ],
     "price": 4950.0,
     "rating": 4.5,
@@ -3113,9 +3113,9 @@ const PRODUCTS = [
     "model": "MSAG-18CRDN8",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1q1WyoilRumFBFiE3nuriZjgli-eM3zKB&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1lz5ZlqW2n0RDwAkbNd3hso2zqoKJV1hf&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1_OcMPXJtP1jqCFUVvJXaX_KJDfccMXK-&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1q1WyoilRumFBFiE3nuriZjgli-eM3zKB%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lz5ZlqW2n0RDwAkbNd3hso2zqoKJV1hf%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_OcMPXJtP1jqCFUVvJXaX_KJDfccMXK-%26sz%3Dw1000"
     ],
     "price": 7200.0,
     "rating": 4.5,
@@ -3137,9 +3137,9 @@ const PRODUCTS = [
     "model": "MSAG-24CRDN8",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1_OcMPXJtP1jqCFUVvJXaX_KJDfccMXK-&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1lz5ZlqW2n0RDwAkbNd3hso2zqoKJV1hf&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1q1WyoilRumFBFiE3nuriZjgli-eM3zKB&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_OcMPXJtP1jqCFUVvJXaX_KJDfccMXK-%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lz5ZlqW2n0RDwAkbNd3hso2zqoKJV1hf%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1q1WyoilRumFBFiE3nuriZjgli-eM3zKB%26sz%3Dw1000"
     ],
     "price": 11200.0,
     "rating": 4.5,
@@ -3161,8 +3161,8 @@ const PRODUCTS = [
     "model": "MSAGBU-12HRFN7",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1YmvUFkQcTVAdrTZBlLTs1r9dORinflK9&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1DddSqwhfW_f96TyzYdvCK006zQGLn5ap&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1YmvUFkQcTVAdrTZBlLTs1r9dORinflK9%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1DddSqwhfW_f96TyzYdvCK006zQGLn5ap%26sz%3Dw1000"
     ],
     "price": 5450.0,
     "rating": 4.5,
@@ -3184,8 +3184,8 @@ const PRODUCTS = [
     "model": "MSAFC-17CRDN8/MOX230-18CDN8-Q",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1eA6faPOyTWn3THyBYP3tvBmR95g5Dhx6&sz=w1000",
-      "https://drive.google.com/thumbnail?id=13p8S9DmS0qtkG7h4i4qba1NoONBYEBlu&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1eA6faPOyTWn3THyBYP3tvBmR95g5Dhx6%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D13p8S9DmS0qtkG7h4i4qba1NoONBYEBlu%26sz%3Dw1000"
     ],
     "price": 6500.0,
     "rating": 4.5,
@@ -3207,8 +3207,8 @@ const PRODUCTS = [
     "model": "MFTJ-36CRN1",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1aiiUpKOeZTJDhDgyFbnoLNFxu8CnPYZ4&sz=w1000",
-      "https://drive.google.com/thumbnail?id=17p9i5GT3YRTtAzDB2whfL6GOSBAs5vSp&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1aiiUpKOeZTJDhDgyFbnoLNFxu8CnPYZ4%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17p9i5GT3YRTtAzDB2whfL6GOSBAs5vSp%26sz%3Dw1000"
     ],
     "price": 16700.0,
     "rating": 4.5,
@@ -3230,8 +3230,8 @@ const PRODUCTS = [
     "model": "MJ2-48CRN1",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1sbPV7FP-_Qh8NFFXZPFrKEeVP4hZ4Wpt&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1q8XjWsHgPZ45weH7BCdsZL_OuGvc1BvD&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1sbPV7FP-_Qh8NFFXZPFrKEeVP4hZ4Wpt%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1q8XjWsHgPZ45weH7BCdsZL_OuGvc1BvD%26sz%3Dw1000"
     ],
     "price": 22000.0,
     "rating": 4.5,
@@ -3253,8 +3253,8 @@ const PRODUCTS = [
     "model": "MFPA400-48HRFN1",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=15QwAB6-L0SKLbVzNet284Ut7es_SKQFJ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Yw1BhNa_4nIOJOowkAwf99QUxBBFW0VD&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D15QwAB6-L0SKLbVzNet284Ut7es_SKQFJ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Yw1BhNa_4nIOJOowkAwf99QUxBBFW0VD%26sz%3Dw1000"
     ],
     "price": 25500.0,
     "rating": 4.5,
@@ -3276,7 +3276,7 @@ const PRODUCTS = [
     "model": "MFPA-18CRDN1",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1_TDzlCDIGdgAihq8eMeuK7cFTYsYTAYm&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_TDzlCDIGdgAihq8eMeuK7cFTYsYTAYm%26sz%3Dw1000"
     ],
     "price": 9650.0,
     "rating": 4.5,
@@ -3298,7 +3298,7 @@ const PRODUCTS = [
     "model": "FS40-19K",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1n4XcPQCqxGRb5oqQFsi6ssQppDKiLAoq&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1n4XcPQCqxGRb5oqQFsi6ssQppDKiLAoq%26sz%3Dw1000"
     ],
     "price": 399.0,
     "rating": 4.5,
@@ -3320,9 +3320,9 @@ const PRODUCTS = [
     "model": "FS45-23MRD",
     "category": "small",
     "images": [
-      "https://drive.google.com/thumbnail?id=1sgfC_cQ9AlxWbaWlBZvQRtehuOEtuuhk&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1O56GGydOZan-ujBnf3ryH-Mpz0bHkgtg&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1AyJ1WqRnknbfyLYm9TTqGHC7zuR-BuNR&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1sgfC_cQ9AlxWbaWlBZvQRtehuOEtuuhk%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1O56GGydOZan-ujBnf3ryH-Mpz0bHkgtg%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1AyJ1WqRnknbfyLYm9TTqGHC7zuR-BuNR%26sz%3Dw1000"
     ],
     "price": 999.0,
     "rating": 4.5,
@@ -3344,7 +3344,7 @@ const PRODUCTS = [
     "model": "MDRD142FGN50",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=15iTI94CPFTvNCEQWv-7vzESOQfZ9_jvX&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D15iTI94CPFTvNCEQWv-7vzESOQfZ9_jvX%26sz%3Dw1000"
     ],
     "price": 1999.0,
     "rating": 4.5,
@@ -3366,10 +3366,10 @@ const PRODUCTS = [
     "model": "MDRT134FGN50",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1plQQ0qFR3kgacxCG9-nYZ6c_jDAtm__w&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1vGrTgrK2ivXzlZ-04uwZYCbZoobGoV1J&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1b9qZaA1UQAPahKYEn7oeU9vhPZEVP3G_&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1bW6EoPy1ji8jsswVntvg46bjV6w0kRKP&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1plQQ0qFR3kgacxCG9-nYZ6c_jDAtm__w%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vGrTgrK2ivXzlZ-04uwZYCbZoobGoV1J%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1b9qZaA1UQAPahKYEn7oeU9vhPZEVP3G_%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1bW6EoPy1ji8jsswVntvg46bjV6w0kRKP%26sz%3Dw1000"
     ],
     "price": 1699.0,
     "rating": 4.5,
@@ -3391,9 +3391,9 @@ const PRODUCTS = [
     "model": "MDRB424FGF02",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1ykk88rIw9PyFgufUIL2tMNbspAeBElo-&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1xDaQZsZZ_FxviUMolLT2cRaGhRe0YAXQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1fj7wTbucRynh_05K6WuUfYonvnI4rlFm&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ykk88rIw9PyFgufUIL2tMNbspAeBElo-%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1xDaQZsZZ_FxviUMolLT2cRaGhRe0YAXQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1fj7wTbucRynh_05K6WuUfYonvnI4rlFm%26sz%3Dw1000"
     ],
     "price": 7750.0,
     "rating": 4.5,
@@ -3415,8 +3415,8 @@ const PRODUCTS = [
     "model": "MDRT241FTGN50",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1S1xPWuk4nFcqEAS8FxwlWNQW8x0Wb1G3&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1A5KWOfO2NOt3jq_DmV0cWbqKHU-O8Zo7&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1S1xPWuk4nFcqEAS8FxwlWNQW8x0Wb1G3%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1A5KWOfO2NOt3jq_DmV0cWbqKHU-O8Zo7%26sz%3Dw1000"
     ],
     "price": 3299.0,
     "rating": 4.5,
@@ -3438,10 +3438,10 @@ const PRODUCTS = [
     "model": "MDRT645MTN46D",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Z7ir4aPoqA9LuUcDdCuxiZruKs8EUBFy&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1bDABUtstzZGmsrj6KyQqCN0RD1Y8sQpJ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Ov6Nc67yzzp544gY3aJOp7vKhYx4k5E6&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1GSUFOPH_EnVdv7nEpgP3xD4SEogPBdew&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Z7ir4aPoqA9LuUcDdCuxiZruKs8EUBFy%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1bDABUtstzZGmsrj6KyQqCN0RD1Y8sQpJ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Ov6Nc67yzzp544gY3aJOp7vKhYx4k5E6%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GSUFOPH_EnVdv7nEpgP3xD4SEogPBdew%26sz%3Dw1000"
     ],
     "price": 7800.0,
     "rating": 4.5,
@@ -3463,7 +3463,7 @@ const PRODUCTS = [
     "model": "MDRT489MTN46",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1S6L4HoVdOl317IL_b8fK55Q24hte9jgc&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1S6L4HoVdOl317IL_b8fK55Q24hte9jgc%26sz%3Dw1000"
     ],
     "price": 6750.0,
     "rating": 4.5,
@@ -3485,8 +3485,8 @@ const PRODUCTS = [
     "model": "MDRT294FGN28",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1xpBAIA2sxSRfDzgseyixn3QwqwX4pYGD&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1nkR8khbiYBZKT00XHSROz2JDI53HWETy&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1xpBAIA2sxSRfDzgseyixn3QwqwX4pYGD%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1nkR8khbiYBZKT00XHSROz2JDI53HWETy%26sz%3Dw1000"
     ],
     "price": 3400.0,
     "rating": 4.5,
@@ -3508,9 +3508,9 @@ const PRODUCTS = [
     "model": "MDRT187FGG28",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1nPr3laCXzQtDy_Jmn-PAgd_zwP4QgcHi&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ZNiWwi4Wge7gVMTgK6KumxfSPtz_cgAa&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1krs1zWStFTyqMGBojGPbKbmDyow9QIRf&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1nPr3laCXzQtDy_Jmn-PAgd_zwP4QgcHi%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ZNiWwi4Wge7gVMTgK6KumxfSPtz_cgAa%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1krs1zWStFTyqMGBojGPbKbmDyow9QIRf%26sz%3Dw1000"
     ],
     "price": 2499.0,
     "rating": 4.5,
@@ -3532,7 +3532,7 @@ const PRODUCTS = [
     "model": "MDRZ302FZG21",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1YGRG1xuwbpsT4l4SPLaCTJ-cjhUs13oN&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1YGRG1xuwbpsT4l4SPLaCTJ-cjhUs13oN%26sz%3Dw1000"
     ],
     "price": 44700.0,
     "rating": 4.5,
@@ -3551,8 +3551,8 @@ const PRODUCTS = [
     "model": "MDRZ432FZG21",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1cRVvOC2_oTnFOqC-be63-YX0r7juLUxn&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1EPfgRBcmMUqDtucKHkVuGpZUdcJZmnmu&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1cRVvOC2_oTnFOqC-be63-YX0r7juLUxn%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1EPfgRBcmMUqDtucKHkVuGpZUdcJZmnmu%26sz%3Dw1000"
     ],
     "price": 5650.0,
     "rating": 4.5,
@@ -3574,10 +3574,10 @@ const PRODUCTS = [
     "model": "MDRC193FZG43D",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1uuBYw9wRMSBJ1XOPZ44EYH1ichwZfd1N&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1YFvoU5zPwuOVXr5Hj14-jnWq1CEViUZC&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1r12a4tWp3An2jfl7aDuniPsBP6_7DgrA&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1SS0a64p_RLRjIC0ocP3DcamnqNfVfa78&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1uuBYw9wRMSBJ1XOPZ44EYH1ichwZfd1N%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1YFvoU5zPwuOVXr5Hj14-jnWq1CEViUZC%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1r12a4tWp3An2jfl7aDuniPsBP6_7DgrA%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1SS0a64p_RLRjIC0ocP3DcamnqNfVfa78%26sz%3Dw1000"
     ],
     "price": 2030.0,
     "rating": 4.5,
@@ -3599,9 +3599,9 @@ const PRODUCTS = [
     "model": "MDRC265FZG43D",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1j7fYV4QtgcZPHyo0kBUUnRLYrwML36GQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1vAs2zl3i9Kjgwp7V4P0CwAZeQY28LPph&sz=w1000",
-      "https://drive.google.com/thumbnail?id=18YJ_fDrXQb-9-_zsGLGl0KNIgNV8d0Th&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1j7fYV4QtgcZPHyo0kBUUnRLYrwML36GQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vAs2zl3i9Kjgwp7V4P0CwAZeQY28LPph%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D18YJ_fDrXQb-9-_zsGLGl0KNIgNV8d0Th%26sz%3Dw1000"
     ],
     "price": 2500.0,
     "rating": 4.5,
@@ -3623,9 +3623,9 @@ const PRODUCTS = [
     "model": "MDRC362FZG43D",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1j7fYV4QtgcZPHyo0kBUUnRLYrwML36GQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=18YJ_fDrXQb-9-_zsGLGl0KNIgNV8d0Th&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1vAs2zl3i9Kjgwp7V4P0CwAZeQY28LPph&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1j7fYV4QtgcZPHyo0kBUUnRLYrwML36GQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D18YJ_fDrXQb-9-_zsGLGl0KNIgNV8d0Th%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vAs2zl3i9Kjgwp7V4P0CwAZeQY28LPph%26sz%3Dw1000"
     ],
     "price": 2850.0,
     "rating": 4.5,
@@ -3647,9 +3647,9 @@ const PRODUCTS = [
     "model": "MDRC407FZN43D",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1_LW7zOCyQzK4JUP2XSjbiIP6yyYTgl9W&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1tNTnywJcOn67_5ztIQztDeCXBlm0hA9m&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Bc5ypusU2TkWlUTbayuWLNI0DnWCJK5r&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_LW7zOCyQzK4JUP2XSjbiIP6yyYTgl9W%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1tNTnywJcOn67_5ztIQztDeCXBlm0hA9m%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Bc5ypusU2TkWlUTbayuWLNI0DnWCJK5r%26sz%3Dw1000"
     ],
     "price": 4350.0,
     "rating": 4.5,
@@ -3671,9 +3671,9 @@ const PRODUCTS = [
     "model": "MF110W80B/T",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1FMBhR-AH_VGskMAycUNTaM-URMpBUCV7&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1oNDWUFu4x7UcwWD7if__aPXxLC3dQs_r&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1uqnrLR3LPo3bAPhAHF53-Mkxi-9DAcb-&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1FMBhR-AH_VGskMAycUNTaM-URMpBUCV7%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1oNDWUFu4x7UcwWD7if__aPXxLC3dQs_r%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1uqnrLR3LPo3bAPhAHF53-Mkxi-9DAcb-%26sz%3Dw1000"
     ],
     "price": 4800.0,
     "rating": 4.5,
@@ -3695,9 +3695,9 @@ const PRODUCTS = [
     "model": "MF110W70/T",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1xMAx9NIpuX8te6zGgXZ_dtY_g73NpPCD&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1gswIvHpCASZdy9VnFopCrgXSfdQ0CXvE&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1P_ISxn_uagXNFWZT3n9cTjTKyzJ4xLBq&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1xMAx9NIpuX8te6zGgXZ_dtY_g73NpPCD%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1gswIvHpCASZdy9VnFopCrgXSfdQ0CXvE%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1P_ISxn_uagXNFWZT3n9cTjTKyzJ4xLBq%26sz%3Dw1000"
     ],
     "price": 3850.0,
     "rating": 4.5,
@@ -3719,9 +3719,9 @@ const PRODUCTS = [
     "model": "YL1674S-B",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=17nvzbc2amoc2m3H-HeettfgTkEDg0mwT&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1bemYj7hPhT1jJGmBrA-2IHV-1-8ybi-W&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1JUiceuFDebm1xKQ5PpEfJWOUiscb3Tgv&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17nvzbc2amoc2m3H-HeettfgTkEDg0mwT%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1bemYj7hPhT1jJGmBrA-2IHV-1-8ybi-W%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1JUiceuFDebm1xKQ5PpEfJWOUiscb3Tgv%26sz%3Dw1000"
     ],
     "price": 2199.0,
     "rating": 4.5,
@@ -3743,9 +3743,9 @@ const PRODUCTS = [
     "model": "YL2037S-W",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1qa42QKdeuXnPe1gzs5_1_p1o5Vw0gfrv&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1royrowBKc4Fl1ICFnxSIPCkQFScn8S7t&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Pcantzs5XIFHkbxUyQ1u70p63wIJgsP1&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1qa42QKdeuXnPe1gzs5_1_p1o5Vw0gfrv%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1royrowBKc4Fl1ICFnxSIPCkQFScn8S7t%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Pcantzs5XIFHkbxUyQ1u70p63wIJgsP1%26sz%3Dw1000"
     ],
     "price": 1799.0,
     "rating": 4.5,
@@ -3767,9 +3767,9 @@ const PRODUCTS = [
     "model": "SP5055T082-B",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=16Qa5eY20Af8UkFYf4-oJywRSDWv2z7BI&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1K26T1sFsjr24YEncSVTuoKcJHxZR2M9v&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1AbzrsQGJMc2vrLEZyJlQL4BvKZS0FkZ9&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D16Qa5eY20Af8UkFYf4-oJywRSDWv2z7BI%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1K26T1sFsjr24YEncSVTuoKcJHxZR2M9v%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1AbzrsQGJMc2vrLEZyJlQL4BvKZS0FkZ9%26sz%3Dw1000"
     ],
     "price": 1499.0,
     "rating": 4.5,
@@ -3791,9 +3791,9 @@ const PRODUCTS = [
     "model": "SP5055T082-S",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1gLAv-J2RAs3gqstcTP0N394yZC_tmoWb&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1-zrEnBYWAcjgK0RGjENd7-xgTifZbSOT&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Cc1xo1OWvyMopbYXep9S0_2oLY8U0IAn&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1gLAv-J2RAs3gqstcTP0N394yZC_tmoWb%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1-zrEnBYWAcjgK0RGjENd7-xgTifZbSOT%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Cc1xo1OWvyMopbYXep9S0_2oLY8U0IAn%26sz%3Dw1000"
     ],
     "price": 1550.0,
     "rating": 4.5,
@@ -3815,9 +3815,9 @@ const PRODUCTS = [
     "model": "36LMG5G080V",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=14RyH28VRa3KugfSxfIFbx_XrHk7aUX1R&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1b4yzEt8Sa8ejSQ3ennnnDV6aAZoY082p&sz=w1000",
-      "https://drive.google.com/thumbnail?id=13_vop-QkzHdwsX7Bc-TRPEFVAjaIceVc&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14RyH28VRa3KugfSxfIFbx_XrHk7aUX1R%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1b4yzEt8Sa8ejSQ3ennnnDV6aAZoY082p%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D13_vop-QkzHdwsX7Bc-TRPEFVAjaIceVc%26sz%3Dw1000"
     ],
     "price": 6180.0,
     "rating": 4.5,
@@ -3839,7 +3839,7 @@ const PRODUCTS = [
     "model": "EG925EFF",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=17b6YWzUoS__9pWrjr2WzIddwRd5aca2Z&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17b6YWzUoS__9pWrjr2WzIddwRd5aca2Z%26sz%3Dw1000"
     ],
     "price": 1699.0,
     "rating": 4.5,
@@ -3861,9 +3861,9 @@ const PRODUCTS = [
     "model": "EG9P032MX-S",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1_IzNfUbbNys0Iabv7yooU-0w6qLlSL4h&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1TJqYkCnbQ76-TP7OY_rqLCeLA2BCyV61&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1EoeJewEYuV4L7Fwq_VSEaqDFk3qtxPXM&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_IzNfUbbNys0Iabv7yooU-0w6qLlSL4h%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1TJqYkCnbQ76-TP7OY_rqLCeLA2BCyV61%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1EoeJewEYuV4L7Fwq_VSEaqDFk3qtxPXM%26sz%3Dw1000"
     ],
     "price": 1799.0,
     "rating": 4.5,
@@ -3885,8 +3885,8 @@ const PRODUCTS = [
     "model": "MM7P012MZ-B",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1rSN88tBcr7sdrStdizIHCnc89E7bYJ9j&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1-VvDAleQJr19IXlpdat_FWcYTBgw2ULm&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1rSN88tBcr7sdrStdizIHCnc89E7bYJ9j%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1-VvDAleQJr19IXlpdat_FWcYTBgw2ULm%26sz%3Dw1000"
     ],
     "price": 699.0,
     "rating": 4.5,
@@ -3908,9 +3908,9 @@ const PRODUCTS = [
     "model": "EM9P032MO-S",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1fGGkevOKsKfaRWKjTN04Jcw4XtciU26V&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1A0FSScnVWxfVihbE5HB2Ryo7riLw3lg2&sz=w1000",
-      "https://drive.google.com/thumbnail?id=17dW8Tw4KZ8Aqn0JmFsrQ0OTHyJ11qPFI&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1fGGkevOKsKfaRWKjTN04Jcw4XtciU26V%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1A0FSScnVWxfVihbE5HB2Ryo7riLw3lg2%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17dW8Tw4KZ8Aqn0JmFsrQ0OTHyJ11qPFI%26sz%3Dw1000"
     ],
     "price": 1499.0,
     "rating": 4.5,
@@ -3932,9 +3932,9 @@ const PRODUCTS = [
     "model": "EM9P032MO-B",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1v2tJQui-vHIJ3QimiI7sud6_vvZxH1su&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1koIWqChRWHI-37fUU61dCW1Tn7eEAaxl&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1KRZiljGVMzSgt6qCMESnoNzVdIgvKyeU&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1v2tJQui-vHIJ3QimiI7sud6_vvZxH1su%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1koIWqChRWHI-37fUU61dCW1Tn7eEAaxl%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KRZiljGVMzSgt6qCMESnoNzVdIgvKyeU%26sz%3Dw1000"
     ],
     "price": 1399.0,
     "rating": 4.5,
@@ -3956,9 +3956,9 @@ const PRODUCTS = [
     "model": "EM034A2MO-B",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1J1aQUIr1sY9ZDwvPC2pZMte8ilWjw-sh&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1gWSL1YhioVU8DQ5GxzoPR_ynb0Tk4LwT&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1S-18BugWdoBCJCC-10ArWCcXneekrcVj&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1J1aQUIr1sY9ZDwvPC2pZMte8ilWjw-sh%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1gWSL1YhioVU8DQ5GxzoPR_ynb0Tk4LwT%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1S-18BugWdoBCJCC-10ArWCcXneekrcVj%26sz%3Dw1000"
     ],
     "price": 1799.0,
     "rating": 4.5,
@@ -3980,9 +3980,9 @@ const PRODUCTS = [
     "model": "EM142A2MI-B",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1DAJrA8rmSJ1rzDoD4uDoiRMwKWf7-L_q&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ewGe82ML4whdaNz2BUAx7LgNza6ZHL1D&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1hN11uWvilBWExKuJv0V14rFL9CdC4kOT&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1DAJrA8rmSJ1rzDoD4uDoiRMwKWf7-L_q%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ewGe82ML4whdaNz2BUAx7LgNza6ZHL1D%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1hN11uWvilBWExKuJv0V14rFL9CdC4kOT%26sz%3Dw1000"
     ],
     "price": 1999.0,
     "rating": 4.5,
@@ -4004,10 +4004,10 @@ const PRODUCTS = [
     "model": "MDRE353FGN01",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1UyzS1NLabthb8niGyGSj11zj3XlGwr09&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1iQkPKZ7j5_LJQuLk6HlUY-pvRSj0g2j8&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1pUA3msJ_zm3Ajr_ItoLG9cmNHb2ccXPF&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1gwhMbfRoP6k5PJ9GUpKrbjMYJ0KmnFf2&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UyzS1NLabthb8niGyGSj11zj3XlGwr09%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1iQkPKZ7j5_LJQuLk6HlUY-pvRSj0g2j8%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1pUA3msJ_zm3Ajr_ItoLG9cmNHb2ccXPF%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1gwhMbfRoP6k5PJ9GUpKrbjMYJ0KmnFf2%26sz%3Dw1000"
     ],
     "price": 8800.0,
     "rating": 4.5,
@@ -4029,8 +4029,8 @@ const PRODUCTS = [
     "model": "MFA06D80B/W",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Dm4Hx-D-fqB8AAV_cNWL91mMVcENvt1H&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1faBOFLs_S1bVbgImnDOBARkJGut3XIJC&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Dm4Hx-D-fqB8AAV_cNWL91mMVcENvt1H%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1faBOFLs_S1bVbgImnDOBARkJGut3XIJC%26sz%3Dw1000"
     ],
     "price": 6700.0,
     "rating": 4.5,
@@ -4052,11 +4052,11 @@ const PRODUCTS = [
     "model": "MC68ABA",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=14c4Nu2govL3vxB4igug825HG0ewXLYwP&sz=w1000",
-      "https://drive.google.com/thumbnail?id=16iTL_6SrPumnzBT9bDddFgoAgd1yogum&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1_n9FtJruUINKixNVcmz11TWnzm3IS-O5&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1I7f7CgQmiVh6g216tOLaISUMmat5Nw0y&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1v6aod-vRGFj_oOWOPxbaP0REzS8OQD0L&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14c4Nu2govL3vxB4igug825HG0ewXLYwP%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D16iTL_6SrPumnzBT9bDddFgoAgd1yogum%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_n9FtJruUINKixNVcmz11TWnzm3IS-O5%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1I7f7CgQmiVh6g216tOLaISUMmat5Nw0y%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1v6aod-vRGFj_oOWOPxbaP0REzS8OQD0L%26sz%3Dw1000"
     ],
     "price": 1799.0,
     "rating": 4.5,
@@ -4078,10 +4078,10 @@ const PRODUCTS = [
     "model": "MF-CN40E2",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Y349i4deZre5-bAAZWZus7vfJHuFA2l3&sz=w1000",
-      "https://drive.google.com/thumbnail?id=18bESnzFtYXJG2h0KKffNJFBH4oaE8zTe&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1uS6NvNVPkVmSb-mUeJeSetzofVp3wdw6&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1AgB02kXMTy3TaQnwyLA3uuiJOCsPwb4p&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Y349i4deZre5-bAAZWZus7vfJHuFA2l3%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D18bESnzFtYXJG2h0KKffNJFBH4oaE8zTe%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1uS6NvNVPkVmSb-mUeJeSetzofVp3wdw6%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1AgB02kXMTy3TaQnwyLA3uuiJOCsPwb4p%26sz%3Dw1000"
     ],
     "price": 599.0,
     "rating": 4.5,
@@ -4103,9 +4103,9 @@ const PRODUCTS = [
     "model": "MF-CN45WK",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1hKEmSuOhe7zefBP7xVaHMiUSgbTiTfnQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Pqy4KZHkT7tSNLK83d7s5y8tQTR4Qvw_&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1TOgWOZZ1whiG7lNOVbDg1DwSZtMWbCoP&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1hKEmSuOhe7zefBP7xVaHMiUSgbTiTfnQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Pqy4KZHkT7tSNLK83d7s5y8tQTR4Qvw_%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1TOgWOZZ1whiG7lNOVbDg1DwSZtMWbCoP%26sz%3Dw1000"
     ],
     "price": 699.0,
     "rating": 4.5,
@@ -4127,9 +4127,9 @@ const PRODUCTS = [
     "model": "MF-CY55WK",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1hKEmSuOhe7zefBP7xVaHMiUSgbTiTfnQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Pqy4KZHkT7tSNLK83d7s5y8tQTR4Qvw_&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1TOgWOZZ1whiG7lNOVbDg1DwSZtMWbCoP&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1hKEmSuOhe7zefBP7xVaHMiUSgbTiTfnQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Pqy4KZHkT7tSNLK83d7s5y8tQTR4Qvw_%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1TOgWOZZ1whiG7lNOVbDg1DwSZtMWbCoP%26sz%3Dw1000"
     ],
     "price": 749.0,
     "rating": 4.5,
@@ -4151,9 +4151,9 @@ const PRODUCTS = [
     "model": "MF-CY70K",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Y4O45U5XC8aacSGtlAUgdVVN8B7bbute&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1d0h5GZf864OOPqeNFfOnxvit-KpsK6sd&sz=w1000",
-      "https://drive.google.com/thumbnail?id=16PebXk3_ZM1HXpqtb3EFqyD3AEDnHO8X&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Y4O45U5XC8aacSGtlAUgdVVN8B7bbute%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1d0h5GZf864OOPqeNFfOnxvit-KpsK6sd%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D16PebXk3_ZM1HXpqtb3EFqyD3AEDnHO8X%26sz%3Dw1000"
     ],
     "price": 1099.0,
     "rating": 4.5,
@@ -4175,7 +4175,7 @@ const PRODUCTS = [
     "model": "JE2802",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1eB0GCmnSDQzoT6m-oBGnD-yU2ty8rBSe&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1eB0GCmnSDQzoT6m-oBGnD-yU2ty8rBSe%26sz%3Dw1000"
     ],
     "price": 399.0,
     "rating": 4.5,
@@ -4197,8 +4197,8 @@ const PRODUCTS = [
     "model": "MK-17S32A2",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1r9Sj6tXzl8TAh0TwN8b9IqMYoeAAs9Yi&sz=w1000",
-      "https://drive.google.com/thumbnail?id=14C9tGMuiR8xCmg_otmAdUU46iWk8_tW1&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1r9Sj6tXzl8TAh0TwN8b9IqMYoeAAs9Yi%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14C9tGMuiR8xCmg_otmAdUU46iWk8_tW1%26sz%3Dw1000"
     ],
     "price": 199.0,
     "rating": 4.5,
@@ -4220,7 +4220,7 @@ const PRODUCTS = [
     "model": "HM0293A",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1yNc9AhNA6GNcGIyzwr8KtgfTIVADobCr&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1yNc9AhNA6GNcGIyzwr8KtgfTIVADobCr%26sz%3Dw1000"
     ],
     "price": 499.0,
     "rating": 4.5,
@@ -4242,8 +4242,8 @@ const PRODUCTS = [
     "model": "BL2518",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Oje0_3x0UOPwE3xVUVtO1MPm5huwWxPC&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Mecfeg_ArbHS-C8yh2u-C-8ixFb26O7a&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Oje0_3x0UOPwE3xVUVtO1MPm5huwWxPC%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Mecfeg_ArbHS-C8yh2u-C-8ixFb26O7a%26sz%3Dw1000"
     ],
     "price": 249.0,
     "rating": 4.5,
@@ -4265,7 +4265,7 @@ const PRODUCTS = [
     "model": "MJ-BL40G1",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1MkhxGVhM3IITjld20-EtZTWKnjZfZqRs&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1MkhxGVhM3IITjld20-EtZTWKnjZfZqRs%26sz%3Dw1000"
     ],
     "price": 449.0,
     "rating": 4.5,
@@ -4287,10 +4287,10 @@ const PRODUCTS = [
     "model": "MJ-BH6001W",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1rirTMOOcemAltrYODF3fi4O16ClzUXIH&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1pWtKXmki5ipagygA6MzdWimBaphblmel&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1309cyrEoRhmpFlqdhl3ZEmYfxiXNd_tA&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1vjYGJl-gpcnjyBstPj1_VJzwCieiTpZH&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1rirTMOOcemAltrYODF3fi4O16ClzUXIH%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1pWtKXmki5ipagygA6MzdWimBaphblmel%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1309cyrEoRhmpFlqdhl3ZEmYfxiXNd_tA%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vjYGJl-gpcnjyBstPj1_VJzwCieiTpZH%26sz%3Dw1000"
     ],
     "price": 399.0,
     "rating": 4.5,
@@ -4312,11 +4312,11 @@ const PRODUCTS = [
     "model": "MJ-FP8003W",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=11nU58OLlfcKIPQkuIDqQZJt6bEOXLwvp&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1XdTRPzRZakYxiqT932F4IQkFYWYHZehK&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1koArPvF8qmXWRq-kwIcxCB3a9wV7yk1z&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1P5RyOvgRsoWUEZP7ylcn1P6yFmMR8BhF&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1A08euRJTXi7tAmEuCNXRJjKvdGv0wvqC&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D11nU58OLlfcKIPQkuIDqQZJt6bEOXLwvp%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1XdTRPzRZakYxiqT932F4IQkFYWYHZehK%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1koArPvF8qmXWRq-kwIcxCB3a9wV7yk1z%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1P5RyOvgRsoWUEZP7ylcn1P6yFmMR8BhF%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1A08euRJTXi7tAmEuCNXRJjKvdGv0wvqC%26sz%3Dw1000"
     ],
     "price": 599.0,
     "rating": 4.5,
@@ -4338,9 +4338,9 @@ const PRODUCTS = [
     "model": "YJ308J",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1c2ObkafXmNV521JAPVJZLddbvhp8W0kU&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1WSxm_aCR09JdB44oxhmXoBsO0v1DrIwr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1w4FKF6fyFrHlVhMnzrnRmCbPg2z5TqZh&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1c2ObkafXmNV521JAPVJZLddbvhp8W0kU%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WSxm_aCR09JdB44oxhmXoBsO0v1DrIwr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1w4FKF6fyFrHlVhMnzrnRmCbPg2z5TqZh%26sz%3Dw1000"
     ],
     "price": 349.0,
     "rating": 4.5,
@@ -4362,9 +4362,9 @@ const PRODUCTS = [
     "model": "YJ508J",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1c2ObkafXmNV521JAPVJZLddbvhp8W0kU&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1WSxm_aCR09JdB44oxhmXoBsO0v1DrIwr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1w4FKF6fyFrHlVhMnzrnRmCbPg2z5TqZh&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1c2ObkafXmNV521JAPVJZLddbvhp8W0kU%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WSxm_aCR09JdB44oxhmXoBsO0v1DrIwr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1w4FKF6fyFrHlVhMnzrnRmCbPg2z5TqZh%26sz%3Dw1000"
     ],
     "price": 379.0,
     "rating": 4.5,
@@ -4386,8 +4386,8 @@ const PRODUCTS = [
     "model": "MY-CS6037WP2",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Yx19IRL0RDd11RuYi4L5IiNKmi-Em1jM&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1LCtgRELlrBYBGJlyI9H9f5HOTAkv6en5&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Yx19IRL0RDd11RuYi4L5IiNKmi-Em1jM%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1LCtgRELlrBYBGJlyI9H9f5HOTAkv6en5%26sz%3Dw1000"
     ],
     "price": 899.0,
     "rating": 4.5,
@@ -4409,9 +4409,9 @@ const PRODUCTS = [
     "model": "YPJ26A1W",
     "category": "small",
     "images": [
-      "https://drive.google.com/thumbnail?id=1mRV39tajzd1uo1qIP5gkHBa55Mov6xeB&sz=w1000",
-      "https://drive.google.com/thumbnail?id=10mglyVzVMPvkM1u8N58D9Vad7h_teDTt&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1vzQStnJZ3XMAfnwvYiobVNB1tw68ybCA&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1mRV39tajzd1uo1qIP5gkHBa55Mov6xeB%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D10mglyVzVMPvkM1u8N58D9Vad7h_teDTt%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vzQStnJZ3XMAfnwvYiobVNB1tw68ybCA%26sz%3Dw1000"
     ],
     "price": 379.0,
     "rating": 4.5,
@@ -4456,8 +4456,8 @@ const PRODUCTS = [
     "model": "NAS-B43FBFL",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1biQMMMFlH0zLX4hbhv1IURrfLVEaiLBh&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1OoakBHP_-nWyEATId1jgzWEvyRzs-zTd&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1biQMMMFlH0zLX4hbhv1IURrfLVEaiLBh%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1OoakBHP_-nWyEATId1jgzWEvyRzs-zTd%26sz%3Dw1000"
     ],
     "price": 1999.0,
     "rating": 4.5,
@@ -4479,8 +4479,8 @@ const PRODUCTS = [
     "model": "NAS-A12INV-X-R32",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1B9W_DHD3tUUqq_WzM3EFFcbAeLeNb42k&sz=w1000",
-      "https://drive.google.com/thumbnail?id=120J8k67CU0PFTbLZ5yL2m0WedwNe3kN6&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1B9W_DHD3tUUqq_WzM3EFFcbAeLeNb42k%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D120J8k67CU0PFTbLZ5yL2m0WedwNe3kN6%26sz%3Dw1000"
     ],
     "price": 3180.0,
     "rating": 4.5,
@@ -4502,9 +4502,9 @@ const PRODUCTS = [
     "model": "NAS-A18INV-X-R32",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1UJR7jGGCdva5JBGV1KaOZU56DQGc_cLA&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1B9W_DHD3tUUqq_WzM3EFFcbAeLeNb42k&sz=w1000",
-      "https://drive.google.com/thumbnail?id=120J8k67CU0PFTbLZ5yL2m0WedwNe3kN6&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UJR7jGGCdva5JBGV1KaOZU56DQGc_cLA%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1B9W_DHD3tUUqq_WzM3EFFcbAeLeNb42k%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D120J8k67CU0PFTbLZ5yL2m0WedwNe3kN6%26sz%3Dw1000"
     ],
     "price": 4900.0,
     "rating": 4.5,
@@ -4526,9 +4526,9 @@ const PRODUCTS = [
     "model": "NAS-A24INV-X-R32",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=120J8k67CU0PFTbLZ5yL2m0WedwNe3kN6&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1UJR7jGGCdva5JBGV1KaOZU56DQGc_cLA&sz=w1000",
-      "https://drive.google.com/thumbnail?id=120J8k67CU0PFTbLZ5yL2m0WedwNe3kN6&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D120J8k67CU0PFTbLZ5yL2m0WedwNe3kN6%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UJR7jGGCdva5JBGV1KaOZU56DQGc_cLA%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D120J8k67CU0PFTbLZ5yL2m0WedwNe3kN6%26sz%3Dw1000"
     ],
     "price": 6700.0,
     "rating": 4.5,
@@ -4550,9 +4550,9 @@ const PRODUCTS = [
     "model": "NAS-JFS-18N1",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Qf9AmgKbFIK3KEZ3OnG_eviEJ9erBW2h&sz=w1000",
-      "https://drive.google.com/thumbnail?id=18XINO7n6ioXCkvNSP1mHXBDOYko3Rg8y&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19dLjILFodQsreoFjQ2XyUhE0_x4KZNld&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Qf9AmgKbFIK3KEZ3OnG_eviEJ9erBW2h%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D18XINO7n6ioXCkvNSP1mHXBDOYko3Rg8y%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19dLjILFodQsreoFjQ2XyUhE0_x4KZNld%26sz%3Dw1000"
     ],
     "price": 6699.0,
     "rating": 4.5,
@@ -4574,10 +4574,10 @@ const PRODUCTS = [
     "model": "NASF2-400FDR",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1odMId5w9La0NSHfwKP6gk2eap3X-8sVd&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1gZeT-92WGOVdaZ9fibuAI5AodR2kzlv6&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1LsM9Rh1rAFWzAFW4C74EnmnE2mZzs6qk&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1twvLrP7YT5A5tA7wGRXYPHUFwR0OTet_&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1odMId5w9La0NSHfwKP6gk2eap3X-8sVd%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1gZeT-92WGOVdaZ9fibuAI5AodR2kzlv6%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1LsM9Rh1rAFWzAFW4C74EnmnE2mZzs6qk%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1twvLrP7YT5A5tA7wGRXYPHUFwR0OTet_%26sz%3Dw1000"
     ],
     "price": 6850.0,
     "rating": 4.5,
@@ -4599,9 +4599,9 @@ const PRODUCTS = [
     "model": "NASF2-55SK",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Kb9PEQGk5h8yFZ9sKD8L9UcNuLOiNmph&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1WtgfJDmDlbRTBJNR73TmZeWXnNqg6_43&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1TriVAxgFexlY6Es0gKI2hvBtcMJ9fxIJ&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Kb9PEQGk5h8yFZ9sKD8L9UcNuLOiNmph%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WtgfJDmDlbRTBJNR73TmZeWXnNqg6_43%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1TriVAxgFexlY6Es0gKI2hvBtcMJ9fxIJ%26sz%3Dw1000"
     ],
     "price": 7800.0,
     "rating": 4.5,
@@ -4623,10 +4623,10 @@ const PRODUCTS = [
     "model": "NASF2-400SBSF",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1uIZpWcPnIpj9qbHloYVeY7GSJAbdo31C&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1fU9uWd853Pv4ZEg7vqCRom384V2X7TBE&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1uBQq9tTJlHc8AXqSr3I5pD5R-1MExQgY&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1xXKY3oGvfv_ED5sFmpvBBMLAYxp4rdMl&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1uIZpWcPnIpj9qbHloYVeY7GSJAbdo31C%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1fU9uWd853Pv4ZEg7vqCRom384V2X7TBE%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1uBQq9tTJlHc8AXqSr3I5pD5R-1MExQgY%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1xXKY3oGvfv_ED5sFmpvBBMLAYxp4rdMl%26sz%3Dw1000"
     ],
     "price": 5850.0,
     "rating": 4.5,
@@ -4668,10 +4668,10 @@ const PRODUCTS = [
     "model": "NASF2-500WD",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1mIUKd9wDpYvzLry7pgWvr8jN1Wi_Uzsg&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1UFIp767lWzy8rG760Xve-Q9ZsGxx16fa&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1GsiPvknGn6I85IiRyWT0QO5qoddlN31i&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Af1-PsHC0M2hl1MWY0TSRhW7J9u53bC-&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1mIUKd9wDpYvzLry7pgWvr8jN1Wi_Uzsg%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UFIp767lWzy8rG760Xve-Q9ZsGxx16fa%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GsiPvknGn6I85IiRyWT0QO5qoddlN31i%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Af1-PsHC0M2hl1MWY0TSRhW7J9u53bC-%26sz%3Dw1000"
     ],
     "price": 7600.0,
     "rating": 4.5,
@@ -4693,10 +4693,10 @@ const PRODUCTS = [
     "model": "NASF2-600WD",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1mIUKd9wDpYvzLry7pgWvr8jN1Wi_Uzsg&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Af1-PsHC0M2hl1MWY0TSRhW7J9u53bC-&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1GsiPvknGn6I85IiRyWT0QO5qoddlN31i&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1UFIp767lWzy8rG760Xve-Q9ZsGxx16fa&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1mIUKd9wDpYvzLry7pgWvr8jN1Wi_Uzsg%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Af1-PsHC0M2hl1MWY0TSRhW7J9u53bC-%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GsiPvknGn6I85IiRyWT0QO5qoddlN31i%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UFIp767lWzy8rG760Xve-Q9ZsGxx16fa%26sz%3Dw1000"
     ],
     "price": 8150.0,
     "rating": 4.5,
@@ -4718,8 +4718,8 @@ const PRODUCTS = [
     "model": "NASF2-45",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=15OS3X9PGziVsFkdtNYLBF3gaGPUTQsJ2&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1WnZj7wyYVXASZePTo86gfrY38C4eTjGx&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D15OS3X9PGziVsFkdtNYLBF3gaGPUTQsJ2%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WnZj7wyYVXASZePTo86gfrY38C4eTjGx%26sz%3Dw1000"
     ],
     "price": 4400.0,
     "rating": 4.5,
@@ -4741,9 +4741,9 @@ const PRODUCTS = [
     "model": "NASF2-320FLD",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1iJYMdKv2-yFkDwgfQyc4ahVDydHygwlu&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19kFMXubuOaxjG_jdxEc6cJ0MqirrX9vl&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1o7WDuBBSF7gqJdxdgxEjRJfK8zPUMNF-&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1iJYMdKv2-yFkDwgfQyc4ahVDydHygwlu%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19kFMXubuOaxjG_jdxEc6cJ0MqirrX9vl%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1o7WDuBBSF7gqJdxdgxEjRJfK8zPUMNF-%26sz%3Dw1000"
     ],
     "price": 3850.0,
     "rating": 4.5,
@@ -4765,10 +4765,10 @@ const PRODUCTS = [
     "model": "NASF2-320FL-B",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1qd2u2qxoRghPUNr2_xhyBMrZZcnIScAr&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1pIpurKhKisnDufj7chHkcNHCcIX9C2T6&sz=w1000",
-      "https://drive.google.com/thumbnail?id=18b7kjUXrMK_C9RPkynuMzIqePMcm-rJp&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1yTHaysFAhaBy0y1BIxhAq4YobC4Jap8B&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1qd2u2qxoRghPUNr2_xhyBMrZZcnIScAr%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1pIpurKhKisnDufj7chHkcNHCcIX9C2T6%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D18b7kjUXrMK_C9RPkynuMzIqePMcm-rJp%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1yTHaysFAhaBy0y1BIxhAq4YobC4Jap8B%26sz%3Dw1000"
     ],
     "price": 3650.0,
     "rating": 4.5,
@@ -4790,7 +4790,7 @@ const PRODUCTS = [
     "model": "NASF2-250FLD",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Tu8hOiJRg-EnBh_1Bdg-tM5QvSYvi9H8&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Tu8hOiJRg-EnBh_1Bdg-tM5QvSYvi9H8%26sz%3Dw1000"
     ],
     "price": 3699.0,
     "rating": 4.5,
@@ -4812,9 +4812,9 @@ const PRODUCTS = [
     "model": "NASF2-30",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1LrW8BupnDgzIsDYrkv5oyTp6b8EeVNuX&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1lcVNTwI3f00zBZUTh_dY6xqjXfJG_55p&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1X3K1-OdyXg0dTuULGq1xrOHp03WQZaon&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1LrW8BupnDgzIsDYrkv5oyTp6b8EeVNuX%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lcVNTwI3f00zBZUTh_dY6xqjXfJG_55p%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1X3K1-OdyXg0dTuULGq1xrOHp03WQZaon%26sz%3Dw1000"
     ],
     "price": 3200.0,
     "rating": 4.5,
@@ -4856,9 +4856,9 @@ const PRODUCTS = [
     "model": "NASF2-15S",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Xbc-TG0Vdq0VOrVTMAQjkZ_HZOfVRJHm&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1NroeUSU9xyeDYr2n9hJC3eElcaOfBFx9&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kqP9tiuyYKL693RnLk6g20kyHAZa9j5J&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Xbc-TG0Vdq0VOrVTMAQjkZ_HZOfVRJHm%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1NroeUSU9xyeDYr2n9hJC3eElcaOfBFx9%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kqP9tiuyYKL693RnLk6g20kyHAZa9j5J%26sz%3Dw1000"
     ],
     "price": 1970.0,
     "rating": 4.5,
@@ -4980,10 +4980,10 @@ const PRODUCTS = [
     "model": "NASD2-44",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1QmDBJhSx8JhGqr19F4WSy1gc-8nWrVUE&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1OzcQ89R1mK_7kNfmbX_nOXAbXOzzpRpG&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1tEMg0qmZ7CfaT8SLpoVM5j_NNQfztru1&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1On1OAaKwSjt73-dN9aV3MM8OvC6tqTqd&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1QmDBJhSx8JhGqr19F4WSy1gc-8nWrVUE%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1OzcQ89R1mK_7kNfmbX_nOXAbXOzzpRpG%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1tEMg0qmZ7CfaT8SLpoVM5j_NNQfztru1%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1On1OAaKwSjt73-dN9aV3MM8OvC6tqTqd%26sz%3Dw1000"
     ],
     "price": 4999.0,
     "rating": 4.5,
@@ -5005,11 +5005,11 @@ const PRODUCTS = [
     "model": "NASD2-40WD",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1DGtVivQAaDaLEuZgZW6Q1BQ0o82gpM_h&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1mK1ReVAoiqEc2KT1Uy8brUYiWY8BuGDS&sz=w1000",
-      "https://drive.google.com/thumbnail?id=15afYJSRF_oVXLUQSkjwI0mrlRF7Brx70&sz=w1000",
-      "https://drive.google.com/thumbnail?id=11c1L6S12FHJ5VCaY_2_dUy_kh1lSwXgR&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1R2ejvunIe79lkRN8pEdhrVCzXqlOhDdu&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1DGtVivQAaDaLEuZgZW6Q1BQ0o82gpM_h%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1mK1ReVAoiqEc2KT1Uy8brUYiWY8BuGDS%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D15afYJSRF_oVXLUQSkjwI0mrlRF7Brx70%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D11c1L6S12FHJ5VCaY_2_dUy_kh1lSwXgR%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1R2ejvunIe79lkRN8pEdhrVCzXqlOhDdu%26sz%3Dw1000"
     ],
     "price": 4800.0,
     "rating": 4.5,
@@ -5211,9 +5211,9 @@ const PRODUCTS = [
     "model": "NASF2-16FL",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Gg5SMe6RZz1ID02qTVhpp5QEV2Xziy6i&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1FLS4D4XGmApLp0TfiIMZsKnvzCavdeW0&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1zPAXYPeCQj7Dxi0IomRPfHyVB3aACtYn&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Gg5SMe6RZz1ID02qTVhpp5QEV2Xziy6i%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1FLS4D4XGmApLp0TfiIMZsKnvzCavdeW0%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1zPAXYPeCQj7Dxi0IomRPfHyVB3aACtYn%26sz%3Dw1000"
     ],
     "price": 1999.0,
     "rating": 4.5,
@@ -5415,9 +5415,9 @@ const PRODUCTS = [
     "model": "NAS-FL110SC",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=19Xf8S5LbZOYoewhaWo9NtKsdynlaztHk&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1lnVa1ZVCoYQhSx_Ne-U9i9kk9fnbCLA0&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1rla-SIcwKg_U2fCJO_yuUUAQWwxiuHwI&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19Xf8S5LbZOYoewhaWo9NtKsdynlaztHk%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lnVa1ZVCoYQhSx_Ne-U9i9kk9fnbCLA0%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1rla-SIcwKg_U2fCJO_yuUUAQWwxiuHwI%26sz%3Dw1000"
     ],
     "price": 1999.0,
     "rating": 4.5,
@@ -5439,9 +5439,9 @@ const PRODUCTS = [
     "model": "NAS-FL350-1DR",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1ADrCG8xTUjx297Z1VkLgwuWmtgaaijM3&sz=w1000",
-      "https://drive.google.com/thumbnail?id=18a-xynn67DdTEQtPmK_qy7zF8JA34-zS&sz=w1000",
-      "https://drive.google.com/thumbnail?id=19Ru34R5OY7FixN29BGzpEczSdXqiG8fE&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ADrCG8xTUjx297Z1VkLgwuWmtgaaijM3%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D18a-xynn67DdTEQtPmK_qy7zF8JA34-zS%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19Ru34R5OY7FixN29BGzpEczSdXqiG8fE%26sz%3Dw1000"
     ],
     "price": 4450.0,
     "rating": 4.5,
@@ -5463,7 +5463,7 @@ const PRODUCTS = [
     "model": "NAS-FL360-1DR",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1bbXOF_POFiqiMX6tNiqxeHYCfoXJpj1B&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1bbXOF_POFiqiMX6tNiqxeHYCfoXJpj1B%26sz%3Dw1000"
     ],
     "price": 4750.0,
     "rating": 4.5,
@@ -5485,7 +5485,7 @@ const PRODUCTS = [
     "model": "NAS-FL400-1DR",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=11neHAZ5FyENTbzZvaEMDENyQ6Uv81Wku&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D11neHAZ5FyENTbzZvaEMDENyQ6Uv81Wku%26sz%3Dw1000"
     ],
     "price": 5350.0,
     "rating": 4.5,
@@ -5507,9 +5507,9 @@ const PRODUCTS = [
     "model": "NAS-375DFG",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1yriRbiGVAVZdwo4PaoQ9IBaUiLYfUxSn&sz=w1000",
-      "https://drive.google.com/thumbnail?id=12lQuZJo_9IREwYK1PkiAyuXQ9WCprPaB&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kA9GeU47S5ANyaeu1T8e7r2ALyLcUz1x&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1yriRbiGVAVZdwo4PaoQ9IBaUiLYfUxSn%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D12lQuZJo_9IREwYK1PkiAyuXQ9WCprPaB%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kA9GeU47S5ANyaeu1T8e7r2ALyLcUz1x%26sz%3Dw1000"
     ],
     "price": 5899.0,
     "rating": 4.5,
@@ -5531,9 +5531,9 @@ const PRODUCTS = [
     "model": "NAS-FL850-2DR",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=19Ru34R5OY7FixN29BGzpEczSdXqiG8fE&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ADrCG8xTUjx297Z1VkLgwuWmtgaaijM3&sz=w1000",
-      "https://drive.google.com/thumbnail?id=18a-xynn67DdTEQtPmK_qy7zF8JA34-zS&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19Ru34R5OY7FixN29BGzpEczSdXqiG8fE%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ADrCG8xTUjx297Z1VkLgwuWmtgaaijM3%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D18a-xynn67DdTEQtPmK_qy7zF8JA34-zS%26sz%3Dw1000"
     ],
     "price": 10800.0,
     "rating": 4.5,
@@ -5555,9 +5555,9 @@ const PRODUCTS = [
     "model": "NAS-FL1300-2DR",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Uz2iVZ4gPG7PXsbhLct_dawE_TYZqpnR&sz=w1000",
-      "https://drive.google.com/thumbnail?id=18LJRO5y793lTlGJnZiVITtvtbxGc4o40&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1-bIrEw_OKfZudwfi2BfiEC0WaRS6t2a8&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Uz2iVZ4gPG7PXsbhLct_dawE_TYZqpnR%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D18LJRO5y793lTlGJnZiVITtvtbxGc4o40%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1-bIrEw_OKfZudwfi2BfiEC0WaRS6t2a8%26sz%3Dw1000"
     ],
     "price": 14800.0,
     "rating": 4.5,
@@ -5579,9 +5579,9 @@ const PRODUCTS = [
     "model": "NAS-FL1400-3DR",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1cquhOKZ0mILtgdXTmVXrOE_MOS7nPbgP&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1aWra9Ajph6J3Vn4k_0iO-EUS7vKHVz2M&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1tT6ZqDKjLJ0oi4Bj32HiVj5hLXeSE-ff&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1cquhOKZ0mILtgdXTmVXrOE_MOS7nPbgP%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1aWra9Ajph6J3Vn4k_0iO-EUS7vKHVz2M%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1tT6ZqDKjLJ0oi4Bj32HiVj5hLXeSE-ff%26sz%3Dw1000"
     ],
     "price": 16900.0,
     "rating": 4.5,
@@ -5983,8 +5983,8 @@ const PRODUCTS = [
     "model": "NAS-YD200-W",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1_CIl33uDGI2ZNF0lP3k6kz_hQSaEP21j&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1iQH1AeCC0AlTEDygB7h9ww-yb1mHh0g0&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_CIl33uDGI2ZNF0lP3k6kz_hQSaEP21j%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1iQH1AeCC0AlTEDygB7h9ww-yb1mHh0g0%26sz%3Dw1000"
     ],
     "price": 999.0,
     "rating": 4.5,
@@ -6006,7 +6006,7 @@ const PRODUCTS = [
     "model": "AG036AFK",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1GzGeA-1kCSLiugiE8TcQznmkR_dM-4zr&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GzGeA-1kCSLiugiE8TcQznmkR_dM-4zr%26sz%3Dw1000"
     ],
     "price": 1799.0,
     "rating": 4.5,
@@ -6028,8 +6028,8 @@ const PRODUCTS = [
     "model": "NAS-05-TW",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1AlaEn3tS016xCp4pdW7edlr_BxLVqBvZ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1R-AtruSXSeEkC4C6nqoyDpIfp96eOQbH&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1AlaEn3tS016xCp4pdW7edlr_BxLVqBvZ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1R-AtruSXSeEkC4C6nqoyDpIfp96eOQbH%26sz%3Dw1000"
     ],
     "price": 999.0,
     "rating": 4.5,
@@ -6051,9 +6051,9 @@ const PRODUCTS = [
     "model": "NASTT-JS80",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1e0yUd8mcEU4jMpj8QoHW8um1swiXeyzc&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1TVtbO5GMjHnDeADyf2wre3750I6htBYw&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1NV3MtvXjDb4nVgXCX_WFvPkKLYeCBRu2&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1e0yUd8mcEU4jMpj8QoHW8um1swiXeyzc%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1TVtbO5GMjHnDeADyf2wre3750I6htBYw%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1NV3MtvXjDb4nVgXCX_WFvPkKLYeCBRu2%26sz%3Dw1000"
     ],
     "price": 1999.0,
     "rating": 4.5,
@@ -6075,9 +6075,9 @@ const PRODUCTS = [
     "model": "NASTL-B120FL",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Eb7Y-AcaudnqwBYPhAoUGsupocotgCTl&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1-sXhLXzZvzEM4Fwn-MAzh4FiH9EEtVLu&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1e9_3CD4LTPOPrBqmsEXJOy1wMtkdzpyo&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Eb7Y-AcaudnqwBYPhAoUGsupocotgCTl%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1-sXhLXzZvzEM4Fwn-MAzh4FiH9EEtVLu%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1e9_3CD4LTPOPrBqmsEXJOy1wMtkdzpyo%26sz%3Dw1000"
     ],
     "price": 3650.0,
     "rating": 4.5,
@@ -6099,9 +6099,9 @@ const PRODUCTS = [
     "model": "NASTL-B80",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1WLt8h_27y-w1kl8ELOi75StpzwfmJBHx&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1TyxtoC5nOx2mXGhrmDZj_M6ZT4_Glx-2&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1G42u4_Xy_ThgYEVQxs8v63oeOlI-VN6z&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WLt8h_27y-w1kl8ELOi75StpzwfmJBHx%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1TyxtoC5nOx2mXGhrmDZj_M6ZT4_Glx-2%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1G42u4_Xy_ThgYEVQxs8v63oeOlI-VN6z%26sz%3Dw1000"
     ],
     "price": 2750.0,
     "rating": 4.5,
@@ -6123,10 +6123,10 @@ const PRODUCTS = [
     "model": "NASFL-JS12KG-S",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1Y2-3Seh4VOaNRmps4f4E2b8ig8cG8yck&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Bla-1QnV-ZIP4gA4qR-f-9Aw-H2Pb4jC&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1UDIl7qyoCPOYFghZN1xEShTEyxJmehJ2&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1U4TcSWdzR8kR8BZADYcF2XhDTsSZq4Pm&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Y2-3Seh4VOaNRmps4f4E2b8ig8cG8yck%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Bla-1QnV-ZIP4gA4qR-f-9Aw-H2Pb4jC%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1UDIl7qyoCPOYFghZN1xEShTEyxJmehJ2%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1U4TcSWdzR8kR8BZADYcF2XhDTsSZq4Pm%26sz%3Dw1000"
     ],
     "price": 4800.0,
     "rating": 4.5,
@@ -6148,10 +6148,10 @@ const PRODUCTS = [
     "model": "NASFL-JS10KG-S",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1qB1sqd4o-vtKnPj5m-BniDKI72FNee_e&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1EFsxm-r8jXw2Cya7F8QyDtbvM-aAogBq&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1hQVoM5dMCtTKkOe8depDSlUNkiCTq0z6&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1P979_9l6AIkpLy-4pXbvIs4ORJADrNqy&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1qB1sqd4o-vtKnPj5m-BniDKI72FNee_e%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1EFsxm-r8jXw2Cya7F8QyDtbvM-aAogBq%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1hQVoM5dMCtTKkOe8depDSlUNkiCTq0z6%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1P979_9l6AIkpLy-4pXbvIs4ORJADrNqy%26sz%3Dw1000"
     ],
     "price": 4150.0,
     "rating": 4.5,
@@ -6173,9 +6173,9 @@ const PRODUCTS = [
     "model": "NASFL-J8KG-S",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1WtLNJ9t32iBV-ZZHyGTd4OgGQqAFVoTH&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1MtUrG9E9StKk-Vt_jEFpK8tyi0pHf4cK&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1J4cyjRbuJPhIu5wCUKGDqyZ0586BWXrT&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1WtLNJ9t32iBV-ZZHyGTd4OgGQqAFVoTH%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1MtUrG9E9StKk-Vt_jEFpK8tyi0pHf4cK%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1J4cyjRbuJPhIu5wCUKGDqyZ0586BWXrT%26sz%3Dw1000"
     ],
     "price": 3300.0,
     "rating": 4.5,
@@ -6197,9 +6197,9 @@ const PRODUCTS = [
     "model": "NASFL-J6KG-S",
     "category": "laundry",
     "images": [
-      "https://drive.google.com/thumbnail?id=1W_IOxbRrn-xnyT-Oj4L43VvXMO0YM3WC&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1b2nxcBbZiku9vEY1sXaCy7FpS2W796_N&sz=w1000",
-      "https://drive.google.com/thumbnail?id=16OHgDuK5ZU1d_1P4XyUplxlZ-Tb8JyVJ&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1W_IOxbRrn-xnyT-Oj4L43VvXMO0YM3WC%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1b2nxcBbZiku9vEY1sXaCy7FpS2W796_N%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D16OHgDuK5ZU1d_1P4XyUplxlZ-Tb8JyVJ%26sz%3Dw1000"
     ],
     "price": 2950.0,
     "rating": 4.5,
@@ -6221,9 +6221,9 @@ const PRODUCTS = [
     "model": "NASGC-SNIPER50TB",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=146l1JWII9JqOfn4beKiiNtRfbAav4OxA&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Wo3gi87ytXqmhq_-VfPgEkhr46RCItCu&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1IyxjaH6Ti5MYRXtBTModf1AwjaROTpAi&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D146l1JWII9JqOfn4beKiiNtRfbAav4OxA%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Wo3gi87ytXqmhq_-VfPgEkhr46RCItCu%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1IyxjaH6Ti5MYRXtBTModf1AwjaROTpAi%26sz%3Dw1000"
     ],
     "price": 1499.0,
     "rating": 4.5,
@@ -6245,9 +6245,9 @@ const PRODUCTS = [
     "model": "NASGC-SNIPER50TB-G",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1KcykH00A_0VjsbtIPSC1YfV56lyVo82O&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1dsIY_NdE_FHgiembQhCZ02JhXe-aU6b-&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1hUA76aoawd_cBWdP3__HvKcGbIeeN4IY&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KcykH00A_0VjsbtIPSC1YfV56lyVo82O%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1dsIY_NdE_FHgiembQhCZ02JhXe-aU6b-%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1hUA76aoawd_cBWdP3__HvKcGbIeeN4IY%26sz%3Dw1000"
     ],
     "price": 1699.0,
     "rating": 4.5,
@@ -6269,10 +6269,10 @@ const PRODUCTS = [
     "model": "NAS-DM4H109",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1nxbpJ0_gsz4Sb9Au7OwWxJG75LxFmUAD&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1TweCJiD2g-B6Yk8fjI-jP7R5O0HdH-H7&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1olCj1iA5tqpxoOGEhT483llgoOUYuWtB&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1nEBLi4ffdGiwkxAB3yIkZa5lpnvEH80s&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1nxbpJ0_gsz4Sb9Au7OwWxJG75LxFmUAD%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1TweCJiD2g-B6Yk8fjI-jP7R5O0HdH-H7%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1olCj1iA5tqpxoOGEhT483llgoOUYuWtB%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1nEBLi4ffdGiwkxAB3yIkZa5lpnvEH80s%26sz%3Dw1000"
     ],
     "price": 2999.0,
     "rating": 4.5,
@@ -6294,9 +6294,9 @@ const PRODUCTS = [
     "model": "IMB1008-GS",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1qCbGI4vY-l1FyxQ0Lvw-ltcmx19lcpVV&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1Yw6xeweadCLN_TRuae4f2pGsriWqxzBx&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1tcHJd9VKLGU5LydUr185pv_eMTbNhCE-&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1qCbGI4vY-l1FyxQ0Lvw-ltcmx19lcpVV%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1Yw6xeweadCLN_TRuae4f2pGsriWqxzBx%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1tcHJd9VKLGU5LydUr185pv_eMTbNhCE-%26sz%3Dw1000"
     ],
     "price": 999.0,
     "rating": 4.5,
@@ -6318,8 +6318,8 @@ const PRODUCTS = [
     "model": "65P6L",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1pdMhk9ws3Y8KdE5dcKIydvTVHMbpLQq8&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1iPlu5awSZZue4IGcc28boctMMeqeVWUv&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1pdMhk9ws3Y8KdE5dcKIydvTVHMbpLQq8%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1iPlu5awSZZue4IGcc28boctMMeqeVWUv%26sz%3Dw1000"
     ],
     "price": 7600.0,
     "rating": 4.5,
@@ -6341,9 +6341,9 @@ const PRODUCTS = [
     "model": "NASF2-15-SK",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1npXp71aoVlnsz1UIqotFLyMhtha59pNS&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1fYL69Pa0ru8e7CkFkG8ijWgYNRbSD-5U&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1un43dCMlhBbGox9N9ZTDxfFVGq2Io-3Q&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1npXp71aoVlnsz1UIqotFLyMhtha59pNS%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1fYL69Pa0ru8e7CkFkG8ijWgYNRbSD-5U%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1un43dCMlhBbGox9N9ZTDxfFVGq2Io-3Q%26sz%3Dw1000"
     ],
     "price": 2600.0,
     "rating": 4.5,
@@ -6365,7 +6365,7 @@ const PRODUCTS = [
     "model": "MCD-36HRDN1",
     "category": "small",
     "images": [
-      "https://drive.google.com/thumbnail?id=15sml8tTorrqH6KakgXpLlN5Oyg6jr8zp&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D15sml8tTorrqH6KakgXpLlN5Oyg6jr8zp%26sz%3Dw1000"
     ],
     "price": 26900.0,
     "rating": 4.5,
@@ -6384,10 +6384,10 @@ const PRODUCTS = [
     "model": "QA75Q7FAAUXGH",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1U4AkP0cVeSQ0bZ4PiQ-CLSWBEzgD4WJb&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1SdL1DUETI7usLU1UaPXta-f81KlJ9ItC&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1ZcIhJT6ZMxJDKUUsfLeSR7v4eG7ushoD&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1GipBjwFxyKavmI-W5Ssyd2qO46MkVi4f&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1U4AkP0cVeSQ0bZ4PiQ-CLSWBEzgD4WJb%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1SdL1DUETI7usLU1UaPXta-f81KlJ9ItC%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ZcIhJT6ZMxJDKUUsfLeSR7v4eG7ushoD%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GipBjwFxyKavmI-W5Ssyd2qO46MkVi4f%26sz%3Dw1000"
     ],
     "price": 19200.0,
     "rating": 4.5,
@@ -6409,9 +6409,9 @@ const PRODUCTS = [
     "model": "90J72-B",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=17BbxJ5UID1H3PEiUz8dih4FdfphvlUs9&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1wz1fGAGbLnQscipINA3wWwTgqYdDGxkF&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1XP6VdahYKgggqmrRx5PTE7ldLxm3KNDZ&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D17BbxJ5UID1H3PEiUz8dih4FdfphvlUs9%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1wz1fGAGbLnQscipINA3wWwTgqYdDGxkF%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1XP6VdahYKgggqmrRx5PTE7ldLxm3KNDZ%26sz%3Dw1000"
     ],
     "price": 2950.0,
     "rating": 4.5,
@@ -6433,9 +6433,9 @@ const PRODUCTS = [
     "model": "90M21-S",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=19kjzmuKXr6k2Ph5kj07oopwt9bbS_X9G&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1zIwRLG4LAAySI9VBP0g4QX9XTgSqpmxk&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1MeZCoGCNBqGnw8YrC_PUHbIEQmu09wl-&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D19kjzmuKXr6k2Ph5kj07oopwt9bbS_X9G%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1zIwRLG4LAAySI9VBP0g4QX9XTgSqpmxk%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1MeZCoGCNBqGnw8YrC_PUHbIEQmu09wl-%26sz%3Dw1000"
     ],
     "price": 1999.0,
     "rating": 4.5,
@@ -6454,9 +6454,9 @@ const PRODUCTS = [
     "model": "NASGS-K332FS",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1ogf76BT75CD6PtvRIg9XREieZWlr3TTD&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1asiCVAvEPX63fopyu4BG2LYzsf9VLBCg&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1orTcLfTpB4MDyEiaZtCsYRzzt0flDCnr&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ogf76BT75CD6PtvRIg9XREieZWlr3TTD%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1asiCVAvEPX63fopyu4BG2LYzsf9VLBCg%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1orTcLfTpB4MDyEiaZtCsYRzzt0flDCnr%26sz%3Dw1000"
     ],
     "price": 899.0,
     "rating": 4.5,
@@ -6475,8 +6475,8 @@ const PRODUCTS = [
     "model": "NASGS-K5CSS-S",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1k19I4mD8_YG7dfO5r9DoWe1kYiEiyVDX&sz=w1000",
-      "https://drive.google.com/thumbnail?id=14yWBHVa2KH1lNSy2QYDHofsaEOFO8WEJ&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1k19I4mD8_YG7dfO5r9DoWe1kYiEiyVDX%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14yWBHVa2KH1lNSy2QYDHofsaEOFO8WEJ%26sz%3Dw1000"
     ],
     "price": 599.0,
     "rating": 4.5,
@@ -6495,9 +6495,9 @@ const PRODUCTS = [
     "model": "MC353",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1s-Axykt5uFr1V0XO9dl_6n8C64Tmmv8w&sz=w1000",
-      "https://drive.google.com/thumbnail?id=105pEbOBWyNiJM1Fi8AggF_8-ujXcfcls&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1MNcWm4h1JV-whptud450VzHMTWAxxdd1&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1s-Axykt5uFr1V0XO9dl_6n8C64Tmmv8w%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D105pEbOBWyNiJM1Fi8AggF_8-ujXcfcls%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1MNcWm4h1JV-whptud450VzHMTWAxxdd1%26sz%3Dw1000"
     ],
     "price": 299.0,
     "rating": 4.5,
@@ -6516,8 +6516,8 @@ const PRODUCTS = [
     "model": "NAS-175FL-G",
     "category": "fridge",
     "images": [
-      "https://drive.google.com/thumbnail?id=1JMmVGz5Q_d7yu69Z4ZI7QVxdFDbRsoIX&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1y83Rjb7xinP99A_puq3ntrDJHpWEX1jf&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1JMmVGz5Q_d7yu69Z4ZI7QVxdFDbRsoIX%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1y83Rjb7xinP99A_puq3ntrDJHpWEX1jf%26sz%3Dw1000"
     ],
     "price": 2349.0,
     "rating": 4.5,
@@ -6536,9 +6536,9 @@ const PRODUCTS = [
     "model": "VCC4570S4K",
     "category": "small",
     "images": [
-      "https://drive.google.com/thumbnail?id=1ihfzrtREl5QyJfgNsorZcRLSDPkfvILP&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1JZ8Bzcf3KyJzYLxxyIMxsJt63OeoY4ha&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1J-ma4PIrbPDxPOsCl92UqFWs3hlOGRMm&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1ihfzrtREl5QyJfgNsorZcRLSDPkfvILP%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1JZ8Bzcf3KyJzYLxxyIMxsJt63OeoY4ha%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1J-ma4PIrbPDxPOsCl92UqFWs3hlOGRMm%26sz%3Dw1000"
     ],
     "price": 1799.0,
     "rating": 4.5,
@@ -6557,10 +6557,10 @@ const PRODUCTS = [
     "model": "",
     "category": "small",
     "images": [
-      "https://drive.google.com/thumbnail?id=10GowIUYEnTG2M4clCXT23rB_5cTdlbFv&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1MRStBM9W7sfrWiphyy72BswFUkY7eLO_&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1-MujwqzgRo7WTGqsmJaRDXYP_Qvw56Fc&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1vYWWUSlr10CduBBGA4-zgZO-Ij70uNcC&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D10GowIUYEnTG2M4clCXT23rB_5cTdlbFv%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1MRStBM9W7sfrWiphyy72BswFUkY7eLO_%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1-MujwqzgRo7WTGqsmJaRDXYP_Qvw56Fc%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1vYWWUSlr10CduBBGA4-zgZO-Ij70uNcC%26sz%3Dw1000"
     ],
     "price": 2150.0,
     "rating": 4.5,
@@ -6579,9 +6579,9 @@ const PRODUCTS = [
     "model": "DW60CG550FSGSV",
     "category": "small",
     "images": [
-      "https://drive.google.com/thumbnail?id=16T77X7TYISKxjskiLi3Iebp6P3t1YwJQ&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1nZDi_W2Z6dXnUWVTVCb7BLj3VtX-vq4p&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1eSmbL8gNfpZ_WtOopJYY9OTEjIpmUUZi&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D16T77X7TYISKxjskiLi3Iebp6P3t1YwJQ%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1nZDi_W2Z6dXnUWVTVCb7BLj3VtX-vq4p%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1eSmbL8gNfpZ_WtOopJYY9OTEjIpmUUZi%26sz%3Dw1000"
     ],
     "price": 18999.0,
     "rating": 4.5,
@@ -6603,10 +6603,10 @@ const PRODUCTS = [
     "model": "NAS-J12-N1-ECO",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1tsDng2Ug3B54enhsJhgBnB3xEY6gc1sc&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1_gDYJtG83vm6f78WIxOqpc6L7glfKmD7&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1-E1ypdcQ7ta1iCeziAxZGEiXnKuRNupt&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1stSx-cCL76PTvjjFB-D2ISmPWnnv8jUi&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1tsDng2Ug3B54enhsJhgBnB3xEY6gc1sc%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1_gDYJtG83vm6f78WIxOqpc6L7glfKmD7%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1-E1ypdcQ7ta1iCeziAxZGEiXnKuRNupt%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1stSx-cCL76PTvjjFB-D2ISmPWnnv8jUi%26sz%3Dw1000"
     ],
     "price": 2850.0,
     "rating": 4.5,
@@ -6628,9 +6628,9 @@ const PRODUCTS = [
     "model": "NAS-T18N1",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1-cGqA_Yrsrx47VVr8qf7bHibQ1L2_nP5&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1DchKFjVXLzoOj74SgltgwAwFptZcOyNq&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1D4duS_Hnqle1Nw6W7oWWax1DWxAq66Ud&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1-cGqA_Yrsrx47VVr8qf7bHibQ1L2_nP5%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1DchKFjVXLzoOj74SgltgwAwFptZcOyNq%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1D4duS_Hnqle1Nw6W7oWWax1DWxAq66Ud%26sz%3Dw1000"
     ],
     "price": 4850.0,
     "rating": 4.5,
@@ -6652,9 +6652,9 @@ const PRODUCTS = [
     "model": "NAS-T24N1",
     "category": "ac",
     "images": [
-      "https://drive.google.com/thumbnail?id=1c30QTibZvAis7fUAUL_beZ4m6Ga--hxV&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1s6qBaex4bmwX3h6JFSZqY8_nV7aCdVrw&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1DhZJ1HI8rSW7YwG_pDsZmaxe17jgQlZ-&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1c30QTibZvAis7fUAUL_beZ4m6Ga--hxV%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1s6qBaex4bmwX3h6JFSZqY8_nV7aCdVrw%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1DhZJ1HI8rSW7YwG_pDsZmaxe17jgQlZ-%26sz%3Dw1000"
     ],
     "price": 6799.0,
     "rating": 4.5,
@@ -6676,7 +6676,7 @@ const PRODUCTS = [
     "model": "NAS-J50FBFL",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1eEP8t9gqhEr1Lv_gN_TsOaVtgYTsElpk&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1eEP8t9gqhEr1Lv_gN_TsOaVtgYTsElpk%26sz%3Dw1000"
     ],
     "price": 3099.0,
     "rating": 4.5,
@@ -6698,7 +6698,7 @@ const PRODUCTS = [
     "model": "NAS-J50FBFL-G",
     "category": "tv",
     "images": [
-      "https://drive.google.com/thumbnail?id=1f9JVpo3j5TIQ0ro2VFYjrcrWcHuqs8MX&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1f9JVpo3j5TIQ0ro2VFYjrcrWcHuqs8MX%26sz%3Dw1000"
     ],
     "price": 3799.0,
     "rating": 4.5,
@@ -6720,16 +6720,16 @@ const PRODUCTS = [
     "model": "LH75WAFPLGCXUE",
     "category": "commercial",
     "images": [
-      "https://drive.google.com/thumbnail?id=1PSpNhzOxM0cPJ2PUG7NXwtESCTGlnb32&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1lfMFnLcWRRSTYRyO2XvLiMDXzfBPKonm&sz=w1000",
-      "https://drive.google.com/thumbnail?id=14CoBj-jmvoBYKcgOY641ETAW47toPWwn&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1cTj0CHjX0jZFIzeskP-l3yhNa52hvwzS&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1kCrP8AVym3JuI1-A7wTap9Un4zGfekSw&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1HsOtdaEtNuBA_YOfAonw8XylwEuwASmI&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1CLMasaNz7T6lNPu2RtuctwmgoZjUbZqp&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1KnnXiFMQBWNQ5sbhoV7bUfLMvIGqXtjs&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1bMJWTUYYvqheD7CL2n-A918-abVjvq5D&sz=w1000",
-      "https://drive.google.com/thumbnail?id=14XvFiPBJUy7x8jFL6VRZUWuk_fTYrUY6&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1PSpNhzOxM0cPJ2PUG7NXwtESCTGlnb32%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1lfMFnLcWRRSTYRyO2XvLiMDXzfBPKonm%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14CoBj-jmvoBYKcgOY641ETAW47toPWwn%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1cTj0CHjX0jZFIzeskP-l3yhNa52hvwzS%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1kCrP8AVym3JuI1-A7wTap9Un4zGfekSw%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1HsOtdaEtNuBA_YOfAonw8XylwEuwASmI%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1CLMasaNz7T6lNPu2RtuctwmgoZjUbZqp%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1KnnXiFMQBWNQ5sbhoV7bUfLMvIGqXtjs%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1bMJWTUYYvqheD7CL2n-A918-abVjvq5D%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D14XvFiPBJUy7x8jFL6VRZUWuk_fTYrUY6%26sz%3Dw1000"
     ],
     "price": 37500.0,
     "rating": 4.5,
@@ -6751,11 +6751,11 @@ const PRODUCTS = [
     "model": "HW-A650/XA",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=11vmBkeo1KAASlgqtJiYc7DX2WRJr4XTi&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1DMz88BbpMZO4J_hS1K3V7FlyPHduER55&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1-EPpALesNOYcOAjzZkBsf4W2nNZX0c7i&sz=w1000",
-      "https://drive.google.com/thumbnail?id=13TiyxN7vZXTOhzPt8SbJKHnebdvjOYv_&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1GmzDrdPoPv3ETaC0DS5CU-rCshKEhH-Z&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D11vmBkeo1KAASlgqtJiYc7DX2WRJr4XTi%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1DMz88BbpMZO4J_hS1K3V7FlyPHduER55%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1-EPpALesNOYcOAjzZkBsf4W2nNZX0c7i%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D13TiyxN7vZXTOhzPt8SbJKHnebdvjOYv_%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1GmzDrdPoPv3ETaC0DS5CU-rCshKEhH-Z%26sz%3Dw1000"
     ],
     "price": 4399.0,
     "rating": 4.5,
@@ -6774,7 +6774,7 @@ const PRODUCTS = [
     "model": "FP9026KE-CB",
     "category": "kitchen",
     "images": [
-      "https://drive.google.com/thumbnail?id=1MeQCdyvT70nJ_gBZ9dA5Ortwf95xVZ8Y&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1MeQCdyvT70nJ_gBZ9dA5Ortwf95xVZ8Y%26sz%3Dw1000"
     ],
     "price": 499.0,
     "rating": 4.5,
@@ -6796,9 +6796,9 @@ const PRODUCTS = [
     "model": "P733W-GHA",
     "category": "audio",
     "images": [
-      "https://drive.google.com/thumbnail?id=1nWk4vwpl25XosXlhCzXFnlwzpmNnJ64Q&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1W-czMuiaucT8Yw8lK6vTbsU8yHHrZfvH&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1abHxG0NbIpnAFmlvyXqaTYAQ84F_-OuL&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1nWk4vwpl25XosXlhCzXFnlwzpmNnJ64Q%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1W-czMuiaucT8Yw8lK6vTbsU8yHHrZfvH%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1abHxG0NbIpnAFmlvyXqaTYAQ84F_-OuL%26sz%3Dw1000"
     ],
     "price": 3700.0,
     "rating": 4.5,
@@ -6817,9 +6817,9 @@ const PRODUCTS = [
     "model": "D10-20VI",
     "category": "small",
     "images": [
-      "https://drive.google.com/thumbnail?id=188J6WATb7t0Kl8dn9VF_gtP2-qWtiaLE&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1IjFzmWOFA_Ql6nZybULE9dlgpaVmIXjg&sz=w1000",
-      "https://drive.google.com/thumbnail?id=1bdZTyJu1u_C-M3clTxXlFc8wfWK0y90T&sz=w1000"
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D188J6WATb7t0Kl8dn9VF_gtP2-qWtiaLE%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1IjFzmWOFA_Ql6nZybULE9dlgpaVmIXjg%26sz%3Dw1000",
+      "https://res.cloudinary.com/fkngvka8/image/fetch/https%3A%2F%2Fdrive.google.com%2Fthumbnail%3Fid%3D1bdZTyJu1u_C-M3clTxXlFc8wfWK0y90T%26sz%3Dw1000"
     ],
     "price": 1199.0,
     "rating": 4.5,

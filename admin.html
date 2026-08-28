@@ -1046,6 +1046,16 @@ textarea{resize:vertical;min-height:70px}
 <script src="js/data.js"></script>
 <script>
 /* ── Constants ── */
+// Every product image gets routed through Cloudinary's CDN rather than
+// served directly from wherever it's actually hosted (Google Drive, etc.)
+// — Cloudinary fetches the original once, caches it, and serves all future
+// requests from a fast CDN instead. Meaningfully faster than Drive alone,
+// especially on mobile. Change this if the Cloudinary account ever changes.
+const CLOUDINARY_CLOUD_NAME = 'fkngvka8';
+function toCloudinaryFetchUrl(url){
+  if(!url || url.startsWith('data:') || url.includes('res.cloudinary.com')) return url; // already routed, or a local upload with nothing to fetch
+  return 'https://res.cloudinary.com/'+CLOUDINARY_CLOUD_NAME+'/image/fetch/'+encodeURIComponent(url);
+}
 let CAT_LABELS = Object.fromEntries(CATEGORIES.map(c => [c.id, c.name]));
 const CAT_CLASS  = {tv:'cat-tv',ac:'cat-ac',fridge:'cat-fridge',laundry:'cat-laundry',kitchen:'cat-kitchen',audio:'cat-small',small:'cat-small',phones:'cat-phones',tablets:'cat-phones',commercial:'cat-commercial'};
 
@@ -2064,7 +2074,7 @@ function driveToDirectUrl(url){
   let m=url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
   if(!m)m=url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
   if(!m)m=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if(m)return'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1000';
+  if(m)return toCloudinaryFetchUrl('https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1000');
   return url;
 }
 function slotUrlChange(input){
@@ -2467,7 +2477,7 @@ function importProductsCSV(input){
           let images=[];
           if(iImgs>=0){
             const raw=(cols[iImgs]||'').trim();
-            images=raw.split(' | ').map(u=>u.trim()).filter(u=>u.startsWith('http')||u.startsWith('//'));
+            images=raw.split(' | ').map(u=>u.trim()).filter(u=>u.startsWith('http')||u.startsWith('//')).map(u=>u.includes('drive.google.com')?toCloudinaryFetchUrl(u):u);
           }
           if(!images.length && model && skuMap[model] && skuMap[model].length){ images=skuMap[model]; imgMapped++; }
           const specs={};
@@ -2524,7 +2534,7 @@ function importProductsCSV(input){
         // Images: apply URLs from CSV; fall back to SKU map if column is empty
         if(iImgs>=0&&cols[iImgs]!==undefined){
           const raw=(cols[iImgs]||'').trim();
-          const urls=raw.split(' | ').map(u=>u.trim()).filter(u=>u.startsWith('http')||u.startsWith('//'));
+          const urls=raw.split(' | ').map(u=>u.trim()).filter(u=>u.startsWith('http')||u.startsWith('//')).map(u=>u.includes('drive.google.com')?toCloudinaryFetchUrl(u):u);
           if(urls.length){edits[id].images=urls;changed=true;}
           else{
             // No URLs in CSV — try SKU map fallback

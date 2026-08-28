@@ -117,9 +117,21 @@ function initShopPage() {
   }
 }
 
+// Rendering every matching product at once meant a large category could
+// fire off dozens of image requests simultaneously — especially painful
+// since product images are hosted on Google Drive's thumbnail service,
+// which is noticeably slower under load than a real image CDN and doesn't
+// handle a burst of concurrent requests gracefully. Paginating keeps the
+// initial batch small regardless of how big the category is.
+const SHOP_PAGE_SIZE = 16;
+let _shopFullList = [];
+let _shopShownCount = 0;
+
 function renderShopGrid(products) {
   const grid = document.getElementById('shopProductsGrid');
   if (!grid) return;
+  _shopFullList = products;
+  _shopShownCount = 0;
   if (products.length === 0) {
     grid.innerHTML = `
       <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--text-muted)">
@@ -127,11 +139,26 @@ function renderShopGrid(products) {
         <h3 style="font-size:18px;margin-bottom:8px">No products found</h3>
         <p>Try adjusting your filters or <a href="shop.html" style="color:var(--primary)">browse all products</a>.</p>
       </div>`;
+    document.getElementById('shopLoadMoreWrap').style.display = 'none';
     return;
   }
-  grid.innerHTML = products.map(p => renderProductCard(p)).join('');
+  grid.innerHTML = '';
+  appendNextShopBatch();
+}
+
+function appendNextShopBatch() {
+  const grid = document.getElementById('shopProductsGrid');
+  const wrap = document.getElementById('shopLoadMoreWrap');
+  const batch = _shopFullList.slice(_shopShownCount, _shopShownCount + SHOP_PAGE_SIZE);
+  grid.insertAdjacentHTML('beforeend', batch.map(p => renderProductCard(p)).join(''));
+  _shopShownCount += batch.length;
   updateWishlistButtons();
   triggerReveal();
+  if (wrap) wrap.style.display = (_shopShownCount < _shopFullList.length) ? 'block' : 'none';
+}
+
+function loadMoreShopProducts() {
+  appendNextShopBatch();
 }
 
 // Stable per-visit shuffle: each product gets a fixed random key the first
