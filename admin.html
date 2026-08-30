@@ -374,6 +374,7 @@ textarea{resize:vertical;min-height:70px}
         <button class="btn btn-primary" id="topAddBtn" onclick="openAddModal()" style="display:none"><i class="fas fa-plus"></i> Add Product</button>
         <button class="btn btn-primary" id="topAddOrderBtn" onclick="openAddOrderModal()" style="display:none"><i class="fas fa-plus"></i> Add Order</button>
         <button class="btn btn-primary" id="topAddDealBtn" onclick="openAddDealModal()" style="display:none"><i class="fas fa-plus"></i> New Deal</button>
+        <button class="btn btn-outline" onclick="hardRefreshAdmin()" title="Force-reload the latest version — use this after deploying a code update, or if data looks out of date"><i class="fas fa-sync-alt"></i></button>
         <button class="btn btn-outline" onclick="logout()" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
       </div>
     </div>
@@ -396,6 +397,13 @@ textarea{resize:vertical;min-height:70px}
           <button onclick="loadVisitLog()" style="margin-left:auto;font-size:12px;background:none;border:1px solid #e2e8f0;border-radius:6px;padding:3px 10px;cursor:pointer;color:var(--muted)">↻ Refresh</button>
         </div>
         <div id="visitLogTable"></div>
+      </div>
+      <div class="dash-widget" style="grid-column:1/-1">
+        <div class="widget-title" style="display:flex;align-items:center;gap:10px">
+          <span>Where Visitors Are Viewing From — Today</span>
+          <button onclick="loadVisitorLocations()" style="margin-left:auto;font-size:12px;background:none;border:1px solid #e2e8f0;border-radius:6px;padding:3px 10px;cursor:pointer;color:var(--muted)">↻ Refresh</button>
+        </div>
+        <div id="visitorLocationsPanel"></div>
       </div>
     </div>
 
@@ -1220,6 +1228,17 @@ async function doLogin() {
   }
 }
 
+// A normal browser reload can still be served from the browser's own HTTP
+// cache instead of actually fetching what was just deployed to GitHub —
+// this forces a genuinely fresh copy of the page (and re-syncs the latest
+// data from Supabase in the process, since that happens on every load).
+function hardRefreshAdmin() {
+  toast('Refreshing to the latest version…', 'info');
+  setTimeout(() => {
+    location.href = location.pathname + '?_r=' + Date.now();
+  }, 300);
+}
+
 function logout() {
   localStorage.removeItem(ADMIN_SESSION_KEY);
   location.reload();
@@ -1386,6 +1405,128 @@ async function loadVisitLog() {
   }
 }
 
+// Ghana's 16 regions (2018 restructuring). Listed in full regardless of
+// whether there's any traffic from a given region today — unlike other
+// countries, which only show up here if someone actually viewed from
+// there. Geolocation services don't return a consistent exact string for
+// region names, so matching is keyword-based rather than exact — the
+// more specific/compound names (e.g. "Bono East") are checked before
+// their shorter substrings (e.g. "Bono") so they can't be misclassified.
+const GHANA_REGIONS = ['Greater Accra','Ashanti','Western','Central','Eastern','Volta','Northern','Upper East','Upper West','Bono','Bono East','Ahafo','Savannah','North East','Oti','Western North'];
+function normalizeGhanaRegion(raw) {
+  if (!raw) return null;
+  const r = raw.toLowerCase();
+  const checks = [
+    ['Bono East', ['bono east']],
+    ['Western North', ['western north']],
+    ['Upper East', ['upper east']],
+    ['Upper West', ['upper west']],
+    ['North East', ['north east', 'northeast']],
+    ['Greater Accra', ['greater accra', 'accra']],
+    ['Ashanti', ['ashanti']],
+    ['Bono', ['bono']],
+    ['Central', ['central']],
+    ['Eastern', ['eastern']],
+    ['Northern', ['northern']],
+    ['Oti', ['oti']],
+    ['Savannah', ['savannah']],
+    ['Volta', ['volta']],
+    ['Western', ['western']],
+    ['Ahafo', ['ahafo']],
+  ];
+  for (const [canonical, keywords] of checks) {
+    if (keywords.some(k => r.includes(k))) return canonical;
+  }
+  return null;
+}
+
+async function loadVisitorLocations() {
+  const el = document.getElementById('visitorLocationsPanel');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Loading...</div>';
+  try {
+    const h = { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` };
+    const r = await fetch(`${SB_URL}/rest/v1/kv_store?key=eq.obv_visit_log`, { headers: h });
+    const rows = await r.json();
+    let log = [];
+    try { log = JSON.parse(rows[0]?.value || '[]'); } catch(e) {}
+    if (!Array.isArray(log)) log = [];
+
+    const today = new Date().toISOString().slice(0,10);
+    const todayLog = log.filter(v => v.t && v.t.startsWith(today));
+
+    // Split into Ghana (region-level detail) vs everywhere else (country-level only)
+    const ghanaCounts = {};   // region -> count
+    const accraCities = {};   // city -> count, only for Greater Accra
+    const otherCountries = {}; // country -> count
+
+    todayLog.forEach(v => {
+      const isGhana = (v.country || '').toLowerCase().includes('ghana');
+      if (isGhana) {
+        const region = normalizeGhanaRegion(v.region) || 'Unspecified';
+        ghanaCounts[region] = (ghanaCounts[region] || 0) + 1;
+        if (region === 'Greater Accra' && v.city) {
+          accraCities[v.city] = (accraCities[v.city] || 0) + 1;
+        }
+      } else {
+        const c = v.country || 'Unknown';
+        if (c !== 'Unknown') otherCountries[c] = (otherCountries[c] || 0) + 1;
+      }
+    });
+
+    const ghanaTotal = Object.values(ghanaCounts).reduce((s,n)=>s+n,0);
+    const otherTotal = Object.values(otherCountries).reduce((s,n)=>s+n,0);
+
+    // Ghana regions: always show all 16, sorted by count (highest first),
+    // ties broken alphabetically for a stable order.
+    const regionRows = GHANA_REGIONS.map(name => ({ name, count: ghanaCounts[name] || 0 }))
+      .sort((a,b) => b.count - a.count || a.name.localeCompare(b.name));
+    const unspecifiedGhana = ghanaCounts['Unspecified'] || 0;
+
+    const accraRows = Object.entries(accraCities).sort((a,b) => b[1]-a[1]);
+    const otherRows = Object.entries(otherCountries).sort((a,b) => b[1]-a[1]);
+
+    el.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr;gap:20px">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="font-size:20px">🇬🇭</span>
+            <strong style="font-size:14px">Ghana</strong>
+            <span style="font-size:12px;color:var(--muted)">${ghanaTotal} visit${ghanaTotal===1?'':'s'} today</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px">
+            ${regionRows.map(rg => `
+              <div style="background:${rg.count>0?'#f0fdf4':'#f8fafc'};border:1px solid ${rg.count>0?'#bbf7d0':'#e2e8f0'};border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:12.5px;font-weight:600;color:${rg.count>0?'#15803d':'var(--muted)'}">${rg.name}</span>
+                <span style="font-size:13px;font-weight:700;color:${rg.count>0?'#15803d':'var(--muted)'}">${rg.count}</span>
+              </div>`).join('')}
+          </div>
+          ${unspecifiedGhana ? `<div style="font-size:11.5px;color:var(--muted);margin-top:6px">+ ${unspecifiedGhana} visit${unspecifiedGhana===1?'':'s'} from Ghana with no specific region detected</div>` : ''}
+          ${accraRows.length ? `
+            <div style="margin-top:14px;padding:12px 14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px">
+              <div style="font-size:12.5px;font-weight:700;color:#1d4ed8;margin-bottom:8px">Greater Accra — by area</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                ${accraRows.map(([city,count]) => `<span style="background:#fff;border:1px solid #bfdbfe;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:#1d4ed8">${escHtml(city)} · ${count}</span>`).join('')}
+              </div>
+            </div>` : ''}
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="font-size:20px">🌍</span>
+            <strong style="font-size:14px">Other Countries</strong>
+            <span style="font-size:12px;color:var(--muted)">${otherTotal} visit${otherTotal===1?'':'s'} today</span>
+          </div>
+          ${otherRows.length ? `
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              ${otherRows.map(([country,count]) => `<span style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px;padding:5px 14px;font-size:12.5px;font-weight:600;color:var(--text)">${count} ${count===1?'person':'people'} viewed from ${escHtml(country)}</span>`).join('')}
+            </div>` : `<div style="font-size:12.5px;color:var(--muted)">No visits from outside Ghana today.</div>`}
+        </div>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:#ef4444;font-size:13px">Failed to load visitor location data.</div>';
+  }
+}
+
 function renderDashboard() {
   const pending   = ORDERS.filter(o=>o.status==='pending').length;
   const revenue   = ORDERS.filter(o=>['confirmed','processing','delivered'].includes(o.status)).reduce((s,o)=>s+(o.total||0),0);
@@ -1402,6 +1543,7 @@ function renderDashboard() {
     <div class="stat-val">${s.val}</div><div class="stat-label">${s.label}</div>
     <div class="stat-sub">${s.sub}</div></div>`).join('');
   loadVisitLog();
+  loadVisitorLocations();
 
   const recent = [...ORDERS].reverse().slice(0,7);
   const rl = document.getElementById('recentOrdersList');

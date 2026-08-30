@@ -494,93 +494,6 @@ function openLightbox(images, startIndex, name) {
 ════════════════════════════════════════ */
 
 /* Categories */
-/* Shared infinite card marquee — rotates DOM nodes, drag/swipe both directions */
-function startCardMarquee(track, wrap, speed) {
-  if (!track || !wrap) return;
-  wrap.scrollLeft = 0;
-  track.style.transform = 'translateX(0)';
-  let offset = 0, autoRunning = true, dragActive = false, prevX = 0;
-
-  // Cards now use a genuinely fixed CSS width (not just min-width), so this
-  // only needs measuring once instead of forcing a layout recalculation on
-  // every single animation frame — reading offsetWidth 60 times a second
-  // was needless work, and previously (before fixed widths existed) it was
-  // also unreliable, since a card of a different actual width could cycle
-  // to the front and throw the shift-per-frame math off, causing the
-  // stutter/jump this whole approach is now fixed to avoid.
-  let cachedWidth = null;
-  function cardW() {
-    if (cachedWidth !== null) return cachedWidth;
-    const first = track.firstElementChild;
-    if (!first) return 0;
-    cachedWidth = first.offsetWidth + (parseFloat(getComputedStyle(track).gap) || 12);
-    return cachedWidth;
-  }
-  window.addEventListener('resize', () => { cachedWidth = null; });
-
-  function shift(delta) {
-    const cw = cardW();
-    if (cw <= 0) return;
-    offset += delta;
-    while (offset >= cw) { track.appendChild(track.firstElementChild); offset -= cw; }
-    while (offset < 0)   { track.prepend(track.lastElementChild);      offset += cw; }
-    track.style.transform = `translateX(-${offset}px)`;
-  }
-
-
-  function tick() {
-    if (autoRunning && !dragActive) shift(speed);
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-
-  /* mouse drag */
-  wrap.style.cursor = 'grab';
-  wrap.addEventListener('mousedown', e => {
-    dragActive = true; autoRunning = false;
-    prevX = e.clientX; wrap.style.cursor = 'grabbing'; e.preventDefault();
-  });
-  document.addEventListener('mousemove', e => {
-    if (!dragActive) return;
-    shift(prevX - e.clientX); prevX = e.clientX;
-  });
-  document.addEventListener('mouseup', () => {
-    if (!dragActive) return;
-    dragActive = false; autoRunning = true; wrap.style.cursor = 'grab';
-  });
-
-  /* touch swipe */
-  let touchIsHorizontal = null; // undecided until there's been enough movement to tell
-  let touchStartY = 0;
-  wrap.addEventListener('touchstart', e => {
-    dragActive = true; autoRunning = false;
-    prevX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    touchIsHorizontal = null;
-  }, {passive:true});
-  wrap.addEventListener('touchmove', e => {
-    if (!dragActive) return;
-    const curX = e.touches[0].clientX, curY = e.touches[0].clientY;
-    if (touchIsHorizontal === null) {
-      // A real-world swipe is never perfectly straight, so wait for a
-      // small amount of movement before deciding which direction it
-      // actually is, rather than guessing off the very first pixel.
-      const dx = Math.abs(curX - prevX), dy = Math.abs(curY - touchStartY);
-      if (dx < 6 && dy < 6) return;
-      touchIsHorizontal = dx > dy;
-      if (!touchIsHorizontal) {
-        // This is someone scrolling the page, not dragging the marquee —
-        // hand it back cleanly instead of hijacking their scroll.
-        dragActive = false; autoRunning = true;
-        return;
-      }
-    }
-    shift(prevX - curX); prevX = curX;
-  }, {passive:true});
-  wrap.addEventListener('touchend', () => {
-    dragActive = false; setTimeout(() => { autoRunning = true; }, 800);
-  }, {passive:true});
-}
 
 // Shared by shop.html and product.html — builds the category dropdown menu
 // with subcategories nested (indented) under their parent category.
@@ -695,7 +608,6 @@ function renderCategories() {
       <div class="cat-name">${c.name}</div>
     </div>`;
   }).join('');
-  if (window.innerWidth < 1024) startCardMarquee(grid, grid.parentElement, 0.6);
 }
 
 /* Flash Sale */
@@ -799,14 +711,17 @@ function renderBrands() {
   const brandCounts = {};
   PRODUCTS.forEach(p => { brandCounts[p.brandId] = (brandCounts[p.brandId] || 0) + 1; });
 
-  grid.innerHTML = BRANDS.filter(b => brandCounts[b.id] > 0).map(b => {
+  const html = BRANDS.filter(b => brandCounts[b.id] > 0).map(b => {
     const logoHtml = b.logo
       ? `<img src="${b.logo}" alt="${b.name}" class="brand-logo-img" onerror="this.onerror=null;this.style.display='none';this.nextSibling.style.display='block'">`
       : '';
     const textHtml = `<div style="font-size:20px;font-weight:800;color:var(--text-dark);text-align:center;width:100%;${b.logo ? 'display:none' : ''}">${b.name}</div>`;
     return `<div class="brand-card" onclick="window.location='shop.html?brand=${b.id}'">${logoHtml}${textHtml}</div>`;
   }).join('');
-  if (window.innerWidth < 1024) startCardMarquee(grid, grid.parentElement, 0.5);
+  // Same reasoning as renderCategories() above — mobile needs the content
+  // duplicated once for the CSS animation loop to be seamless, desktop
+  // (a static wrapping grid) only gets a single copy.
+  grid.innerHTML = (window.innerWidth < 1024) ? html + html : html;
 }
 
 /* Blog */
@@ -1139,17 +1054,12 @@ function initSidebars() {
   });
 }
 
-/* ════════════════════════════════════════
-   TRUST STRIP MARQUEE (mobile only)
-════════════════════════════════════════ */
-function initTrustMarquee() {
-  if (window.innerWidth >= 768) return;
-  const strip = document.querySelector('.trust-strip');
-  const inner = document.querySelector('.trust-inner');
-  if (!strip || !inner) return;
-  strip.style.overflow = 'hidden';
-  startCardMarquee(inner, strip, 0.45);
-}
+/* Trust strip is now a pure CSS animation (see .trust-marquee-track in
+   style.css) — no longer JS-driven. Replacing the old reparenting-based
+   marquee removes an entire category of mobile bugs: it can't fight with
+   the browser's own touch/scroll handling since there's no custom touch
+   code left to conflict with, and it can't drift out of sync with the
+   content since there's no per-frame width measurement to get wrong. */
 
 /* ════════════════════════════════════════
    HEADER SCROLL EFFECTS
@@ -1309,13 +1219,14 @@ async function trackVisit() {
       const gr = await fetch('https://ipapi.co/json/');
       if (gr.ok) {
         const gd = await gr.json();
-        geo = { country: gd.country_name || '', city: gd.city || '', ip: gd.ip || '' };
+        geo = { country: gd.country_name || '', region: gd.region || '', city: gd.city || '', ip: gd.ip || '' };
       }
     } catch(e) {}
     const visit = {
       t: new Date().toISOString(),
       p: location.pathname.split('/').pop() || 'index.html',
       country: geo.country || 'Unknown',
+      region: geo.region || '',
       city: geo.city || '',
       ip: geo.ip || ''
     };
@@ -1420,7 +1331,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { startCountdown(); } catch(e) {}
   try { initSearch(); } catch(e) {}
   try { initSearchPanel(); } catch(e) {}
-  try { initTrustMarquee(); } catch(e) {}
+  // trust strip is now a pure CSS animation, no init needed
   try { initSidebars(); } catch(e) {}
   try { initHeaderScroll(); } catch(e) {}
   try { initMobileNav(); } catch(e) {}
