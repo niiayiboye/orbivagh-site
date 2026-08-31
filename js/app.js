@@ -1219,13 +1219,14 @@ async function trackVisit() {
       const gr = await fetch('https://ipapi.co/json/');
       if (gr.ok) {
         const gd = await gr.json();
-        geo = { country: gd.country_name || '', region: gd.region || '', city: gd.city || '', ip: gd.ip || '' };
+        geo = { country: gd.country_name || '', countryCode: gd.country_code || '', region: gd.region || '', city: gd.city || '', ip: gd.ip || '' };
       }
     } catch(e) {}
     const visit = {
       t: new Date().toISOString(),
       p: location.pathname.split('/').pop() || 'index.html',
       country: geo.country || 'Unknown',
+      countryCode: geo.countryCode || '',
       region: geo.region || '',
       city: geo.city || '',
       ip: geo.ip || ''
