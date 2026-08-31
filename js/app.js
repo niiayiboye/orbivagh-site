@@ -724,6 +724,102 @@ function renderBrands() {
   grid.innerHTML = (window.innerWidth < 1024) ? html + html : html;
 }
 
+// Drives the brands strip's auto-scroll directly via JS transform instead
+// of a CSS animation, specifically so a manual drag can hand off smoothly
+// into continued auto-scroll in whichever direction someone just swiped —
+// something a fixed-direction CSS @keyframes loop can never do. Careful to
+// avoid the two real bugs the old JS marquee had: this never reparents DOM
+// nodes (position just wraps via modulo math instead, so uneven card
+// widths can't throw the math off), and it only ever commits to a
+// horizontal drag after confirming the gesture is actually more
+// horizontal than vertical, so a normal vertical page-scroll that happens
+// to start over this strip is never hijacked.
+function initBrandsDragMarquee() {
+  if (window.innerWidth >= 1024) return; // desktop is a static grid, nothing to animate
+  const track = document.getElementById('brandsGrid');
+  const wrap = track ? track.closest('.brands-marquee-wrap') : null;
+  if (!track || !wrap) return;
+  if (track.dataset.dragInit) return; // guard against double-initialization
+  track.dataset.dragInit = '1';
+
+  let setWidth = 0; // width of one copy of the (doubled) content
+  function measure() { setWidth = track.scrollWidth / 2; }
+  measure();
+  window.addEventListener('resize', measure);
+
+  let pos = 0;          // current translateX, kept within (-setWidth, 0]
+  let dir = -1;          // -1 = auto-scrolling leftward (the default), +1 = rightward
+  const AUTO_SPEED = 0.5; // px/frame baseline auto-scroll speed
+  let dragging = false;
+  let horizontalConfirmed = null;
+  let startX = 0, startY = 0, lastX = 0;
+  let lastMoveTime = 0, lastMoveX = 0, velocity = 0;
+
+  function wrapPos() {
+    if (setWidth <= 0) return;
+    while (pos <= -setWidth) pos += setWidth;
+    while (pos > 0) pos -= setWidth;
+  }
+  function paint() { track.style.transform = `translateX(${pos}px)`; }
+
+  function tick() {
+    if (window.innerWidth >= 1024) {
+      // Resized into the desktop static-grid layout while this was running
+      // — stop transforming it so it doesn't fight with the wrapped grid.
+      if (track.style.transform) track.style.transform = '';
+      requestAnimationFrame(tick);
+      return;
+    }
+    if (!dragging) {
+      pos += dir * AUTO_SPEED;
+      wrapPos();
+      paint();
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  wrap.addEventListener('touchstart', e => {
+    dragging = true;
+    horizontalConfirmed = null;
+    startX = lastX = lastMoveX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    lastMoveTime = Date.now();
+    velocity = 0;
+  }, { passive: true });
+
+  wrap.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    const curX = e.touches[0].clientX, curY = e.touches[0].clientY;
+    if (horizontalConfirmed === null) {
+      const dx = Math.abs(curX - startX), dy = Math.abs(curY - startY);
+      if (dx < 6 && dy < 6) return; // not enough movement yet to tell intent
+      horizontalConfirmed = dx > dy;
+      if (!horizontalConfirmed) { dragging = false; return; } // vertical scroll — hand it back to the page
+    }
+    const delta = curX - lastX;
+    pos += delta;
+    wrapPos();
+    paint();
+    lastX = curX;
+
+    const now = Date.now();
+    const dt = now - lastMoveTime;
+    if (dt > 0) velocity = (curX - lastMoveX) / dt; // px/ms, signed by direction
+    lastMoveTime = now; lastMoveX = curX;
+  }, { passive: true });
+
+  wrap.addEventListener('touchend', () => {
+    if (horizontalConfirmed) {
+      // Pick up auto-scroll continuing in whichever direction the finger
+      // was actually moving at release, rather than snapping back to the
+      // default direction.
+      dir = velocity >= 0 ? 1 : -1;
+    }
+    dragging = false;
+  }, { passive: true });
+}
+
 /* Blog */
 function renderBlog() {
   const grid = document.getElementById('blogGrid');
@@ -1291,7 +1387,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { renderCategories(); } catch(e) {}
   try { renderFlashProducts(); } catch(e) {}
   try { renderFeaturedProducts(); } catch(e) {}
-  try { renderBrands(); } catch(e) {}
+  try { renderBrands(); initBrandsDragMarquee(); } catch(e) {}
   try { renderRecentlyViewed(); } catch(e) {}
   try {
     // Live count from PRODUCTS (not the static "products" field baked into
