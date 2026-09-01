@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script>(function(){try{var b=JSON.parse(localStorage.getItem('obv_branding')||'{}');if(b.logoUrl){document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.admin-logo-img').forEach(function(i){i.src=b.logoUrl;if(b.logoSize)i.style.height=b.logoSize+'px';});});}}catch(e){}}());</script>
+<script>(function(){try{var b=JSON.parse(localStorage.getItem('obv_branding')||'{}');if(b.logoUrl||b.logoSize){document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.admin-logo-img').forEach(function(i){if(b.logoUrl)i.src=b.logoUrl;if(b.logoSize)i.style.height=b.logoSize+'px';});});}}catch(e){}}());</script>
 <link rel="icon" type="image/jpeg" href="img/logo.jpeg">
 <link rel="apple-touch-icon" href="img/icon-192.png">
 <link rel="manifest" href="admin-manifest.json">
@@ -2353,7 +2353,7 @@ function deleteDeal(id){
 }
 
 /* ── Products ── */
-function filterProducts(){
+function filterProducts(preservePage){
   const q=document.getElementById('searchBox').value.toLowerCase();
   const cat=document.getElementById('filterCat').value;
   const br=document.getElementById('filterBrand').value;
@@ -2369,7 +2369,8 @@ function filterProducts(){
     if(img==='visible'&&p.hidden) return false;
     return true;
   });
-  currentPage=1;renderTable();
+  if(!preservePage) currentPage=1;
+  renderTable();
   const active=q||cat||br||img;
   const btn=document.getElementById('clearFiltersBtn');
   if(btn) btn.style.display=active?'inline-flex':'none';
@@ -2384,6 +2385,13 @@ function clearProductFilters(){
   filtered=[...adminProds];currentPage=1;renderTable();
 }
 function renderTable(){
+  // If the current page no longer has anything on it (e.g. the item that
+  // kept a later page valid just got edited out of the filtered view, or
+  // deleted), fall back to the last real page instead of showing a blank
+  // "no products found" for a page number that no longer makes sense.
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
   const start=(currentPage-1)*PAGE_SIZE,page=filtered.slice(start,start+PAGE_SIZE);
   const missingCount=filtered.filter(p=>!(p.images&&p.images[0])).length;
   const hiddenCount=filtered.filter(p=>p.hidden).length;
@@ -2422,7 +2430,7 @@ function toggleProductHidden(id){
   lsSet('obv_prod_edits',edits);sbPush('obv_prod_edits');
   toast(newHidden?'Product hidden from site':'Product visible on site again','ok');
   logHistory({type:'toggle_hidden',label:(newHidden?'Hid':'Unhid')+': '+p.name,undoData:{productId:id}});
-  loadProducts();filterProducts();
+  loadProducts();filterProducts(true);
 }
 function brandBg(id){return{samsung:'#1428a0',tcl:'#cc0000',midea:'#00a0e9',nasco:'#003087'}[id]||'#64748b';}
 function renderPagination(){
@@ -2643,7 +2651,7 @@ function _doSaveProduct(stayOpen, name, price, _sku, _imgs){
       try{logHistory({type:'add',label:'Added: '+product.name,undoData:{productId:product.id}});}catch(e){}
     }
     if(!stayOpen)closeModal('productModal');
-    loadProducts();filterProducts();renderDashboard();
+    loadProducts();filterProducts(true);renderDashboard();
   } catch(e){
     toast('Save failed: '+e.message,'err');
   }
@@ -2659,7 +2667,7 @@ function deleteProduct(id){
     const dels=lsGet('obv_prod_dels',[]);if(!dels.includes(id))dels.push(id);lsSet('obv_prod_dels',dels);sbPush('obv_prod_dels');
     logHistory({type:'delete',label:'Deleted: '+(p?p.name:id),undoData:{productId:id}});
   }
-  toast('Deleted','ok');loadProducts();filterProducts();renderDashboard();
+  toast('Deleted','ok');loadProducts();filterProducts(true);renderDashboard();
 }
 
 function deleteAllKeepImages() {
@@ -3180,16 +3188,20 @@ async function saveBranding(){
   }
   const branding={logoUrl:url,logoSize:size};
   lsSet('obv_branding',branding);
-  // Push to Supabase so all pages see it
-  const h={apikey:SB_KEY,Authorization:`Bearer ${SB_KEY}`};
-  await fetch(`${SB_URL}/rest/v1/kv_store`,{method:'POST',headers:{...h,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates'},body:JSON.stringify({key:'obv_branding',value:JSON.stringify(branding)})});
+  // Was previously pushed with the plain public anon key instead of the
+  // logged-in admin's own token — Row Level Security silently rejected
+  // that write (no error was ever surfaced), so the change only ever
+  // stuck in the admin's own browser and never actually reached Supabase.
+  // Every other visitor kept seeing the old logo/size forever, no matter
+  // how many times "Save" was clicked. sbPush uses the correct admin
+  // token and reports a failure if one happens.
+  sbPush('obv_branding');
   toast('Logo updated! Refresh the site to see it live.','ok');
 }
 async function resetBranding(){
   const branding={logoUrl:'img/logo.jpeg',logoSize:54};
   lsSet('obv_branding',branding);
-  const h={apikey:SB_KEY,Authorization:`Bearer ${SB_KEY}`};
-  await fetch(`${SB_URL}/rest/v1/kv_store`,{method:'POST',headers:{...h,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates'},body:JSON.stringify({key:'obv_branding',value:JSON.stringify(branding)})});
+  sbPush('obv_branding');
   loadBranding();
   toast('Logo reset to default.','ok');
 }

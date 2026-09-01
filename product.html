@@ -18,7 +18,7 @@
   <meta name="twitter:description" id="twDescription" content="Premium Electronics in Ghana">
   <meta name="twitter:image" id="twImage" content="https://orbivagh.com/img/logo.jpeg">
   <script>if(localStorage.getItem('obv_freeDelivery')==='off')document.documentElement.setAttribute('data-no-delivery','');
-  (function(){try{var b=JSON.parse(localStorage.getItem('obv_branding')||'{}');if(b.logoUrl){document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.logo-img').forEach(function(i){i.src=b.logoUrl;if(b.logoSize)i.style.height=b.logoSize+'px';});});}}catch(e){}}());
+  (function(){try{var b=JSON.parse(localStorage.getItem('obv_branding')||'{}');if(b.logoUrl||b.logoSize){document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.logo-img').forEach(function(i){if(b.logoUrl)i.src=b.logoUrl;if(b.logoSize)i.style.height=b.logoSize+'px';});});}}catch(e){}}());
   </script>
   <link rel="icon" type="image/jpeg" href="img/logo.jpeg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />

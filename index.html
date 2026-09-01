@@ -6,7 +6,7 @@
   <meta name="google-site-verification" content="1Hx-Yh0dhGIMP5XJO5BtSSAFUaQxTM9Vd69nysnc8nM" />
   <meta name="description" content="Orbiva Technologies — Ghana's premium electronics store. Shop Samsung, TCL, Nasco & Midea TVs, Air Conditioners, Refrigerators, Audio Devices and more. Fast delivery across Ghana.">
   <script>if(localStorage.getItem('obv_freeDelivery')==='off')document.documentElement.setAttribute('data-no-delivery','');
-  (function(){try{var b=JSON.parse(localStorage.getItem('obv_branding')||'{}');if(b.logoUrl){document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.logo-img').forEach(function(i){i.src=b.logoUrl;if(b.logoSize)i.style.height=b.logoSize+'px';});});}}catch(e){}}());
+  (function(){try{var b=JSON.parse(localStorage.getItem('obv_branding')||'{}');if(b.logoUrl||b.logoSize){document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.logo-img').forEach(function(i){if(b.logoUrl)i.src=b.logoUrl;if(b.logoSize)i.style.height=b.logoSize+'px';});});}}catch(e){}}());
   </script>
   <link rel="icon" type="image/jpeg" href="img/logo.jpeg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
