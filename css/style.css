@@ -649,6 +649,21 @@ input, select, textarea { font-family: inherit; }
 .cat-drawer-item.sub { padding-left: 30px; font-size: 13px; font-weight: 500; color: var(--text-muted); }
 .cat-drawer-item.sub .cat-drawer-icon { width: 26px; height: 26px; font-size: 11px; }
 
+.cat-drawer-row { display: flex; align-items: stretch; }
+.cat-drawer-row .cat-drawer-item { flex: 1; min-width: 0; }
+.cat-drawer-toggle {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; flex-shrink: 0; background: none; border: none;
+  color: var(--text-muted); font-size: 13px; cursor: pointer;
+}
+.cat-drawer-toggle i { transition: transform 0.2s ease; }
+.cat-drawer-toggle.open i { transform: rotate(180deg); }
+.cat-drawer-subs {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+.cat-drawer-subs.open { max-height: 600px; }
+
 
 /* ================================================================
    OVERLAY

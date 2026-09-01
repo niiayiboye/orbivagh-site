@@ -513,15 +513,47 @@ function categoryHasVisibleProducts(catId, cats) {
   return cats.filter(s => s.parentId === catId).some(s => categoryProductCount(s.id) > 0);
 }
 
+// Blends a #rrggbb color toward white by the given amount (0 = unchanged,
+// 1 = pure white). Used so subcategories can automatically inherit a
+// lighter tint of their parent category's color, instead of needing an
+// independently picked color that can drift out of sync with it.
+function lightenHex(hex, amount) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
+  if (!m) return hex;
+  const n = parseInt(m[1], 16);
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  const mix = c => Math.round(c + (255 - c) * amount);
+  return '#' + [mix(r), mix(g), mix(b)].map(c => c.toString(16).padStart(2, '0')).join('');
+}
+// Same idea, but for a full CSS background value — handles both a plain
+// hex color and a gradient string (lightens every hex color found inside
+// it, leaving the gradient's shape/angle intact).
+function lightenBg(bg, amount) {
+  if (!bg) return bg;
+  return bg.replace(/#[0-9a-f]{6}/gi, hex => lightenHex(hex, amount));
+}
+// A subcategory's own stored color/bg is never used directly for display —
+// this always derives it fresh from the parent's current color, so editing
+// a parent category's color automatically keeps every subcategory under it
+// in sync, rather than each one needing to be individually re-edited.
+function subcategoryColors(sub, cats) {
+  const parent = cats.find(c => c.id === sub.parentId);
+  if (!parent) return { color: sub.color, bg: sub.bg };
+  return { color: parent.color, bg: lightenBg(parent.bg, 0.55) };
+}
+
 function buildCategoryDropdownHtml(cats) {
   const topLevel = cats.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, cats));
-  const itemHtml = (c, isSub) => `
+  const itemHtml = (c, isSub) => {
+    const colors = isSub ? subcategoryColors(c, cats) : c;
+    return `
     <li class="${isSub ? 'dd-sub' : ''}">
       <a href="shop.html?cat=${c.id}">
-        <span class="dd-icon" style="background:${c.bg};color:${c.color}"><i class="${c.icon}"></i></span>
+        <span class="dd-icon" style="background:${colors.bg};color:${colors.color}"><i class="${c.icon}"></i></span>
         ${c.name}
       </a>
     </li>`;
+  };
   let html = '';
   topLevel.forEach(c => {
     html += itemHtml(c, false);
@@ -558,21 +590,42 @@ function openCategoryDrawer() {
     const topLevel = cats.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, cats));
     let html = '';
     topLevel.forEach(c => {
-      html += `<a href="shop.html?cat=${c.id}" class="cat-drawer-item">
+      const subs = cats.filter(s => s.parentId === c.id);
+      const catLink = `<a href="shop.html?cat=${c.id}" class="cat-drawer-item">
         <span class="cat-drawer-icon" style="background:${c.bg};color:${c.color}"><i class="${c.icon}"></i></span>
         ${c.name}
       </a>`;
-      cats.filter(s => s.parentId === c.id).forEach(s => {
-        html += `<a href="shop.html?cat=${s.id}" class="cat-drawer-item sub">
-          <span class="cat-drawer-icon" style="background:${s.bg};color:${s.color}"><i class="${s.icon}"></i></span>
+      if (!subs.length) {
+        // No subcategories — nothing to expand, just a plain link like before.
+        html += catLink;
+        return;
+      }
+      const subsHtml = subs.map(s => {
+        const colors = subcategoryColors(s, cats);
+        return `<a href="shop.html?cat=${s.id}" class="cat-drawer-item sub">
+          <span class="cat-drawer-icon" style="background:${colors.bg};color:${colors.color}"><i class="${s.icon}"></i></span>
           ${s.name}
         </a>`;
-      });
+      }).join('');
+      // Collapsed by default — tapping the category name still goes
+      // straight to that category's products; the chevron is a separate
+      // tap target just for revealing/hiding the subcategory list.
+      html += `<div class="cat-drawer-group">
+        <div class="cat-drawer-row">
+          ${catLink}
+          <button class="cat-drawer-toggle" onclick="toggleCatDrawerGroup(this)"><i class="fas fa-chevron-down"></i></button>
+        </div>
+        <div class="cat-drawer-subs">${subsHtml}</div>
+      </div>`;
     });
     list.innerHTML = html || '<p style="padding:16px;color:var(--text-muted);font-size:13px">No categories yet.</p>';
   }
   document.getElementById('catDrawerBackdrop')?.classList.add('open');
   document.getElementById('catDrawer')?.classList.add('open');
+}
+function toggleCatDrawerGroup(btn) {
+  btn.classList.toggle('open');
+  btn.closest('.cat-drawer-row').nextElementSibling.classList.toggle('open');
 }
 function closeCategoryDrawer() {
   document.getElementById('catDrawerBackdrop')?.classList.remove('open');
