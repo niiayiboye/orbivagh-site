@@ -320,14 +320,14 @@ input, select, textarea { font-family: inherit; }
   background: #fff;
   border: 1px solid var(--border-light);
   border-radius: 16px;
-  box-shadow: 0 20px 48px rgba(15,23,42,0.16);
+  box-shadow: 0 24px 56px rgba(15,23,42,0.18);
   width: max-content;
-  max-width: min(900px, 92vw);
-  padding: 24px 28px;
+  max-width: min(920px, 92vw);
+  padding: 26px 30px;
   z-index: 500;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 20px 28px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px 32px;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
@@ -346,15 +346,18 @@ input, select, textarea { font-family: inherit; }
   transition: color 0.2s ease;
 }
 .mega-col-head:hover { color: var(--primary); }
-.mega-col-head .dd-icon { width: 30px; height: 30px; border-radius: 9px; font-size: 13px; flex-shrink: 0; }
+.mega-col-head .dd-icon { width: 32px; height: 32px; border-radius: 10px; font-size: 14px; flex-shrink: 0; }
 .mega-col ul { list-style: none; }
 .mega-col ul li a {
-  display: block; padding: 6px 0;
+  display: flex; align-items: center; gap: 9px;
+  padding: 6px 8px; margin: 0 -8px;
+  border-radius: 8px;
   font-size: 13px; color: var(--text-muted);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.15s ease, background 0.15s ease;
 }
-.mega-col ul li a:hover { color: var(--primary); }
+.mega-col ul li a .dd-icon { width: 24px; height: 24px; border-radius: 7px; font-size: 10px; flex-shrink: 0; }
+.mega-col ul li a:hover { color: var(--primary); background: var(--bg); }
 
 /* ── Search Panel (right-side drawer) ── */
 .search-panel {

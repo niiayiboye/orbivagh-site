@@ -94,6 +94,7 @@ td{padding:11px 14px;font-size:13px;vertical-align:middle}
 .prod-model{font-size:11px;color:var(--muted)}
 .prod-mobile-meta{display:none}
 .cat-pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.inline-cat-select{font-size:12px;font-weight:600;padding:3px 6px;border-radius:6px;border:1.5px solid var(--primary);background:#fff;color:var(--text);outline:none;max-width:180px}
 .cat-tv{background:#dbeafe;color:#1d4ed8}.cat-ac{background:#e0f2fe;color:#0369a1}
 .cat-fridge{background:#cffafe;color:#0e7490}.cat-laundry{background:#ede9fe;color:#7c3aed}
 .cat-kitchen{background:#fce7f3;color:#be185d}.cat-small{background:#fef3c7;color:#b45309}
@@ -2408,8 +2409,8 @@ function renderTable(){
     return `<tr style="${rowBg}">
       <td style="text-align:center;font-size:12px;color:var(--muted);font-weight:600">${rowNum}</td>
       <td>${img?`<img class="prod-thumb" src="${img}" onerror="this.style.display='none'">`:`<div class="prod-thumb-icon" style="background:#fff0e0;border-color:#fdba74">${p.icon||'📦'}</div>`}</td>
-      <td><div class="prod-name" title="${escHtml(p.name)}">${escHtml(p.name)}${p.hidden?' <span style="background:#64748b;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;vertical-align:middle">HIDDEN</span>':''}</div><div class="prod-model">${escHtml(p.model||'')} · ID ${p.id}</div><div class="prod-mobile-meta"><span class="cat-pill ${CAT_CLASS[p.category]||''}">${CAT_LABELS[p.category]||p.category}</span> <span class="brand-badge" style="background:${brandBg(p.brandId)}">${escHtml(p.brand)}</span></div></td>
-      <td><span class="cat-pill ${CAT_CLASS[p.category]||''}">${CAT_LABELS[p.category]||p.category}</span></td>
+      <td><div class="prod-name" title="${escHtml(p.name)}">${escHtml(p.name)}${p.hidden?' <span style="background:#64748b;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;vertical-align:middle">HIDDEN</span>':''}</div><div class="prod-model">${escHtml(p.model||'')} · ID ${p.id}</div><div class="prod-mobile-meta"><span class="cat-pill ${CAT_CLASS[p.category]||''}" onclick="startInlineCategoryEdit(this,'${p.id}')" style="cursor:pointer">${CAT_LABELS[p.category]||p.category}</span> <span class="brand-badge" style="background:${brandBg(p.brandId)}">${escHtml(p.brand)}</span></div></td>
+      <td><span class="cat-pill ${CAT_CLASS[p.category]||''}" onclick="startInlineCategoryEdit(this,'${p.id}')" style="cursor:pointer" title="Click to change category">${CAT_LABELS[p.category]||p.category}</span></td>
       <td><span class="brand-badge" style="background:${brandBg(p.brandId)}">${escHtml(p.brand)}</span></td>
       <td><div class="price-main">${fmt(p.price)}</div>${p.oldPrice?`<div class="price-old">${fmt(p.oldPrice)}</div>`:''}</td>
       <td>${img
@@ -2434,6 +2435,39 @@ function toggleProductHidden(id){
   toast(newHidden?'Product hidden from site':'Product visible on site again','ok');
   logHistory({type:'toggle_hidden',label:(newHidden?'Hid':'Unhid')+': '+p.name,undoData:{productId:id}});
   loadProducts();filterProducts(true);
+}
+// Turns a clicked category pill into a dropdown right in place, so the
+// category can be changed without opening the full edit modal — same
+// quick-toggle pattern as the hide/unhide eye icon.
+function startInlineCategoryEdit(el,id){
+  const p=adminProds.find(x=>x.id===id);
+  if(!p)return;
+  const cats=getAllCategories();
+  const topLevel=cats.filter(c=>!c.parentId);
+  let optionsHtml='';
+  topLevel.forEach(c=>{
+    optionsHtml+=`<option value="${c.id}" ${c.id===p.category?'selected':''}>${escHtml(c.name)}</option>`;
+    cats.filter(s=>s.parentId===c.id).forEach(s=>{
+      optionsHtml+=`<option value="${s.id}" ${s.id===p.category?'selected':''}>&nbsp;&nbsp;— ${escHtml(s.name)}</option>`;
+    });
+  });
+  const select=document.createElement('select');
+  select.className='inline-cat-select';
+  select.innerHTML=optionsHtml;
+  select.onchange=()=>saveInlineCategory(id,select.value);
+  select.onblur=()=>filterProducts(true); // clicked away without choosing anything — just revert to the pill
+  el.replaceWith(select);
+  select.focus();
+}
+function saveInlineCategory(id,newCatId){
+  const p=adminProds.find(x=>x.id===id);
+  if(p&&p.category===newCatId){filterProducts(true);return;} // no actual change
+  const edits=lsGet('obv_prod_edits',{});
+  edits[id]=Object.assign({},edits[id]||{},{category:newCatId});
+  lsSet('obv_prod_edits',edits);sbPush('obv_prod_edits');
+  logHistory({type:'category_change',label:'Changed category for: '+(p?p.name:id),undoData:{productId:id}});
+  loadProducts();filterProducts(true);
+  toast('Category updated','ok');
 }
 function brandBg(id){return{samsung:'#1428a0',tcl:'#cc0000',midea:'#00a0e9',nasco:'#003087'}[id]||'#64748b';}
 function renderPagination(){
@@ -2818,23 +2852,41 @@ function exportProductsCSV(){
   });
 
   const header=[
-    'Product Name','Brand','SKU / Model','Category',
+    'Product Name','Brand','SKU / Model','Category','Subcategory',
     'Selling Price (GH₵)','Original Price (GH₵)','Discount %',
     'Image URLs','Description',
     ...specKeys.map(k=>'Spec: '+k),
     'ID'   // keep at end for re-import use
   ];
 
+  // A product's own assigned category might itself BE a subcategory (e.g.
+  // "LED" under "Televisions") — in that case the main Category column
+  // shows the parent ("Televisions") and Subcategory shows the specific
+  // one ("LED"), rather than just showing "LED" with no indication of
+  // what it actually belongs under.
+  const allCats = getAllCategories();
+  function catAndSubFor(catId) {
+    const c = allCats.find(x => x.id === catId);
+    if (!c) return { cat: catId, sub: '' };
+    if (c.parentId) {
+      const parent = allCats.find(x => x.id === c.parentId);
+      return { cat: parent ? parent.name : catId, sub: c.name };
+    }
+    return { cat: c.name, sub: '' };
+  }
+
   const rows=prods.map(p=>{
     const imgs=(p.images||[]).filter(u=>typeof u==='string'&&(u.startsWith('http')||u.startsWith('//')));
     const imgUrls=imgs.join(' | ');
     const desc=(p.description||'').replace(/\n/g,' | ');
     const specVals=specKeys.map(k=>csvField((p.specs||{})[k]||''));
+    const {cat,sub}=catAndSubFor(p.category);
     return[
       csvField(p.name),
       csvField(p.brand),
       csvField(p.model||p.sku||''),
-      csvField(CAT_LABELS[p.category]||p.category),
+      csvField(cat),
+      csvField(sub),
       p.price||'',
       p.oldPrice||'',
       p.discount||'',
@@ -2882,6 +2934,7 @@ function importProductsCSV(input){
       const iBrand = col('brand');
       const iModel = col('sku / model','sku/model','model','sku');
       const iCat   = col('category');
+      const iSubcat = col('subcategory');
       const iPr    = col('selling price','price');
       const iOp    = col('original price','old price','old_price');
       const iDi    = col('discount');
@@ -2898,6 +2951,16 @@ function importProductsCSV(input){
       // actually exist on the site.
       const CAT_ID={};
       getAllCategories().forEach(c=>{ CAT_ID[c.id.toLowerCase()]=c.id; CAT_ID[c.name.toLowerCase()]=c.id; });
+      // Prefer the Subcategory column when it names a real subcategory —
+      // that's the more specific assignment. Falls back to the main
+      // Category column otherwise, same as before this column existed.
+      function resolveCatId(catRaw, subRaw){
+        if(subRaw){
+          const sid=CAT_ID[subRaw.toLowerCase()];
+          if(sid) return sid;
+        }
+        return catRaw?CAT_ID[catRaw.toLowerCase()]:undefined;
+      }
 
       const edits   = lsGet('obv_prod_edits',{});
       const skuMap  = lsGet('obv_sku_img_map',{});
@@ -2923,8 +2986,9 @@ function importProductsCSV(input){
           if(!name){skipped++;continue;}
           const brand=(iBrand>=0?(cols[iBrand]||'').trim():'')||'Generic';
           const model=(iModel>=0?(cols[iModel]||'').trim():'');
-          const catRaw=(iCat>=0?(cols[iCat]||'').trim():'').toLowerCase();
-          const category=CAT_ID[catRaw]||(getAllCategories()[0]?getAllCategories()[0].id:'');
+          const catRaw=(iCat>=0?(cols[iCat]||'').trim():'');
+          const subRaw=(iSubcat>=0?(cols[iSubcat]||'').trim():'');
+          const category=resolveCatId(catRaw,subRaw)||(getAllCategories()[0]?getAllCategories()[0].id:'');
           const price=(()=>{const n=parseFloat(iPr>=0?cols[iPr]:'');return isNaN(n)?0:n;})();
           let images=[];
           if(iImgs>=0){
@@ -2972,7 +3036,17 @@ function importProductsCSV(input){
         applyField(iName, v=>{if(v)edits[id].name=v;});
         applyField(iBrand,v=>{if(v)edits[id].brand=v;});
         applyField(iModel,v=>{edits[id].model=v;});
-        applyField(iCat,  v=>{const cid=CAT_ID[v.toLowerCase()];if(cid)edits[id].category=cid;});
+        // Considered together rather than via applyField, since resolving
+        // the right category means checking Subcategory first and only
+        // falling back to Category if that's blank or unrecognized.
+        {
+          const catRaw=(iCat>=0&&cols[iCat]!==undefined)?cols[iCat].trim():'';
+          const subRaw=(iSubcat>=0&&cols[iSubcat]!==undefined)?cols[iSubcat].trim():'';
+          if(catRaw||subRaw){
+            const cid=resolveCatId(catRaw,subRaw);
+            if(cid){edits[id].category=cid;changed=true;}
+          }
+        }
         applyField(iPr,   v=>{const n=parseFloat(v);if(!isNaN(n)&&n>0)edits[id].price=n;});
         applyField(iOp,   v=>{const n=parseFloat(v);if(!isNaN(n)&&n>0)edits[id].oldPrice=n;});
         applyField(iDi,   v=>{const n=parseInt(v);if(!isNaN(n))edits[id].discount=n;});

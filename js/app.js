@@ -571,13 +571,17 @@ function buildCategoryMegaMenuHtml(cats) {
   const topLevel = cats.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, cats));
   return topLevel.map(c => {
     const subs = cats.filter(s => s.parentId === c.id && categoryProductCount(s.id) > 0);
+    const subsHtml = subs.map(s => {
+      const colors = subcategoryColors(s, cats);
+      return `<li><a href="shop.html?cat=${s.id}"><span class="dd-icon" style="background:${colors.bg};color:${colors.color}"><i class="${s.icon}"></i></span>${s.name}</a></li>`;
+    }).join('');
     return `
       <div class="mega-col">
         <a href="shop.html?cat=${c.id}" class="mega-col-head">
           <span class="dd-icon" style="background:${c.bg};color:${c.color}"><i class="${c.icon}"></i></span>
           ${c.name}
         </a>
-        ${subs.length ? `<ul>${subs.map(s => `<li><a href="shop.html?cat=${s.id}">${s.name}</a></li>`).join('')}</ul>` : ''}
+        ${subs.length ? `<ul>${subsHtml}</ul>` : ''}
       </div>`;
   }).join('');
 }
