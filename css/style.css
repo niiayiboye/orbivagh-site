@@ -1294,42 +1294,67 @@ input, select, textarea { font-family: inherit; }
    FLASH SALE — mobile
 ================================================================ */
 .flash-sale-section {
+  position: relative;
   background: linear-gradient(135deg, #0f172a, #1e3a5f);
-  padding: 24px 0;
+  padding: 32px 0;
+  overflow: hidden;
 }
-.flash-sale-inner { display: flex; flex-direction: column; gap: 20px; }
+.flash-sale-section::before,
+.flash-sale-section::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+.flash-sale-section::before {
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(225,29,72,0.35), transparent 70%);
+  top: -80px; left: -60px;
+}
+.flash-sale-section::after {
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(59,130,246,0.25), transparent 70%);
+  bottom: -120px; right: -80px;
+}
+.flash-sale-inner { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 20px; }
 .flash-left { color: #fff; padding: 0 16px; }
 .flash-badge {
   display: inline-flex; align-items: center; gap: 6px;
-  background: var(--accent); color: #fff;
+  background: linear-gradient(135deg, #e11d48, #f43f5e); color: #fff;
   font-size: 11px; font-weight: 800; letter-spacing: 0.8px;
   padding: 5px 14px; border-radius: var(--radius-full);
   margin-bottom: 10px;
+  box-shadow: 0 4px 16px rgba(225,29,72,0.4);
   animation: flashPulse 2s ease-in-out infinite;
 }
 @keyframes flashPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(225,29,72,0.5); }
-  50% { box-shadow: 0 0 0 6px rgba(225,29,72,0); }
+  0%, 100% { box-shadow: 0 4px 16px rgba(225,29,72,0.4), 0 0 0 0 rgba(225,29,72,0.5); }
+  50% { box-shadow: 0 4px 16px rgba(225,29,72,0.4), 0 0 0 6px rgba(225,29,72,0); }
 }
 .flash-left h2 { font-family: var(--font-heading); font-size: 20px; font-weight: 800; margin-bottom: 6px; }
 .flash-left p { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 16px; }
 .countdown { display: flex; align-items: center; gap: 10px; }
 .count-unit { text-align: center; }
-.count-unit span {
+.count-unit span:not(.count-label) {
   display: flex; align-items: center; justify-content: center;
   width: 52px; height: 56px;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: linear-gradient(160deg, rgba(255,255,255,0.16), rgba(255,255,255,0.05));
+  border: 1px solid rgba(255,255,255,0.22);
   border-radius: var(--radius-md);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
   font-size: 24px; font-weight: 800; color: #fff;
   font-family: var(--font-heading);
 }
 .count-unit .count-label {
+  width: auto; height: auto;
+  background: none; border: none; box-shadow: none;
   font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
   text-transform: uppercase; color: rgba(255,255,255,0.55);
   margin-top: 5px; display: block;
 }
-.count-sep { font-size: 22px; font-weight: 800; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
+.count-sep { font-size: 22px; font-weight: 800; color: rgba(255,255,255,0.55); margin-bottom: 20px; animation: countSepBlink 1s step-start infinite; }
+@keyframes countSepBlink { 50% { opacity: 0.15; } }
 
 /* Flash products — horizontal scroll */
 .flash-products {
