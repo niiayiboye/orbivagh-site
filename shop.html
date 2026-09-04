@@ -390,17 +390,25 @@ function renderShopFilters() {
 
   // Populate category filter (subcategories collapsed under their parent by
   // default — a fully expanded list gets unwieldy long once there are more
-  // than a couple of categories with several subcategories each).
+  // than a couple of categories with several subcategories each). The
+  // count shown next to a top-level category is its own total PLUS all its
+  // subcategories combined — most products are actually tagged with a
+  // specific subcategory rather than the parent directly, so showing only
+  // the parent's own direct count made it look like almost nothing was in
+  // there. Checking the parent's own checkbox filters to everything under
+  // it (handled in applyFilters); the chevron only ever reveals/hides the
+  // subcategory list and has no effect on filtering by itself.
   const catList = document.getElementById('catFilterList');
   if (catList) {
     const topLevel = CATEGORIES.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, CATEGORIES));
     catList.innerHTML = topLevel.map(c => {
       const subs = CATEGORIES.filter(s => s.parentId === c.id && _catCount[s.id] > 0);
+      const aggregateCount = (_catCount[c.id] || 0) + subs.reduce((sum, s) => sum + (_catCount[s.id] || 0), 0);
       const catRow = `
         <label class="filter-item">
           <input type="checkbox" class="cat-filter-check" value="${c.id}" ${c.id === _urlCat ? 'checked' : ''} />
           <span>${c.name}</span>
-          <span class="filter-count">${_catCount[c.id] || 0}</span>
+          <span class="filter-count">${aggregateCount}</span>
         </label>`;
       if (!subs.length) return catRow;
       // Expanded by default only if the currently active filter is one of
@@ -417,7 +425,7 @@ function renderShopFilters() {
         <div class="cat-filter-group">
           <div class="cat-filter-row">
             ${catRow}
-            <button type="button" class="cat-filter-toggle${hasActiveSub ? ' open' : ''}" onclick="toggleCatFilterGroup(this)"><i class="fas fa-chevron-down"></i></button>
+            <button type="button" class="cat-filter-toggle${hasActiveSub ? ' open' : ''}" onclick="toggleCatFilterGroup(this)" aria-label="Show subcategories"><i class="fas fa-chevron-down"></i></button>
           </div>
           <div class="cat-filter-subs${hasActiveSub ? ' open' : ''}">${subsHtml}</div>
         </div>`;

@@ -215,9 +215,18 @@ function setupShopFilters(urlCat, urlBrand, urlQ, sub) {
       filtered = filtered.filter(p => p.price <= maxVal);
     }
 
-    // Category checkboxes — source of truth (not URL)
+    // Category checkboxes — source of truth (not URL). Checking a
+    // top-level category also matches everything filed under its
+    // subcategories, not just products tagged with that exact id directly —
+    // otherwise checking "Refrigerators" itself would show almost nothing,
+    // since most fridges are actually tagged with a specific subcategory
+    // like "Top Mount" or "Side-by-Side".
     const catChecks = [...document.querySelectorAll('.cat-filter-check:checked')].map(c => c.value);
-    if (catChecks.length) filtered = filtered.filter(p => catChecks.includes(p.category));
+    const expandedCatChecks = new Set(catChecks);
+    catChecks.forEach(id => {
+      CATEGORIES.filter(c => c.parentId === id).forEach(sub => expandedCatChecks.add(sub.id));
+    });
+    if (expandedCatChecks.size) filtered = filtered.filter(p => expandedCatChecks.has(p.category));
 
     // Brand checkboxes — source of truth (not URL)
     const brandChecks = [...document.querySelectorAll('.brand-filter-check:checked')].map(b => b.value);
