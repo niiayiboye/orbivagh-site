@@ -2164,6 +2164,21 @@ input, select, textarea { font-family: inherit; }
 .filter-item { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: var(--text-body); min-height: 36px; border-radius: 8px; padding: 0 6px; margin: 0 -6px; transition: background 0.15s ease, color 0.15s ease; }
 .filter-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); flex-shrink: 0; }
 .filter-count { color: var(--text-muted); font-size: 12px; margin-left: auto; }
+.cat-filter-group { display: flex; flex-direction: column; }
+.cat-filter-row { display: flex; align-items: center; gap: 4px; }
+.cat-filter-row .filter-item { flex: 1; min-width: 0; }
+.cat-filter-toggle {
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; flex-shrink: 0;
+  background: none; border: none; color: var(--text-muted);
+  font-size: 11px; cursor: pointer; border-radius: 6px;
+}
+.cat-filter-toggle:hover { background: var(--bg); }
+.cat-filter-toggle i { transition: transform 0.2s ease; }
+.cat-filter-toggle.open i { transform: rotate(180deg); }
+.cat-filter-subs { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; padding-left: 14px; }
+.cat-filter-subs.open { max-height: 600px; }
+.filter-item.sub { font-size: 12.5px; }
 @media (hover: hover) {
   .filter-item:hover { background: var(--bg); color: var(--primary); }
 }

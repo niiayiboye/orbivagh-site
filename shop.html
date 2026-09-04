@@ -372,6 +372,10 @@ function updateShopSEO() {
   setMeta('meta[name="twitter:description"]', desc);
 }
 
+function toggleCatFilterGroup(btn) {
+  btn.classList.toggle('open');
+  btn.closest('.cat-filter-row').nextElementSibling.classList.toggle('open');
+}
 function renderShopFilters() {
   const _urlp = new URLSearchParams(window.location.search);
   const _urlCat = _urlp.get('cat') || '';
@@ -384,21 +388,40 @@ function renderShopFilters() {
     _brandCount[p.brand]  = (_brandCount[p.brand]  || 0) + 1;
   });
 
-  // Populate category filter (subcategories shown indented under their parent)
+  // Populate category filter (subcategories collapsed under their parent by
+  // default — a fully expanded list gets unwieldy long once there are more
+  // than a couple of categories with several subcategories each).
   const catList = document.getElementById('catFilterList');
   if (catList) {
     const topLevel = CATEGORIES.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, CATEGORIES));
-    const orderedCats = [];
-    topLevel.forEach(c => {
-      orderedCats.push(c);
-      CATEGORIES.filter(s => s.parentId === c.id && _catCount[s.id] > 0).forEach(s => orderedCats.push(s));
-    });
-    catList.innerHTML = orderedCats.map(c => `
-      <label class="filter-item" ${c.parentId ? 'style="padding-left:20px;font-size:12.5px"' : ''}>
-        <input type="checkbox" class="cat-filter-check" value="${c.id}" ${c.id === _urlCat ? 'checked' : ''} />
-        <span>${c.parentId ? '\u2014 ' : ''}${c.name}</span>
-        <span class="filter-count">${_catCount[c.id] || 0}</span>
-      </label>`).join('');
+    catList.innerHTML = topLevel.map(c => {
+      const subs = CATEGORIES.filter(s => s.parentId === c.id && _catCount[s.id] > 0);
+      const catRow = `
+        <label class="filter-item">
+          <input type="checkbox" class="cat-filter-check" value="${c.id}" ${c.id === _urlCat ? 'checked' : ''} />
+          <span>${c.name}</span>
+          <span class="filter-count">${_catCount[c.id] || 0}</span>
+        </label>`;
+      if (!subs.length) return catRow;
+      // Expanded by default only if the currently active filter is one of
+      // this category's own subcategories — otherwise it'd be hidden
+      // inside a collapsed group with no indication anything's selected.
+      const hasActiveSub = subs.some(s => s.id === _urlCat);
+      const subsHtml = subs.map(s => `
+        <label class="filter-item sub">
+          <input type="checkbox" class="cat-filter-check" value="${s.id}" ${s.id === _urlCat ? 'checked' : ''} />
+          <span>— ${s.name}</span>
+          <span class="filter-count">${_catCount[s.id] || 0}</span>
+        </label>`).join('');
+      return `
+        <div class="cat-filter-group">
+          <div class="cat-filter-row">
+            ${catRow}
+            <button type="button" class="cat-filter-toggle${hasActiveSub ? ' open' : ''}" onclick="toggleCatFilterGroup(this)"><i class="fas fa-chevron-down"></i></button>
+          </div>
+          <div class="cat-filter-subs${hasActiveSub ? ' open' : ''}">${subsHtml}</div>
+        </div>`;
+    }).join('');
   }
 
   // Populate brand filter
