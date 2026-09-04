@@ -400,6 +400,8 @@
   </div>
 </div>
 
+<section class="container" id="productReviewsSection" style="display:none;padding:20px 16px 40px"></section>
+
 <!-- Footer -->
 <footer class="footer">
   <div class="container footer-grid">
@@ -566,12 +568,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
     };
-    if (p.rating) {
-      schema.aggregateRating = { '@type': 'AggregateRating', ratingValue: p.rating, reviewCount: p.reviews || 1 };
+    // Only ever sends Google a rating backed by real, approved customer
+    // reviews — the old version sent every product's fake, identical
+    // 4.5-star placeholder here, which risks a structured data penalty
+    // for fabricated review data, on top of just not being true.
+    const seoReviewStats = getProductReviewStats(p.id);
+    if (seoReviewStats) {
+      schema.aggregateRating = { '@type': 'AggregateRating', ratingValue: seoReviewStats.avg, reviewCount: seoReviewStats.count };
     }
     const schemaEl = document.getElementById('productSchema');
     if (schemaEl) schemaEl.textContent = JSON.stringify(schema);
   })();
+
+  renderProductReviews(p.id);
 
   // Track recently viewed
   let rv = JSON.parse(localStorage.getItem('obv_rv') || '[]');
@@ -586,6 +595,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Specs
   const specsHtml = p.specs ? Object.entries(p.specs).map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('') : '';
+
+  // Real customer reviews only — no fake/uniform rating ever shown. Only
+  // renders anything if reviews are turned on AND this specific product
+  // actually has at least one approved review.
+  const reviewStats = getProductReviewStats(p.id);
+  const reviewStatsHtml = (localStorage.getItem('obv_reviews_enabled') === 'on' && reviewStats)
+    ? `<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+         <span style="color:#f59e0b;font-size:15px;letter-spacing:1px">${'★'.repeat(Math.round(reviewStats.avg))}${'☆'.repeat(5 - Math.round(reviewStats.avg))}</span>
+         <span style="font-size:13px;color:var(--text-muted)">${reviewStats.avg} · ${reviewStats.count} review${reviewStats.count===1?'':'s'}</span>
+       </div>`
+    : '';
 
   // Main image HTML
   const mainImgHtml = imgs.length
@@ -628,6 +648,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       <div class="pp-brand-badge">${(typeof BRANDS !== 'undefined' ? BRANDS.find(b => b.id === p.brandId)?.logo : null) ? `<img src="${BRANDS.find(b => b.id === p.brandId).logo}" alt="" onerror="this.remove()">` : ''}${p.brand}</div>
       <h1 class="pp-name">${p.name}</h1>
       ${p.model ? `<div style="font-size:13px;color:var(--text-muted);font-weight:500;margin-bottom:10px">SKU: <strong style="color:var(--text-body)">${p.model}</strong></div>` : ''}
+      ${reviewStatsHtml}
       <div class="pp-desc">${fmtDesc(p.description)}</div>
       <div class="pp-price-row">
         <span class="pp-price">${fmt(p.price)}</span>
@@ -710,6 +731,103 @@ document.addEventListener('DOMContentLoaded', async () => {
   // and intentionally not waited on here.
   document.getElementById('pageLoadingOverlay')?.remove();
 });
+
+function escHtmlPP(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderProductReviews(productId) {
+  const section = document.getElementById('productReviewsSection');
+  if (!section) return;
+  if (localStorage.getItem('obv_reviews_enabled') !== 'on') { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+
+  let reviews = [];
+  try { reviews = JSON.parse(localStorage.getItem('obv_reviews') || '[]'); } catch(e) {}
+  const approved = reviews.filter(r => r.productId === productId && r.status === 'approved')
+    .sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+
+  const stats = getProductReviewStats(productId);
+  const summaryHtml = stats
+    ? `<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+         <span style="font-size:28px;font-weight:800;color:var(--text-dark)">${stats.avg}</span>
+         <div>
+           <div style="color:#f59e0b;font-size:16px;letter-spacing:2px">${'★'.repeat(Math.round(stats.avg))}${'☆'.repeat(5-Math.round(stats.avg))}</div>
+           <div style="font-size:12.5px;color:var(--text-muted)">Based on ${stats.count} review${stats.count===1?'':'s'}</div>
+         </div>
+       </div>`
+    : `<p style="font-size:13.5px;color:var(--text-muted);margin-bottom:20px">No reviews yet — be the first to share what you think.</p>`;
+
+  const listHtml = approved.length
+    ? approved.map(r => `
+        <div style="border-bottom:1px solid var(--border-light);padding:16px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <strong style="font-size:13.5px">${escHtmlPP(r.name)}</strong>
+            <span style="color:#f59e0b;font-size:12px;letter-spacing:1px">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span>
+          </div>
+          <p style="font-size:13.5px;color:var(--text-body);line-height:1.6;margin:0 0 4px">${escHtmlPP(r.comment)}</p>
+          <span style="font-size:11.5px;color:var(--text-muted)">${r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : ''}</span>
+        </div>`).join('')
+    : '';
+
+  section.innerHTML = `
+    <h2 style="font-family:var(--font-heading);font-size:22px;font-weight:800;margin-bottom:16px">Customer Reviews</h2>
+    ${summaryHtml}
+    <div style="max-width:640px">${listHtml}</div>
+    <div style="max-width:640px;margin-top:${approved.length?'8px':'0'};padding-top:24px;${approved.length?'border-top:1px solid var(--border-light)':''}">
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:14px">Write a Review</h3>
+      <div style="margin-bottom:12px">
+        <div id="reviewStarPicker" style="font-size:26px;color:#e2e8f0;letter-spacing:4px;cursor:pointer;user-select:none"></div>
+        <input type="hidden" id="revFormRating" value="0">
+      </div>
+      <input type="text" id="revFormName" placeholder="Your name" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:10px;box-sizing:border-box">
+      <textarea id="revFormComment" placeholder="Share your experience with this product…" rows="3" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:10px;box-sizing:border-box;resize:vertical"></textarea>
+      <button class="btn-primary" onclick="submitProductReview('${productId}')" style="width:auto;padding:11px 24px">Submit Review</button>
+      <p style="font-size:11.5px;color:var(--text-muted);margin-top:8px">Your review will appear here once approved.</p>
+    </div>`;
+
+  renderStarPicker();
+}
+
+function renderStarPicker() {
+  const picker = document.getElementById('reviewStarPicker');
+  if (!picker) return;
+  const draw = (selected) => {
+    picker.innerHTML = [1,2,3,4,5].map(i =>
+      `<span data-star="${i}" style="color:${i<=selected?'#f59e0b':'#e2e8f0'}">★</span>`).join('');
+  };
+  draw(0);
+  picker.querySelectorAll('span').forEach(star => {
+    star.addEventListener('mouseenter', () => draw(parseInt(star.dataset.star)));
+    star.addEventListener('click', () => {
+      document.getElementById('revFormRating').value = star.dataset.star;
+      draw(parseInt(star.dataset.star));
+    });
+  });
+  picker.addEventListener('mouseleave', () => draw(parseInt(document.getElementById('revFormRating').value) || 0));
+}
+
+function submitProductReview(productId) {
+  const rating = parseInt(document.getElementById('revFormRating').value) || 0;
+  const name = document.getElementById('revFormName').value.trim();
+  const comment = document.getElementById('revFormComment').value.trim();
+  if (!rating) { showToast('error', 'Rating Needed', 'Tap a star to rate this product.', 'fas fa-star'); return; }
+  if (!name) { showToast('error', 'Name Needed', 'Enter your name so we know who to thank.', 'fas fa-user'); return; }
+  if (!comment) { showToast('error', 'Review Needed', 'Share a few words about the product.', 'fas fa-comment'); return; }
+
+  let reviews = [];
+  try { reviews = JSON.parse(localStorage.getItem('obv_reviews') || '[]'); } catch(e) {}
+  // Public submissions start as "pending" — never shown until admin
+  // approves them, unlike reviews admin enters directly (e.g. from
+  // friends), which go straight to approved.
+  reviews.push({ id: 'rev_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), productId, name, rating, comment, status: 'pending', createdAt: new Date().toISOString() });
+  localStorage.setItem('obv_reviews', JSON.stringify(reviews));
+  if (typeof sbPush === 'function') sbPush('obv_reviews');
+
+  document.getElementById('revFormName').value = '';
+  document.getElementById('revFormComment').value = '';
+  document.getElementById('revFormRating').value = '0';
+  renderStarPicker();
+  showToast('success', 'Thank You!', 'Your review has been submitted and will appear once approved.', 'fas fa-check-circle');
+}
 </script>
 
 <a class="whatsapp-float" href="https://wa.me/233502578905" target="_blank" rel="noopener" title="Chat with us on WhatsApp">

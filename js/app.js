@@ -210,6 +210,12 @@ function renderProductCard(product) {
     `<span class="spec-tag">${v}</span>`).join('') : '';
   const brandLogo = (typeof BRANDS !== 'undefined' ? BRANDS.find(b => b.id === product.brandId) : null)?.logo;
   const brandBadge = brandLogo ? `<div class="product-brand-badge"><img src="${brandLogo}" alt="${product.brand}" onerror="this.parentElement.remove()"></div>` : '';
+  // Real reviews only — never shown if reviews are off or this product
+  // has no approved reviews yet, rather than a fake placeholder rating.
+  const reviewStats = getProductReviewStats(product.id);
+  const ratingHtml = reviewStats
+    ? `<div class="product-rating"><span class="stars">${'★'.repeat(Math.round(reviewStats.avg))}${'☆'.repeat(5-Math.round(reviewStats.avg))}</span><span class="count">(${reviewStats.count})</span></div>`
+    : '';
 
   return `
     <div class="product-card reveal" data-tags="${product.tags.join(',')}" data-id="${product.id}" onclick="openProduct('${product.id}')">
@@ -229,6 +235,7 @@ function renderProductCard(product) {
       <div class="product-info">
         <div class="product-cat-label">${catLabel}</div>
         <div class="product-name">${product.name}</div>
+        ${ratingHtml}
         ${product.model ? `<div class="product-model">${product.model}</div>` : ''}
         ${product.description ? `<div class="product-desc">${fmtDesc(product.description, 3)}</div>` : ''}
         ${specTags ? `<div class="product-spec-tags">${specTags}</div>` : ''}
@@ -540,6 +547,20 @@ function subcategoryColors(sub, cats) {
   const parent = cats.find(c => c.id === sub.parentId);
   if (!parent) return { color: sub.color, bg: sub.bg };
   return { color: parent.color, bg: lightenBg(parent.bg, 0.55) };
+}
+
+// Real customer reviews only — never a fake/static rating. Returns null
+// if reviews are disabled or this product has no approved reviews yet, so
+// callers can simply skip showing anything rather than displaying a
+// misleading placeholder.
+function getProductReviewStats(productId) {
+  if (localStorage.getItem('obv_reviews_enabled') !== 'on') return null;
+  let reviews = [];
+  try { reviews = JSON.parse(localStorage.getItem('obv_reviews') || '[]'); } catch(e) {}
+  const approved = reviews.filter(r => r.productId === productId && r.status === 'approved');
+  if (!approved.length) return null;
+  const avg = approved.reduce((s, r) => s + r.rating, 0) / approved.length;
+  return { avg: Math.round(avg * 10) / 10, count: approved.length };
 }
 
 function buildCategoryDropdownHtml(cats) {

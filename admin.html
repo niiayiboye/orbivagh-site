@@ -358,6 +358,7 @@ textarea{resize:vertical;min-height:70px}
       <div class="nav-item" onclick="showPage('images')" id="nav-images"><i class="fas fa-images"></i> Image Library</div>
       <div class="nav-item" onclick="showPage('brands')" id="nav-brands"><i class="fas fa-copyright"></i> Brands</div>
       <div class="nav-item" onclick="showPage('categories')" id="nav-categories"><i class="fas fa-th-large"></i> Categories</div>
+      <div class="nav-item" onclick="showPage('reviews')" id="nav-reviews"><i class="fas fa-star"></i> Reviews<span class="nav-badge" id="pendingReviewBadge" style="display:none">0</span></div>
       <div class="nav-item" onclick="showPage('faqs')" id="nav-faqs"><i class="fas fa-question-circle"></i> FAQs</div>
       <div class="nav-item" onclick="showPage('supplier')" id="nav-supplier"><i class="fas fa-truck"></i> Supplier Requests</div>
       <div class="nav-item" onclick="showPage('customers')" id="nav-customers"><i class="fas fa-address-book"></i> Customer Signups</div>
@@ -709,6 +710,16 @@ textarea{resize:vertical;min-height:70px}
             <span class="toggle-slider"></span>
           </label>
         </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0">
+          <div>
+            <div style="font-size:13px;font-weight:600">Product Reviews</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">Show real customer reviews and a star rating on product pages. Off by default — turn on once you have a few genuine reviews in, so nothing fake ever shows to customers. Manage reviews on the new Reviews page.</div>
+          </div>
+          <label class="toggle-wrap">
+            <input type="checkbox" id="t_reviewsEnabled" onchange="saveReviewsEnabledSetting()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
       </div>
       <div class="settings-section">
         <h3><i class="fas fa-lock" style="color:var(--warn)"></i> Change Admin Password</h3>
@@ -747,6 +758,65 @@ textarea{resize:vertical;min-height:70px}
         <button class="btn btn-primary" onclick="openAddCategoryModal()"><i class="fas fa-plus"></i> Add Category</button>
       </div>
       <div id="categoriesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;align-items:start"></div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="content" id="page-reviews" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <div><h2 style="font-size:18px;font-weight:800">Product Reviews</h2><p style="font-size:13px;color:var(--muted)">Reviews only show on the live site once Settings → Product Reviews is turned on. New reviews from customers start as "Pending" until you approve them — nothing goes live without your review.</p></div>
+        <button class="btn btn-primary" onclick="openAddReviewModal()"><i class="fas fa-plus"></i> Add Review</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <select class="filter-sel" id="reviewStatusFilter" onchange="renderReviewsAdmin()">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+        </select>
+      </div>
+      <div id="reviewsListAdmin" style="display:flex;flex-direction:column;gap:12px"></div>
+    </div>
+
+    <!-- Add/Edit Review Modal -->
+    <div class="modal-overlay" id="reviewModal">
+      <div class="modal" style="max-width:480px">
+        <div class="modal-header">
+          <div class="modal-title">Add Review</div>
+          <button class="modal-close" onclick="closeModal('reviewModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Product</label>
+              <input type="text" id="rv_productSearch" placeholder="Search product by name or SKU…" oninput="searchReviewProduct(this.value)" autocomplete="off">
+              <div id="rv_productResults" style="display:none;border:1px solid var(--border);border-radius:8px;margin-top:4px;max-height:180px;overflow-y:auto"></div>
+              <div id="rv_productSelected" style="display:none;margin-top:6px;font-size:12.5px;color:var(--muted)"></div>
+              <input type="hidden" id="rv_productId">
+            </div>
+            <div class="form-group full">
+              <label>Reviewer Name</label>
+              <input type="text" id="rv_name" placeholder="e.g. Kwame A.">
+            </div>
+            <div class="form-group full">
+              <label>Rating</label>
+              <select id="rv_rating">
+                <option value="5">★★★★★ (5)</option>
+                <option value="4">★★★★☆ (4)</option>
+                <option value="3">★★★☆☆ (3)</option>
+                <option value="2">★★☆☆☆ (2)</option>
+                <option value="1">★☆☆☆☆ (1)</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Review Text</label>
+              <textarea id="rv_comment" rows="4" placeholder="What did they say about it?"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal('reviewModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="saveReviewAdmin()"><i class="fas fa-save"></i> Save Review</button>
+        </div>
+      </div>
     </div>
 
     <!-- FAQS -->
@@ -1372,6 +1442,7 @@ function showPage(page) {
   if (page==='images')    loadImages();
   if (page==='brands')     renderBrands();
   if (page==='categories') renderCategoriesGrid();
+  if (page==='reviews') renderReviewsAdmin();
   if (page==='faqs')       renderFaqsGridAdmin();
   if (page==='supplier')   renderSupplierPage();
   if (page==='customers')  renderCustomersPage();
@@ -1430,7 +1501,7 @@ async function init() {
   } catch(e) {}
   loadProducts(); loadOrders(); loadDeals(); loadPromoCodes();
   populateFilterBrand();
-  renderDashboard(); updatePendingBadge();
+  renderDashboard(); updatePendingBadge(); updatePendingReviewBadge();
   setInterval(()=>{ loadOrders(); updatePendingBadge(); }, 30000);
 }
 
@@ -2767,7 +2838,7 @@ function deleteAllKeepImages() {
 const BACKUP_KEYS=[
   'obv_prod_edits','obv_prod_adds','obv_prod_dels',
   'obv_settings','obv_branding','obv_flash_prods',
-  'obv_delivery_text','obv_freeDelivery','obv_freeDeliveryPromo','obv_sku_img_map','obv_promo_codes',
+  'obv_delivery_text','obv_freeDelivery','obv_freeDeliveryPromo','obv_sku_img_map','obv_promo_codes','obv_reviews_enabled','obv_reviews',
   'obv_img_required','obv_images','obv_history',
   'obv_orders','obv_data_version',
   'obv_cat_adds','obv_cat_dels','obv_cat_edits',
@@ -3312,6 +3383,7 @@ function loadDisplaySettings(){
   document.getElementById('t_badges').checked=localStorage.getItem('obv_badges')==='on';
   document.getElementById('t_freeDelivery').checked=localStorage.getItem('obv_freeDelivery')!=='off';
   document.getElementById('t_freeDeliveryPromo').checked=localStorage.getItem('obv_freeDeliveryPromo')!=='off';
+  document.getElementById('t_reviewsEnabled').checked=localStorage.getItem('obv_reviews_enabled')==='on';
   document.getElementById('t_imgRequired').checked=localStorage.getItem('obv_img_required')!=='off';
   const dtEl=document.getElementById('s_deliveryText');
   if(dtEl) dtEl.value=localStorage.getItem('obv_delivery_text')||'';
@@ -3353,6 +3425,13 @@ function saveFreeDeliveryPromoSetting(){
   localStorage.setItem('obv_freeDeliveryPromo',document.getElementById('t_freeDeliveryPromo').checked?'on':'off');
   sbPush('obv_freeDeliveryPromo');
   try{logHistory({type:'display',label:'Free delivery threshold setting changed',undoData:{freeDeliveryPromo:prev}});}catch(e){}
+  toast('Setting saved!','ok');
+}
+function saveReviewsEnabledSetting(){
+  const prev=localStorage.getItem('obv_reviews_enabled');
+  localStorage.setItem('obv_reviews_enabled',document.getElementById('t_reviewsEnabled').checked?'on':'off');
+  sbPush('obv_reviews_enabled');
+  try{logHistory({type:'display',label:'Product reviews setting changed',undoData:{reviewsEnabled:prev}});}catch(e){}
   toast('Setting saved!','ok');
 }
 function saveImgRequiredSetting(){
@@ -3496,6 +3575,125 @@ function getAllCategories(){
     ...base.filter(c=>!dels.has(c.id)).map(c=>edits[c.id]?Object.assign({},c,edits[c.id]):c),
     ...adds.filter(c=>!dels.has(c.id)).map(c=>edits[c.id]?Object.assign({},c,edits[c.id]):c)
   ];
+}
+
+function getAllReviews(){ return lsGet('obv_reviews', []); }
+
+function updatePendingReviewBadge(){
+  const n = getAllReviews().filter(r => r.status === 'pending').length;
+  const b = document.getElementById('pendingReviewBadge');
+  if (!b) return;
+  b.style.display = n > 0 ? 'inline-block' : 'none';
+  b.textContent = n;
+}
+
+function renderReviewsAdmin(){
+  const list = document.getElementById('reviewsListAdmin');
+  if (!list) return;
+  const statusFilter = document.getElementById('reviewStatusFilter').value;
+  let reviews = getAllReviews();
+  updatePendingReviewBadge();
+  if (statusFilter) reviews = reviews.filter(r => r.status === statusFilter);
+  reviews = [...reviews].sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+
+  if (!reviews.length) {
+    list.innerHTML = '<div class="empty-state"><i class="fas fa-star"></i><p>No reviews yet. Click <strong>Add Review</strong> to add one, or wait for customers to submit their own once Product Reviews is turned on.</p></div>';
+    return;
+  }
+
+  const prods = adminProds.length ? adminProds : getAdminProducts();
+  list.innerHTML = reviews.map(r => {
+    const p = prods.find(x => x.id === r.productId);
+    const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+    const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+    return `<div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:16px;display:flex;gap:14px;align-items:flex-start">
+      <div style="width:44px;height:44px;border-radius:8px;background:var(--bg);flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden">
+        ${p && p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fas fa-box" style="color:var(--muted)"></i>`}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:2px">${p ? escHtml(p.name) : 'Product not found'}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <strong style="font-size:13.5px">${escHtml(r.name)}</strong>
+          <span style="color:#f59e0b;font-size:13px;letter-spacing:1px">${stars}</span>
+          <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:${r.status==='approved'?'#f0fdf4':'#fffbeb'};color:${r.status==='approved'?'#16a34a':'#b45309'}">${r.status==='approved'?'Approved':'Pending'}</span>
+        </div>
+        <p style="font-size:13px;color:var(--text);line-height:1.5;margin:0 0 6px">${escHtml(r.comment||'')}</p>
+        <div style="font-size:11px;color:var(--muted)">${dateStr}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        ${r.status==='pending' ? `<button class="btn btn-primary btn-sm" onclick="approveReview('${r.id}')"><i class="fas fa-check"></i></button>` : ''}
+        <button class="btn btn-danger btn-sm" onclick="confirmAction('Delete this review?','This cannot be undone.',()=>deleteReview('${r.id}'))"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function approveReview(id){
+  const reviews = getAllReviews();
+  const r = reviews.find(x => x.id === id);
+  if (!r) return;
+  r.status = 'approved';
+  lsSet('obv_reviews', reviews);
+  sbPush('obv_reviews');
+  renderReviewsAdmin();
+  toast('Review approved — now live on the product page','ok');
+}
+function deleteReview(id){
+  let reviews = getAllReviews();
+  reviews = reviews.filter(x => x.id !== id);
+  lsSet('obv_reviews', reviews);
+  sbPush('obv_reviews');
+  renderReviewsAdmin();
+  toast('Review deleted','ok');
+}
+
+function openAddReviewModal(){
+  document.getElementById('rv_productSearch').value='';
+  document.getElementById('rv_productId').value='';
+  document.getElementById('rv_productSelected').style.display='none';
+  document.getElementById('rv_productResults').style.display='none';
+  document.getElementById('rv_name').value='';
+  document.getElementById('rv_rating').value='5';
+  document.getElementById('rv_comment').value='';
+  document.getElementById('reviewModal').classList.add('open');
+}
+function searchReviewProduct(q){
+  const box = document.getElementById('rv_productResults');
+  if (!q.trim()) { box.style.display='none'; box.innerHTML=''; return; }
+  const prods = (adminProds.length ? adminProds : getAdminProducts())
+    .filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || (p.model||'').toLowerCase().includes(q.toLowerCase()))
+    .slice(0, 8);
+  if (!prods.length) { box.style.display='none'; box.innerHTML=''; return; }
+  box.innerHTML = prods.map(p => `<div style="padding:8px 10px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border-light)" onclick="selectReviewProduct('${p.id}','${escHtml(p.name).replace(/'/g,"\\'")}')">${escHtml(p.name)} <span style="color:var(--muted);font-size:11px">${p.model||''}</span></div>`).join('');
+  box.style.display='block';
+}
+function selectReviewProduct(id, name){
+  document.getElementById('rv_productId').value = id;
+  document.getElementById('rv_productSearch').value = '';
+  document.getElementById('rv_productResults').style.display='none';
+  const sel = document.getElementById('rv_productSelected');
+  sel.textContent = 'Selected: ' + name;
+  sel.style.display='block';
+}
+function saveReviewAdmin(){
+  const productId = document.getElementById('rv_productId').value;
+  const name = document.getElementById('rv_name').value.trim();
+  const rating = parseInt(document.getElementById('rv_rating').value);
+  const comment = document.getElementById('rv_comment').value.trim();
+  if (!productId) { toast('Select a product first', 'err'); return; }
+  if (!name) { toast('Enter a reviewer name', 'err'); return; }
+  if (!comment) { toast('Enter the review text', 'err'); return; }
+
+  const reviews = getAllReviews();
+  // Entered directly by admin (e.g. a friend's feedback shared over
+  // WhatsApp) — goes straight to approved, skipping the pending queue
+  // that's there specifically to screen anonymous public submissions.
+  reviews.push({ id: 'rev_'+Date.now(), productId, name, rating, comment, status: 'approved', createdAt: new Date().toISOString() });
+  lsSet('obv_reviews', reviews);
+  sbPush('obv_reviews');
+  closeModal('reviewModal');
+  renderReviewsAdmin();
+  toast('Review added','ok');
 }
 
 function renderCategoriesGrid(){
