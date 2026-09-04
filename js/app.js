@@ -594,7 +594,7 @@ function openCategoryDrawer() {
     const topLevel = cats.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, cats));
     let html = '';
     topLevel.forEach(c => {
-      const subs = cats.filter(s => s.parentId === c.id);
+      const subs = cats.filter(s => s.parentId === c.id && categoryProductCount(s.id) > 0);
       const catLink = `<a href="shop.html?cat=${c.id}" class="cat-drawer-item">
         <span class="cat-drawer-icon" style="background:${c.bg};color:${c.color}"><i class="${c.icon}"></i></span>
         ${c.name}
