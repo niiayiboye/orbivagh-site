@@ -1390,10 +1390,26 @@ let editingId=null, editingDealId=null;
 window.sbPushError = function(key, reason, kb) {
   if (reason === 'stripped') {
     toast('Note: uploaded (file) images are local only. Paste a Google Drive link to make images visible to customers.','info');
+    return;
   }
   if (reason === 401 || reason === 403) {
     toast('Your session expired — please sign in again to keep saving changes.','err');
+    return;
   }
+  if (reason === 'blocked') {
+    // The request itself "succeeded" (2xx) but the database's security
+    // rules silently rejected the write, so nothing was actually saved —
+    // signing out and back in refreshes the credentials this check relies on.
+    toast('That change didn\'t actually save — please sign out and back in, then try again.','err');
+    return;
+  }
+  if (reason === 'network') {
+    toast('Could not reach the server — check your connection and try again.','err');
+    return;
+  }
+  // Any other HTTP error status previously failed with no visible feedback
+  // at all — the page would say "saved" while nothing reached the database.
+  toast('That change failed to save (error '+reason+'). Please try again.','err');
 };
 
 async function init() {
@@ -2007,6 +2023,14 @@ function generateInvoice(orderId) {
   win.document.close();
 }
 
+function copyTrackingLink(orderId){
+  const url='https://orbivagh.com/track-order.html?order='+orderId;
+  navigator.clipboard.writeText(url).then(()=>{
+    toast('Tracking link copied — paste it to the customer','ok');
+  }).catch(()=>{
+    toast('Could not copy automatically — link: '+url,'info');
+  });
+}
 function openOrderModal(id) {
   const o=ORDERS.find(x=>x.id===id); if(!o) return;
   document.getElementById('orderModalTitle').textContent=`Order #${o.id} — ${escHtml(o.customerName||'Unknown')}`;
@@ -2028,6 +2052,7 @@ function openOrderModal(id) {
       <div class="order-info-cell"><label>Delivery Area</label><span>${escHtml(o.deliveryArea||'—')}</span></div>
       <div class="order-info-cell"><label>Date</label><span>${fmtDate(o.createdAt)}</span></div>
     </div>
+    <button class="btn btn-outline btn-sm" style="margin-bottom:16px" onclick="copyTrackingLink(${o.id})"><i class="fas fa-link"></i> Copy Tracking Link</button>
     <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Items Ordered</div>
     <div class="order-items-list">${(o.items||[]).length
       ?(o.items).map(it=>{

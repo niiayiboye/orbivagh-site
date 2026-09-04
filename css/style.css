@@ -364,7 +364,8 @@ input, select, textarea { font-family: inherit; }
   position: fixed;
   top: 0; right: -560px;
   width: 520px; max-width: 100vw;
-  height: 100vh;
+  height: 100vh; /* fallback for browsers without dvh support */
+  height: 100dvh; /* accounts for mobile browsers' address bar show/hide, unlike 100vh — without this, the panel can render taller than what's actually visible on screen, making the last suggestions unreachable */
   background: #fff;
   z-index: 1500;
   box-shadow: -4px 0 40px rgba(0,0,0,0.14);
@@ -395,7 +396,7 @@ input, select, textarea { font-family: inherit; }
   transition: all var(--transition);
 }
 .search-panel-close:hover { background: var(--bg); border-color: var(--text-dark); }
-.search-panel-bd { padding: 24px 28px; flex: 1; overflow-y: auto; }
+.search-panel-bd { padding: 24px 28px; flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .search-panel-input-wrap {
   border: 2px solid var(--border);
   border-radius: 10px;

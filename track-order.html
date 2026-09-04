@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Track your order – Orbiva Technologies">
+  <link rel="canonical" href="https://orbivagh.com/track-order.html">
+  <link rel="icon" type="image/jpeg" href="img/logo.jpeg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Your Order – Orbiva Technologies</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    .track-page { min-height: 80vh; padding: 60px 0 80px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); }
+    .track-wrap { max-width: 560px; margin: 0 auto; padding: 0 16px; }
+    .track-header { text-align: center; margin-bottom: 28px; }
+    .track-header i { font-size: 32px; color: #1d4ed8; margin-bottom: 12px; display: block; }
+    .track-header h1 { font-family: 'Poppins', sans-serif; font-size: 1.7rem; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+    .track-header p { font-size: 14px; color: #64748b; }
+
+    .track-form-card { background: #fff; border-radius: 20px; padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.08); }
+    .track-form-group { margin-bottom: 16px; }
+    .track-form-group label { display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px; }
+    .track-form-group input {
+      width: 100%; padding: 13px 16px; border: 1.5px solid #e2e8f0; border-radius: 10px;
+      font-size: 15px; outline: none; transition: border-color 0.15s ease;
+    }
+    .track-form-group input:focus { border-color: #1d4ed8; }
+    .track-submit-btn {
+      width: 100%; padding: 14px; background: #1d4ed8; color: #fff; border: none;
+      border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: background 0.15s ease; display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .track-submit-btn:hover { background: #1e40af; }
+    .track-submit-btn:disabled { background: #94a3b8; cursor: default; }
+    .track-hint { font-size: 12px; color: #94a3b8; margin-top: 10px; text-align: center; }
+
+    .track-error {
+      background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c;
+      border-radius: 10px; padding: 14px 16px; font-size: 13.5px; margin-top: 16px;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+
+    .track-result-card { background: #fff; border-radius: 20px; padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.08); margin-top: 20px; }
+    .track-order-num { text-align: center; margin-bottom: 24px; }
+    .track-order-num span { font-size: 12px; color: #64748b; display: block; margin-bottom: 4px; }
+    .track-order-num strong { font-size: 22px; font-weight: 800; color: #1d4ed8; }
+
+    /* Live status timeline — reflects the order's actual current status,
+       not a fixed "just placed" display like the post-checkout page shows. */
+    .track-timeline { display: flex; margin-bottom: 24px; }
+    .track-step { flex: 1; text-align: center; position: relative; }
+    .track-step-icon {
+      width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px;
+      display: flex; align-items: center; justify-content: center; font-size: 15px;
+      background: #f1f5f9; color: #94a3b8; position: relative; z-index: 1;
+      border: 2px solid #f1f5f9;
+    }
+    .track-step-line {
+      position: absolute; top: 20px; left: -50%; width: 100%; height: 2px;
+      background: #f1f5f9; z-index: 0;
+    }
+    .track-step:first-child .track-step-line { display: none; }
+    .track-step-label { font-size: 11px; font-weight: 600; color: #94a3b8; }
+    .track-step.done .track-step-icon { background: #16a34a; color: #fff; border-color: #16a34a; }
+    .track-step.done .track-step-line { background: #16a34a; }
+    .track-step.done .track-step-label { color: #16a34a; }
+    .track-step.current .track-step-icon { background: #1d4ed8; color: #fff; border-color: #1d4ed8; animation: trackPulse 1.6s ease-in-out infinite; }
+    .track-step.current .track-step-label { color: #1d4ed8; font-weight: 700; }
+    @keyframes trackPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(29,78,216,0.35); } 50% { box-shadow: 0 0 0 6px rgba(29,78,216,0); } }
+    .track-cancelled-banner {
+      background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c;
+      border-radius: 10px; padding: 12px 16px; font-size: 13.5px; font-weight: 600;
+      text-align: center; margin-bottom: 20px;
+    }
+
+    .order-detail-box { background: #f8fafc; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; font-size: 13px; }
+    .order-detail-row { display: flex; justify-content: space-between; margin-bottom: 6px; gap: 12px; }
+    .order-detail-row span:first-child { color: #64748b; flex-shrink: 0; }
+    .order-detail-row strong { text-align: right; }
+    .order-items-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+    .order-items-table td { padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+    .order-total-row { display: flex; justify-content: space-between; background: #1d4ed8; color: #fff; border-radius: 10px; padding: 14px 18px; font-size: 16px; font-weight: 800; margin-bottom: 20px; }
+    .track-search-again { text-align: center; margin-top: 16px; }
+    .track-search-again button { background: none; border: none; color: #1d4ed8; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+  </style>
+</head>
+<body>
+<header class="header" style="position:sticky;top:0;z-index:900">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <img src="img/logo.jpeg" alt="Orbiva Technologies" class="logo-img">
+    </a>
+    <div class="header-actions">
+      <button class="action-btn" id="accountToggle" title="Account"><i class="fas fa-user"></i></button>
+    </div>
+  </div>
+</header>
+
+<section class="track-page">
+  <div class="track-wrap">
+    <div class="track-header">
+      <i class="fas fa-truck"></i>
+      <h1>Track Your Order</h1>
+      <p>Enter your order number and phone number to see its current status.</p>
+    </div>
+
+    <div class="track-form-card" id="trackFormCard">
+      <div class="track-form-group">
+        <label for="trackOrderId">Order Number</label>
+        <input type="text" id="trackOrderId" placeholder="e.g. 1042" inputmode="numeric">
+      </div>
+      <div class="track-form-group">
+        <label for="trackPhone">Phone Number</label>
+        <input type="tel" id="trackPhone" placeholder="The number used at checkout">
+      </div>
+      <button class="track-submit-btn" id="trackSubmitBtn" onclick="lookupOrder()"><i class="fas fa-search"></i> Track Order</button>
+      <p class="track-hint">You'll find your order number on the confirmation page or receipt from checkout.</p>
+      <div id="trackErrorBox"></div>
+    </div>
+
+    <div id="trackResultBox"></div>
+  </div>
+</section>
+
+<nav class="bottom-nav" id="bottomNav">
+  <a href="index.html" class="bottom-nav-item">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <button class="bottom-nav-item" id="bnavCategories" onclick="openCategoryDrawer()">
+    <i class="fas fa-list-ul"></i>
+    <span>Categories</span>
+  </button>
+  <a href="shop.html" class="bottom-nav-item">
+    <i class="fas fa-th-large"></i>
+    <span>Shop</span>
+  </a>
+  <a href="shop.html?filter=flash" class="bottom-nav-item">
+    <i class="fas fa-bolt"></i>
+    <span>Deals</span>
+  </a>
+  <a href="shop.html" class="bottom-nav-item">
+    <i class="fas fa-heart"></i>
+    <span>Saved</span>
+  </a>
+</nav>
+
+<div class="cat-drawer-backdrop" id="catDrawerBackdrop" onclick="closeCategoryDrawer()"></div>
+<div class="cat-drawer" id="catDrawer">
+  <div class="cat-drawer-handle"></div>
+  <div class="cat-drawer-header">
+    <h3>Shop by Category</h3>
+    <button class="cat-drawer-close" onclick="closeCategoryDrawer()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cat-drawer-list" id="catDrawerList"></div>
+</div>
+
+<script src="js/supabase.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  await (window.obvSyncPromise || Promise.resolve());
+  // A shared link (?order=1042) pre-fills the order number so the person
+  // only has to type their phone number, rather than both fields.
+  const params = new URLSearchParams(window.location.search);
+  const prefill = params.get('order');
+  if (prefill) document.getElementById('trackOrderId').value = prefill;
+  document.getElementById('trackPhone').addEventListener('keydown', e => { if (e.key === 'Enter') lookupOrder(); });
+  document.getElementById('trackOrderId').addEventListener('keydown', e => { if (e.key === 'Enter') lookupOrder(); });
+});
+
+// Compares phone numbers by their last 9 digits, so it doesn't matter
+// whether someone types 0244123456, +233244123456, or 244123456 — all of
+// these should match the same number as entered at checkout.
+function phoneDigitsMatch(a, b) {
+  const da = String(a || '').replace(/\D/g, '').slice(-9);
+  const db = String(b || '').replace(/\D/g, '').slice(-9);
+  return da.length === 9 && da === db;
+}
+
+const STATUS_STEPS = [
+  { key: 'pending',    label: 'Received',   icon: 'fa-receipt' },
+  { key: 'confirmed',  label: 'Confirmed',  icon: 'fa-check' },
+  { key: 'processing', label: 'Packing',    icon: 'fa-box' },
+  { key: 'delivered',  label: 'Delivered',  icon: 'fa-truck' },
+];
+
+function lookupOrder() {
+  const idInput = document.getElementById('trackOrderId').value.trim();
+  const phoneInput = document.getElementById('trackPhone').value.trim();
+  const errorBox = document.getElementById('trackErrorBox');
+  const resultBox = document.getElementById('trackResultBox');
+  errorBox.innerHTML = '';
+  resultBox.innerHTML = '';
+
+  if (!idInput || !phoneInput) {
+    errorBox.innerHTML = `<div class="track-error"><i class="fas fa-exclamation-circle" style="margin-top:2px"></i><div>Enter both your order number and phone number.</div></div>`;
+    return;
+  }
+
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem('obv_orders') || '[]'); } catch(e) {}
+  const order = orders.find(o => String(o.id) === idInput.replace(/^#/, '') && phoneDigitsMatch(o.phone, phoneInput));
+
+  if (!order) {
+    errorBox.innerHTML = `<div class="track-error"><i class="fas fa-exclamation-circle" style="margin-top:2px"></i><div>We couldn't find an order matching that number and phone number. Double-check both and try again, or <a href="contact.html" style="color:#b91c1c;font-weight:700">contact us</a> for help.</div></div>`;
+    return;
+  }
+
+  renderOrderResult(order);
+}
+
+function renderOrderResult(order) {
+  const resultBox = document.getElementById('trackResultBox');
+  const isCancelled = order.status === 'cancelled';
+  const currentIdx = STATUS_STEPS.findIndex(s => s.key === order.status);
+  const methodLabel = { momo: 'MTN Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[order.paymentMethod] || order.paymentMethod;
+
+  const timelineHtml = isCancelled ? '' : `
+    <div class="track-timeline">
+      ${STATUS_STEPS.map((s, i) => `
+        <div class="track-step ${i < currentIdx ? 'done' : i === currentIdx ? 'current' : ''}">
+          <div class="track-step-line"></div>
+          <div class="track-step-icon"><i class="fas ${i < currentIdx ? 'fa-check' : s.icon}"></i></div>
+          <div class="track-step-label">${s.label}</div>
+        </div>`).join('')}
+    </div>`;
+
+  const itemsHtml = (order.items || []).map(i => `
+    <tr>
+      <td>${i.name}<br><span style="font-size:11px;color:#94a3b8">SKU: ${i.model || i.sku || '—'}</span></td>
+      <td style="text-align:center;color:#64748b">×${i.qty}</td>
+      <td style="text-align:right;font-weight:600">GH₵ ${(i.price * i.qty).toLocaleString()}</td>
+    </tr>`).join('');
+
+  const createdDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+
+  resultBox.innerHTML = `
+    <div class="track-result-card">
+      <div class="track-order-num">
+        <span>Order Number</span>
+        <strong>#${order.id}</strong>
+      </div>
+
+      ${isCancelled ? `<div class="track-cancelled-banner"><i class="fas fa-times-circle"></i> This order was cancelled</div>` : timelineHtml}
+
+      <div class="order-detail-box">
+        <div class="order-detail-row"><span>Order Date</span><strong>${createdDate}</strong></div>
+        <div class="order-detail-row"><span>Fulfillment</span><strong>${order.fulfillment === 'pickup' ? 'Store Pickup' : 'Home Delivery'}</strong></div>
+        ${order.deliveryArea && order.deliveryArea !== 'Store Pickup' ? `<div class="order-detail-row"><span>Address</span><strong>${order.deliveryArea}</strong></div>` : ''}
+        <div class="order-detail-row"><span>Payment</span><strong>${methodLabel}</strong></div>
+      </div>
+
+      <table class="order-items-table">${itemsHtml}</table>
+      <div class="order-total-row"><span>Total</span><span>GH₵ ${order.total.toLocaleString()}</span></div>
+
+      <div class="track-search-again">
+        <button onclick="document.getElementById('trackResultBox').innerHTML='';document.getElementById('trackOrderId').value='';document.getElementById('trackPhone').value='';document.getElementById('trackOrderId').focus();">
+          <i class="fas fa-search"></i> Track a different order
+        </button>
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>

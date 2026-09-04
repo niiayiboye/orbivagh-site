@@ -105,12 +105,29 @@ async function sbPush(key) {
       'apikey': SB_KEY,
       'Authorization': `Bearer ${adminToken || SB_KEY}`,
       'Content-Type': 'application/json',
-      'Prefer': 'resolution=merge-duplicates'
+      // return=representation lets us tell a genuine save apart from the
+      // classic Supabase/PostgREST gotcha where a Row Level Security
+      // policy silently blocks a write while still returning a "successful"
+      // HTTP status — without this, that case is completely invisible: the
+      // page believes it saved, and the change quietly reverts the next
+      // time anything re-syncs from the database.
+      'Prefer': 'resolution=merge-duplicates,return=representation'
     },
     body: JSON.stringify({ key, value })
-  }).then(r => {
-    if (!r.ok && typeof window.sbPushError === 'function') window.sbPushError(key, r.status, kb);
-  }).catch(() => {});
+  }).then(async r => {
+    if (!r.ok) {
+      if (typeof window.sbPushError === 'function') window.sbPushError(key, r.status, kb);
+      return;
+    }
+    try {
+      const body = await r.json();
+      if (Array.isArray(body) && body.length === 0) {
+        if (typeof window.sbPushError === 'function') window.sbPushError(key, 'blocked', kb);
+      }
+    } catch(e) {}
+  }).catch(() => {
+    if (typeof window.sbPushError === 'function') window.sbPushError(key, 'network', kb);
+  });
 }
 
 function applyDeliveryText() {
