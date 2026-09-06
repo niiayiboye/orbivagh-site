@@ -2923,7 +2923,7 @@ function exportSitemap(){
     urlXml('https://orbivagh.com/shop.html', 'daily', '0.9'),
     ...cats.map(c => urlXml(`https://orbivagh.com/shop.html?cat=${c.id}`, 'daily', '0.8')),
     urlXml('https://orbivagh.com/contact.html', 'monthly', '0.5'),
-    ...visible.map(p => urlXml(`https://orbivagh.com/product.html?id=${p.id}`, 'weekly', '0.7'))
+    ...visible.map(p => urlXml(`https://orbivagh.com/p/${p.id}.html`, 'weekly', '0.7'))
   ];
 
   const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + parts.join('\n') + '\n</urlset>\n';

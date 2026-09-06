@@ -408,6 +408,10 @@
     <div class="footer-brand">
       <div class="logo"><img src="img/logo.jpeg" alt="Orbiva Technologies" class="logo-img"></div>
       <p class="footer-about">Your Trusted Home Appliance Store in Ghana.</p>
+      <div class="footer-socials">
+        <a href="PASTE_FACEBOOK_LINK_HERE" target="_blank" rel="noopener" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/orbiva_gh" target="_blank" rel="noopener" title="Instagram"><i class="fab fa-instagram"></i></a>
+      </div>
     </div>
     <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="contact.html">Contact</a></li></ul></div>
     <div class="footer-col"><h4>Categories</h4><ul id="footerCatLinks"></ul></div>
@@ -473,9 +477,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const footerCats = document.getElementById('footerCatLinks');
   if (footerCats) footerCats.innerHTML = CATEGORIES.slice(0, 6).map(c => `<li><a href="shop.html?cat=${c.id}">${c.name}</a></li>`).join('');
 
-  // Read product ID from URL
+  // Read product ID — from a directly embedded value on static per-product
+  // pages (window.__STATIC_PRODUCT_ID__, set by the page generator so
+  // Google never needs to run JS to know which product this is), falling
+  // back to the URL query string for the original product.html?id=X links
+  // still used elsewhere (WhatsApp shares, older bookmarks, etc.).
   const params = new URLSearchParams(window.location.search);
-  const pid = params.get('id');
+  const pid = window.__STATIC_PRODUCT_ID__ || params.get('id');
   const p = PRODUCTS.find(x => String(x.id) === pid);
 
   // Treat "no images" the same as "not found" when the image-required
@@ -506,7 +514,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // product id, which told Google every product page was a duplicate of
   // one generic page. That's now fixed to be unique per product. ──
   (function seoForProduct() {
-    const pageUrl = 'https://orbivagh.com/product.html?id=' + encodeURIComponent(p.id);
+    // Points at the new static per-product page, not this dynamic one — so
+    // anyone still arriving via an old product.html?id=X link (old bookmarks,
+    // WhatsApp shares, etc.) tells Google the real canonical version lives
+    // at the static page, consolidating everything onto one URL per product.
+    const pageUrl = 'https://orbivagh.com/p/' + encodeURIComponent(p.id) + '.html';
     const shortDesc = (p.description || `${p.name} — available now at Orbiva Technologies, Ghana's premium electronics store.`).slice(0, 160);
     const imgUrl = (p.images && p.images[0]) ? p.images[0] : 'https://orbivagh.com/img/logo.jpeg';
     const catName = (CATEGORIES.find(c => c.id === p.category) || {}).name || '';
