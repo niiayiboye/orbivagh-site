@@ -1,0 +1,35 @@
+# Dependencies — regenerated with: npm install
+node_modules/
+
+# Supplier price sheets — private business data
+*.xlsx
+
+# Local server & admin backend — not needed on GitHub Pages
+server.js
+Start Admin.bat
+data/
+package.json
+package-lock.json
+
+# Utility / import scripts
+parse_products.py
+download_images.js
+import_products.js
+electroland_products.json
+"python electroland_scraper.py"
+
+# Price sheets (private)
+*.pdf
+
+# Raw brand logo files with messy names (already copied to img/)
+MIDEA-*.webp
+SAMSUNG-*.webp
+TCL-1-*.webp
+EGL EASTER PROMO 2026 FOR WEB.webp
+
+# Root logo duplicate (already in img/logo.jpeg)
+/logo.jpeg
+
+# OS junk
+.DS_Store
+Thumbs.db

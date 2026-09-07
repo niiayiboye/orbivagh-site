@@ -1,0 +1,43 @@
+name: Regenerate SEO pages
+
+# Runs every 10 minutes to check whether the "Regenerate SEO Pages" button
+# in admin has been clicked since the last run. Also runnable manually from
+# the Actions tab (workflow_dispatch) as a backup, without needing to wait.
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-and-regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check whether regeneration was requested
+        id: check
+        run: node scripts/check-regen-requested.js
+
+      - name: Generate static product pages and sitemap
+        if: steps.check.outputs.should_run == 'true'
+        run: node scripts/generate-static-pages.js
+
+      - name: Record this run and commit changes
+        if: steps.check.outputs.should_run == 'true'
+        run: |
+          mkdir -p .github
+          echo "${{ steps.check.outputs.requested_at }}" > .github/last-regenerated.txt
+          git config user.name "orbiva-seo-bot"
+          git config user.email "actions@github.com"
+          git add p/ sitemap.xml .github/last-regenerated.txt
+          git diff --staged --quiet && echo "No changes to commit" || git commit -m "Auto-regenerate SEO pages ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+          git push

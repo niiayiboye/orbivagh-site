@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.orbivagh.twa",
+        "sha256_cert_fingerprints": ["85:C7:0A:1E:7B:80:F3:47:BF:2D:F9:9C:AC:15:5A:87:83:77:2F:1B:C7:E0:29:EC:0D:0A:83:3F:01:F6:87:00"]
+      }
+    }]
