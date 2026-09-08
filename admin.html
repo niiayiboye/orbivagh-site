@@ -732,7 +732,7 @@ textarea{resize:vertical;min-height:70px}
       </div>
       <div class="settings-section">
         <h3><i class="fas fa-search" style="color:var(--primary)"></i> SEO Pages</h3>
-        <p style="font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:16px">Every product has its own static page built specifically so Google sees the correct title, price, and description immediately. These pages are a snapshot — they only update when regenerated, so click this after any batch of price changes, new products, or edits. Takes effect within about 10 minutes.</p>
+        <p style="font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:16px">Every product has its own static page built specifically so Google sees the correct title, price, and description immediately. These pages are a snapshot — they only update when regenerated, so click this after any batch of price changes, new products, or edits. Usually completes within about a minute.</p>
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="requestSeoRegeneration()"><i class="fas fa-sync"></i> Regenerate SEO Pages</button>
           <span style="font-size:12.5px;color:var(--muted)" id="seoRegenStatus"></span>
@@ -2907,18 +2907,38 @@ function csvField(v){
   const s=String(v===null||v===undefined?'':v);
   return /[,"\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
 }
-// Sets a timestamp in settings that the GitHub Action (running every ~10
-// minutes) checks for — when it sees a newer timestamp than its own record
-// of the last run, it regenerates every static product page and the
-// sitemap, then commits the result automatically. No secrets are ever
-// exposed here; the actual GitHub access happens entirely on GitHub's own
-// servers, not in this browser page.
-function requestSeoRegeneration(){
+// Sets a timestamp in settings (kept as a backup — GitHub's own schedule
+// trigger checks this every ~10 minutes as a fallback), AND calls a
+// Supabase Edge Function that triggers the GitHub Action to run instantly,
+// bypassing GitHub's schedule trigger entirely (which can be delayed by
+// hours on a repo without constant activity). The Edge Function requires
+// a real logged-in session to call at all — enforced by Supabase itself,
+// not by anything in this page — and the actual GitHub token never
+// touches this browser.
+async function requestSeoRegeneration(){
   const s = lsGet('obv_settings', {});
   s.seoRegenRequestedAt = new Date().toISOString();
   lsSet('obv_settings', s);
   sbPush('obv_settings');
-  toast('Regeneration requested — will run within about 10 minutes.', 'ok');
+
+  const statusEl = document.getElementById('seoRegenStatus');
+  if (statusEl) statusEl.textContent = 'Triggering regeneration…';
+
+  try {
+    const adminToken = await getValidAdminAccessToken();
+    const res = await fetch('https://gvvzcudpcotoicnrhapz.supabase.co/functions/v1/trigger-seo-regen', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    if (res.ok) {
+      toast('Regeneration triggered — should complete within about a minute.', 'ok');
+    } else {
+      const body = await res.json().catch(() => ({}));
+      toast('Requested, but instant trigger failed (' + (body.error || res.status) + ') — will still run via the automatic schedule within ~10 minutes.', 'info');
+    }
+  } catch (e) {
+    toast('Requested — could not reach the instant trigger, but it will still run via the automatic schedule within ~10 minutes.', 'info');
+  }
   renderSeoRegenStatus();
 }
 async function renderSeoRegenStatus(){
@@ -2931,10 +2951,14 @@ async function renderSeoRegenStatus(){
   try {
     const res = await fetch('https://raw.githubusercontent.com/niiayiboye/orbivagh-site/main/.github/last-regenerated.txt?_=' + Date.now());
     const lastRun = res.ok ? (await res.text()).trim() : '';
-    if (lastRun === requestedAt) {
+    // "After", not an exact match — the marker now always records the
+    // actual completion time (not the original request time), since that
+    // works correctly regardless of whether the instant trigger or the
+    // schedule backup was what actually ran it.
+    if (lastRun && new Date(lastRun) >= new Date(requestedAt)) {
       el.textContent = 'Up to date — last regenerated ' + new Date(lastRun).toLocaleString();
     } else {
-      el.textContent = 'Requested ' + new Date(requestedAt).toLocaleString() + ' — waiting for the next automatic run…';
+      el.textContent = 'Requested ' + new Date(requestedAt).toLocaleString() + ' — in progress…';
     }
   } catch (e) {
     el.textContent = 'Requested ' + new Date(requestedAt).toLocaleString() + ' (could not check completion status)';

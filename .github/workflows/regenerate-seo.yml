@@ -1,8 +1,16 @@
 name: Regenerate SEO pages
 
-# Runs every 10 minutes to check whether the "Regenerate SEO Pages" button
-# in admin has been clicked since the last run. Also runnable manually from
-# the Actions tab (workflow_dispatch) as a backup, without needing to wait.
+# Two ways this runs:
+# 1. workflow_dispatch — triggered instantly by the "Regenerate SEO Pages"
+#    button in admin (via a Supabase Edge Function calling GitHub's API).
+#    Always regenerates immediately, no check needed — the dispatch itself
+#    IS the request.
+# 2. schedule — a backup safety net in case the instant trigger ever fails
+#    for any reason (e.g. the Edge Function's GitHub token expires). Runs
+#    every 10 minutes and only regenerates if a request is still pending
+#    that hasn't been handled yet. GitHub's schedule trigger can itself be
+#    delayed by hours on a quiet repo, which is exactly why the instant
+#    path above exists as the primary route.
 on:
   schedule:
     - cron: '*/10 * * * *'
@@ -23,19 +31,29 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Check whether regeneration was requested
+      - name: Check whether regeneration was requested (schedule runs only)
         id: check
+        if: github.event_name == 'schedule'
         run: node scripts/check-regen-requested.js
 
+      - name: Decide whether to run
+        id: decide
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=${{ steps.check.outputs.should_run }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Generate static product pages and sitemap
-        if: steps.check.outputs.should_run == 'true'
+        if: steps.decide.outputs.should_run == 'true'
         run: node scripts/generate-static-pages.js
 
       - name: Record this run and commit changes
-        if: steps.check.outputs.should_run == 'true'
+        if: steps.decide.outputs.should_run == 'true'
         run: |
           mkdir -p .github
-          echo "${{ steps.check.outputs.requested_at }}" > .github/last-regenerated.txt
+          date -u +%Y-%m-%dT%H:%M:%S.000Z > .github/last-regenerated.txt
           git config user.name "orbiva-seo-bot"
           git config user.email "actions@github.com"
           git add p/ sitemap.xml .github/last-regenerated.txt
