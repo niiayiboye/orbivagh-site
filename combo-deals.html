@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="canonical" href="https://orbivagh.com/combo-deals.html">
+  <meta name="description" content="Bundle deals on TVs, appliances, and electronics at Orbiva Technologies — save more when you buy popular combinations together.">
+  <script>if(localStorage.getItem('obv_freeDelivery')==='off')document.documentElement.setAttribute('data-no-delivery','');
+  (function(){try{var b=JSON.parse(localStorage.getItem('obv_branding')||'{}');if(b.logoUrl||b.logoSize){document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.logo-img').forEach(function(i){if(b.logoUrl)i.src=b.logoUrl;if(b.logoSize)i.style.height=b.logoSize+'px';});});}}catch(e){}}());
+  </script>
+  <link rel="icon" type="image/jpeg" href="img/logo.jpeg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Combo Deals – Orbiva Technologies</title>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Orbiva Technologies">
+  <meta property="og:title" content="Combo Deals – Orbiva Technologies">
+  <meta property="og:description" content="Shop premium electronics in Ghana — Samsung, TCL, Nasco & more. Televisions, Air Conditioners, Refrigerators, Audio Devices and small appliances at the best prices.">
+  <meta property="og:image" content="https://orbivagh.com/img/logo.jpeg">
+  <meta property="og:url" content="https://orbivagh.com/combo-deals.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Combo Deals – Orbiva Technologies">
+  <meta name="twitter:description" content="Shop premium electronics in Ghana — Samsung, TCL, Nasco & more.">
+  <meta name="twitter:image" content="https://orbivagh.com/img/logo.jpeg">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="container top-bar-inner">
+    <div class="top-bar-left">
+      <a href="tel:0502578905"><i class="fas fa-phone-alt"></i> 050 257 8905</a>
+      <a href="mailto:info@orbivagh.com"><i class="fas fa-envelope"></i> info@orbivagh.com</a>
+    </div>
+    <div class="top-bar-right">
+      <a href="track-order.html">Track Order</a>
+      <a href="contact.html">Help</a>
+    </div>
+  </div>
+</div>
+
+<!-- Header (same as index) -->
+<header class="header" id="mainHeader">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <img src="img/logo.jpeg" alt="Orbiva Technologies" class="logo-img">
+    </a>
+    <nav class="desktop-nav" id="desktopNav">
+      <a href="shop.html" class="desktop-nav-link">Shop</a>
+      <div class="desktop-nav-item">
+        <a href="shop.html" class="desktop-nav-link">Shop by Brand <i class="fas fa-chevron-down fa-xs"></i></a>
+        <ul class="desktop-dropdown" id="desktopBrandDropdown"></ul>
+      </div>
+      <div class="desktop-nav-item desktop-nav-item-cat">
+        <a href="shop.html" class="desktop-nav-link">Categories <i class="fas fa-chevron-down fa-xs"></i></a>
+        <div class="category-mega-menu" id="desktopCatDropdown"></div>
+      </div>
+      <a href="combo-deals.html" class="desktop-nav-link">Combo Deals</a>
+    </nav>
+    <div class="header-actions">
+      <button class="action-btn" id="searchToggle" title="Search"><i class="fas fa-search"></i></button>
+      <button class="action-btn" id="wishlistToggle" title="Wishlist">
+        <i class="fas fa-heart"></i><span class="badge" id="wishlistCount">0</span>
+      </button>
+      <button class="action-btn cart-btn" id="cartToggle" title="Cart">
+        <i class="fas fa-shopping-cart"></i><span class="badge" id="cartCount">0</span>
+        <span class="cart-total-label" id="cartTotalLabel">GH₵ 0</span>
+      </button>
+      <button class="action-btn" id="accountToggle" title="Account"><i class="fas fa-user"></i></button>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <nav class="nav" id="mainNav">
+    <div class="container nav-inner">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="shop.html" class="nav-link active">Shop</a></li>
+        <li class="has-dropdown">
+          <a href="shop.html" class="nav-link">Categories <i class="fas fa-chevron-down fa-xs"></i></a>
+          <ul class="dropdown" id="catDropdown"></ul>
+        </li>
+        <li class="has-dropdown">
+          <a href="shop.html" class="nav-link">Brands <i class="fas fa-chevron-down fa-xs"></i></a>
+          <ul class="dropdown" id="brandDropdown"></ul>
+        </li>
+        <li><a href="shop.html?filter=deals" class="nav-link deals-link"><i class="fas fa-fire"></i> Deals <span class="hot-tag">HOT</span></a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-promo free-delivery-banner"><i class="fas fa-truck"></i><span>Free delivery on orders above GH₵ 500</span></div>
+    </div>
+  </nav>
+</header>
+
+<!-- Sidebars & Modals (same structure) -->
+<div class="overlay" id="overlay"></div>
+<aside class="cart-sidebar" id="cartSidebar">
+  <div class="cart-sidebar-header">
+    <h3><i class="fas fa-shopping-cart"></i> Your Cart (<span id="cartItemCount">0</span>)</h3>
+    <button class="close-btn" id="closeCart"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cart-items-wrap" id="cartItemsWrap">
+    <div class="cart-empty" id="cartEmpty"><i class="fas fa-shopping-cart"></i><p>Your cart is empty</p><a href="shop.html" class="btn-primary">Start Shopping</a></div>
+    <ul class="cart-items-list" id="cartItemsList"></ul>
+  </div>
+  <div class="cart-sidebar-footer" id="cartFooter" style="display:none">
+    <div class="cart-subtotal"><span>Subtotal</span><strong id="cartSubtotal">GH₵ 0</strong></div>
+    <div class="cart-total-row"><span>Total</span><strong id="cartTotal">GH₵ 0</strong></div>
+    <a href="checkout.html" class="btn-primary btn-block">Checkout</a>
+    <a href="shop.html" class="btn-outline btn-block">Continue Shopping</a>
+  </div>
+</aside>
+<aside class="wishlist-sidebar" id="wishlistSidebar">
+  <div class="cart-sidebar-header">
+    <h3><i class="fas fa-heart"></i> Wishlist (<span id="wishlistItemCount">0</span>)</h3>
+    <button class="close-btn" id="closeWishlist"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cart-items-wrap" id="wishlistItemsWrap">
+    <div class="cart-empty" id="wishlistEmpty"><i class="fas fa-heart"></i><p>Your wishlist is empty</p></div>
+    <ul class="cart-items-list" id="wishlistItemsList"></ul>
+  </div>
+</aside>
+<div class="modal" id="accountModal">
+  <div class="modal-box">
+    <button class="close-btn modal-close" id="closeAccount"><i class="fas fa-times"></i></button>
+    <div id="signupFormView">
+      <h2>Stay Updated</h2>
+      <p class="modal-sub">Get notified about new products &amp; promotions</p>
+      <form class="auth-form" id="registerForm">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="reg_fname">First Name</label>
+            <input type="text" id="reg_fname" name="first_name" autocomplete="given-name" placeholder="John" required />
+          </div>
+          <div class="form-group">
+            <label for="reg_lname">Last Name</label>
+            <input type="text" id="reg_lname" name="last_name" autocomplete="family-name" placeholder="Doe" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="reg_email">Email Address</label>
+          <input type="email" id="reg_email" name="email" autocomplete="email" placeholder="Enter your email" required />
+        </div>
+        <div class="form-group">
+          <label for="reg_phone">Phone Number</label>
+          <input type="tel" id="reg_phone" name="phone" autocomplete="tel" placeholder="+233 XX XXX XXXX" />
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);line-height:1.5;margin:2px 0 14px">
+          <i class="fas fa-info-circle"></i> We'll only use this to let you know about new products and promotions — nothing else, no spam.
+        </p>
+        <button type="submit" class="btn-primary btn-block">Sign Me Up</button>
+      </form>
+    </div>
+    <div id="signupWelcomeView" style="display:none;text-align:center;padding:12px 4px">
+      <div style="width:64px;height:64px;border-radius:50%;background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 18px">
+        <i class="fas fa-check"></i>
+      </div>
+      <h2>Welcome, <span id="welcomeName"></span>!</h2>
+      <p class="modal-sub" style="margin-bottom:22px">You're on the list — we'll let you know the moment new products and promotions land.</p>
+      <button type="button" class="btn-primary btn-block" onclick="document.getElementById('accountModal').classList.remove('open');document.body.style.overflow=''">Continue Shopping</button>
+    </div>
+  </div>
+</div>
+
+
+<style>
+  .combo-hero { background: linear-gradient(135deg, #0f172a, #1e3a5f); padding: 48px 0; text-align: center; color: #fff; }
+  .combo-hero i { font-size: 34px; margin-bottom: 12px; color: #f59e0b; }
+  .combo-hero h1 { font-family: 'Poppins', sans-serif; font-size: 1.9rem; font-weight: 800; margin-bottom: 8px; }
+  .combo-hero p { font-size: 14px; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto; }
+
+  .combo-grid-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 16px 60px; }
+  .combo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+  .combo-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); overflow: hidden; display: flex; flex-direction: column; }
+  .combo-card-images { display: flex; background: #f8fafc; padding: 20px; gap: 8px; align-items: center; justify-content: center; }
+  .combo-card-images img { width: 76px; height: 76px; object-fit: contain; background: #fff; border-radius: 10px; border: 1px solid #eef2f7; }
+  .combo-plus { font-size: 18px; color: #94a3b8; font-weight: 700; }
+  .combo-card-body { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; }
+  .combo-card-title { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+  .combo-card-items { font-size: 12.5px; color: #64748b; line-height: 1.6; margin-bottom: 14px; }
+  .combo-price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+  .combo-price-now { font-size: 20px; font-weight: 800; color: #1d4ed8; }
+  .combo-price-was { font-size: 13px; color: #94a3b8; text-decoration: line-through; }
+  .combo-save-badge { display: inline-block; font-size: 11px; font-weight: 700; color: #16a34a; background: #f0fdf4; padding: 3px 9px; border-radius: 20px; margin-bottom: 14px; }
+  .combo-add-btn { margin-top: auto; width: 100%; padding: 12px; background: #1d4ed8; color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.15s ease; }
+  .combo-add-btn:hover { background: #1e40af; }
+  .combo-empty { text-align: center; padding: 60px 16px; color: #94a3b8; }
+  .combo-empty i { font-size: 40px; margin-bottom: 14px; display: block; }
+</style>
+
+<section class="combo-hero">
+  <i class="fas fa-layer-group"></i>
+  <h1>Combo Deals</h1>
+  <p>Handpicked product bundles at a better combined price than buying separately.</p>
+</section>
+
+<div class="combo-grid-wrap">
+  <div class="combo-grid" id="comboGrid"></div>
+</div>
+<!-- Footer (abbreviated) -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="logo"><img src="img/logo.jpeg" alt="Orbiva Technologies" class="logo-img"></div>
+      <p class="footer-about">Your Trusted Home Appliance Store in Ghana.</p>
+      <div class="footer-socials">
+        <a href="PASTE_FACEBOOK_LINK_HERE" target="_blank" rel="noopener" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/orbiva_gh" target="_blank" rel="noopener" title="Instagram"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Categories</h4><ul id="footerCatLinks"></ul></div>
+    <div class="footer-col"><h4>Support</h4><ul><li><a href="contact.html">FAQs</a></li><li><a href="contact.html">Returns</a></li><li><a href="track-order.html">Track Order</a></li></ul></div>
+    <div class="footer-col footer-contact-col"><h4>Contact</h4><div class="footer-contact-item"><i class="fas fa-phone-alt"></i><a href="tel:0502578905" data-store-phone>050 257 8905</a></div><div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:info@orbivagh.com" data-store-email>info@orbivagh.com</a></div></div>
+  </div>
+  <div class="footer-bottom"><div class="container footer-bottom-inner"><p>&copy; <span id="footerYear">2025</span> Orbiva Technologies.</p></div></div>
+</footer>
+
+<nav class="bottom-nav" id="bottomNav">
+  <a href="index.html" class="bottom-nav-item">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <button class="bottom-nav-item" id="bnavCategories" onclick="openCategoryDrawer()">
+    <i class="fas fa-list-ul"></i>
+    <span>Categories</span>
+  </button>
+  <a href="shop.html" class="bottom-nav-item active">
+    <i class="fas fa-th-large"></i>
+    <span>Shop</span>
+  </a>
+  <button class="bottom-nav-item" id="bnavCart" onclick="document.getElementById('cartToggle').click()">
+    <i class="fas fa-shopping-cart"></i>
+    <span>Cart</span>
+    <span class="bnav-badge" id="bnavCartCount">0</span>
+  </button>
+  <button class="bottom-nav-item" id="bnavWish" onclick="document.getElementById('wishlistToggle').click()">
+    <i class="fas fa-heart"></i>
+    <span>Saved</span>
+    <span class="bnav-badge" id="bnavWishCount">0</span>
+  </button>
+</nav>
+
+<div class="cat-drawer-backdrop" id="catDrawerBackdrop" onclick="closeCategoryDrawer()"></div>
+<div class="cat-drawer" id="catDrawer">
+  <div class="cat-drawer-handle"></div>
+  <div class="cat-drawer-header">
+    <h3>Shop by Category</h3>
+    <button class="cat-drawer-close" onclick="closeCategoryDrawer()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cat-drawer-list" id="catDrawerList"></div>
+</div>
+
+<div class="search-panel" id="searchPanel">
+  <div class="search-panel-hd">
+    <h2 class="search-panel-title">Search</h2>
+    <button class="search-panel-close" id="searchPanelClose"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="search-panel-bd">
+    <div class="search-panel-input-wrap">
+      <input type="text" id="searchPanelInput" class="search-panel-input" placeholder="Search products, brands, SKU…" autocomplete="off">
+    </div>
+    <div id="searchPanelSugs" class="search-panel-sugs"></div>
+  </div>
+</div>
+<div class="search-panel-backdrop" id="searchPanelBackdrop"></div>
+<div class="toast-container" id="toastContainer"></div>
+<button class="back-to-top" id="backToTop"><i class="fas fa-chevron-up"></i></button>
+
+
+<script src="js/supabase.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/cart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  await (window.obvSyncPromise || Promise.resolve());
+  renderComboDeals();
+});
+
+function renderComboDeals() {
+  const grid = document.getElementById('comboGrid');
+  let combos = [];
+  try { combos = JSON.parse(localStorage.getItem('obv_combo_deals') || '[]'); } catch(e) {}
+  combos = combos.filter(c => c.active !== false);
+
+  if (!combos.length) {
+    grid.innerHTML = `<div class="combo-empty" style="grid-column:1/-1"><i class="fas fa-layer-group"></i><p>No combo deals available right now — check back soon.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = combos.map(c => {
+    const items = c.productIds.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+    if (items.length < 2) return '';
+    const individualTotal = items.reduce((s, p) => s + p.price, 0);
+    const savings = individualTotal - c.comboPrice;
+    const imagesHtml = items.map((p, i) => {
+      const img = (p.images && p.images[0]) ? `<img src="${p.images[0]}" alt="${p.name}">` : `<div style="width:76px;height:76px;background:#eef2f7;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#94a3b8"><i class="fas fa-box"></i></div>`;
+      return (i > 0 ? '<span class="combo-plus">+</span>' : '') + img;
+    }).join('');
+    const itemsListHtml = items.map(p => p.name).join(' + ');
+    return `
+      <div class="combo-card">
+        <div class="combo-card-images">${imagesHtml}</div>
+        <div class="combo-card-body">
+          <div class="combo-card-title">${c.title}</div>
+          <div class="combo-card-items">${itemsListHtml}</div>
+          <div class="combo-price-row">
+            <span class="combo-price-now">GH₵ ${c.comboPrice.toLocaleString()}</span>
+            <span class="combo-price-was">GH₵ ${individualTotal.toLocaleString()}</span>
+          </div>
+          <span class="combo-save-badge">Save GH₵ ${savings.toLocaleString()}</span>
+          <button class="combo-add-btn" onclick='addComboToCart(${JSON.stringify(c).replace(/'/g, "&apos;")})'>
+            <i class="fas fa-shopping-cart"></i> Add Bundle to Cart
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// Combo bundles aren't real catalog products, so this adds a single cart
+// line representing the whole bundle at its special combined price,
+// rather than trying to add each product individually with a modified
+// price (which the cart isn't built to understand).
+function addComboToCart(combo) {
+  const items = combo.productIds.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+  const comboCartId = 'combo-' + combo.id;
+  const existing = cart.find(i => i.id === comboCartId);
+  if (existing) {
+    existing.qty = Math.min(existing.qty + 1, 10);
+  } else {
+    cart.push({
+      id: comboCartId,
+      name: 'Combo: ' + combo.title,
+      brand: 'Bundle',
+      icon: 'fas fa-layer-group',
+      image: (items[0] && items[0].images && items[0].images[0]) || null,
+      price: combo.comboPrice,
+      qty: 1,
+      isCombo: true,
+      comboItems: items.map(p => p.name)
+    });
+  }
+  saveCart();
+  updateCartUI();
+  showToast('success', 'Added to Cart', combo.title + ' bundle has been added to your cart.', 'fas fa-layer-group');
+  showCartConfirmFloat(combo.title);
+}
+</script>
+</body>
+</html>

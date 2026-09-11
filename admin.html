@@ -359,6 +359,7 @@ textarea{resize:vertical;min-height:70px}
       <div class="nav-item" onclick="showPage('brands')" id="nav-brands"><i class="fas fa-copyright"></i> Brands</div>
       <div class="nav-item" onclick="showPage('categories')" id="nav-categories"><i class="fas fa-th-large"></i> Categories</div>
       <div class="nav-item" onclick="showPage('reviews')" id="nav-reviews"><i class="fas fa-star"></i> Reviews<span class="nav-badge" id="pendingReviewBadge" style="display:none">0</span></div>
+      <div class="nav-item" onclick="showPage('combos')" id="nav-combos"><i class="fas fa-layer-group"></i> Combo Deals</div>
       <div class="nav-item" onclick="showPage('faqs')" id="nav-faqs"><i class="fas fa-question-circle"></i> FAQs</div>
       <div class="nav-item" onclick="showPage('supplier')" id="nav-supplier"><i class="fas fa-truck"></i> Supplier Requests</div>
       <div class="nav-item" onclick="showPage('customers')" id="nav-customers"><i class="fas fa-address-book"></i> Customer Signups</div>
@@ -823,6 +824,62 @@ textarea{resize:vertical;min-height:70px}
         <div class="modal-footer">
           <button class="btn btn-outline" onclick="closeModal('reviewModal')">Cancel</button>
           <button class="btn btn-primary" onclick="saveReviewAdmin()"><i class="fas fa-save"></i> Save Review</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMBO DEALS -->
+    <div class="content" id="page-combos" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <div><h2 style="font-size:18px;font-weight:800">Combo Deals</h2><p style="font-size:13px;color:var(--muted)">Bundle 2 or more products together at a special combined price. Shows on the live "Combo Deals" page and in the top nav.</p></div>
+        <button class="btn btn-primary" onclick="openAddComboModal()"><i class="fas fa-plus"></i> Add Combo Deal</button>
+      </div>
+      <div id="combosListAdmin" style="display:flex;flex-direction:column;gap:12px"></div>
+    </div>
+
+    <!-- Add/Edit Combo Deal Modal -->
+    <div class="modal-overlay" id="comboModal">
+      <div class="modal" style="max-width:600px">
+        <div class="modal-header">
+          <div class="modal-title" id="comboModalTitle">Add Combo Deal</div>
+          <button class="modal-close" onclick="closeModal('comboModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Combo Title</label>
+              <input type="text" id="cb_title" placeholder="e.g. TV + Soundbar Bundle">
+            </div>
+            <div class="form-group full">
+              <label>Add Products (search and click to add — need at least 2)</label>
+              <input type="text" id="cb_productSearch" placeholder="Search product by name or SKU…" oninput="searchComboProduct(this.value)" autocomplete="off">
+              <div id="cb_productResults" style="display:none;border:1px solid var(--border);border-radius:8px;margin-top:4px;max-height:180px;overflow-y:auto"></div>
+            </div>
+            <div class="form-group full">
+              <label>Products in this Combo</label>
+              <div id="cb_selectedProducts" style="display:flex;flex-direction:column;gap:8px;min-height:40px;padding:10px;background:var(--bg);border-radius:8px">
+                <span style="font-size:12.5px;color:var(--muted)">No products added yet.</span>
+              </div>
+            </div>
+            <div class="form-group full" id="cb_totalsBox" style="display:none;background:#f0fdf4;border-radius:8px;padding:12px 14px;font-size:13px">
+              Individual total: <strong id="cb_individualTotal"></strong>
+            </div>
+            <div class="form-group full">
+              <label>Combo Price (GH₵)</label>
+              <input type="number" id="cb_comboPrice" placeholder="e.g. 12999">
+            </div>
+            <div class="form-group full">
+              <label class="toggle-wrap" style="display:inline-flex;align-items:center;gap:10px">
+                <input type="checkbox" id="cb_active" checked>
+                <span class="toggle-slider"></span>
+                <span style="font-size:13px;font-weight:600">Active (visible on the live site)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal('comboModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="saveComboAdmin()"><i class="fas fa-save"></i> Save Combo Deal</button>
         </div>
       </div>
     </div>
@@ -1451,6 +1508,7 @@ function showPage(page) {
   if (page==='brands')     renderBrands();
   if (page==='categories') renderCategoriesGrid();
   if (page==='reviews') renderReviewsAdmin();
+  if (page==='combos') renderCombosAdmin();
   if (page==='faqs')       renderFaqsGridAdmin();
   if (page==='supplier')   renderSupplierPage();
   if (page==='customers')  renderCustomersPage();
@@ -2846,7 +2904,7 @@ function deleteAllKeepImages() {
 const BACKUP_KEYS=[
   'obv_prod_edits','obv_prod_adds','obv_prod_dels',
   'obv_settings','obv_branding','obv_flash_prods',
-  'obv_delivery_text','obv_freeDelivery','obv_freeDeliveryPromo','obv_sku_img_map','obv_promo_codes','obv_reviews_enabled','obv_reviews',
+  'obv_delivery_text','obv_freeDelivery','obv_freeDeliveryPromo','obv_sku_img_map','obv_promo_codes','obv_reviews_enabled','obv_reviews','obv_combo_deals',
   'obv_img_required','obv_images','obv_history',
   'obv_orders','obv_data_version',
   'obv_cat_adds','obv_cat_dels','obv_cat_edits',
@@ -3760,6 +3818,150 @@ function saveReviewAdmin(){
   closeModal('reviewModal');
   renderReviewsAdmin();
   toast('Review added','ok');
+}
+
+// ══════════════════ COMBO DEALS ══════════════════
+let editingComboId = null;
+let comboSelectedProductIds = [];
+
+function getAllCombos(){ return lsGet('obv_combo_deals', []); }
+
+function renderCombosAdmin(){
+  const list = document.getElementById('combosListAdmin');
+  if (!list) return;
+  const combos = getAllCombos();
+  if (!combos.length) {
+    list.innerHTML = '<div class="empty-state"><i class="fas fa-layer-group"></i><p>No combo deals yet. Click <strong>Add Combo Deal</strong> to bundle products together at a special price.</p></div>';
+    return;
+  }
+  const prods = adminProds.length ? adminProds : getAdminProducts();
+  list.innerHTML = combos.map(c => {
+    const items = c.productIds.map(id => prods.find(p => p.id === id)).filter(Boolean);
+    const individualTotal = items.reduce((s, p) => s + p.price, 0);
+    const savings = individualTotal - c.comboPrice;
+    const thumbs = items.slice(0,4).map(p =>
+      `<div style="width:40px;height:40px;border-radius:8px;background:var(--bg);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 0 0 1px var(--border)">${p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fas fa-box" style="color:var(--muted);font-size:12px"></i>`}</div>`
+    ).join('');
+    return `<div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;margin-left:8px">${thumbs.replace(/margin-left:8px/g,'')}</div>
+      <div style="flex:1;min-width:200px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <strong style="font-size:14px">${escHtml(c.title)}</strong>
+          <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:${c.active?'#f0fdf4':'#f1f5f9'};color:${c.active?'#16a34a':'#64748b'}">${c.active?'Active':'Hidden'}</span>
+        </div>
+        <div style="font-size:12.5px;color:var(--muted)">${items.length} products · Individual total GH₵${individualTotal.toLocaleString()} · Combo price GH₵${c.comboPrice.toLocaleString()} <strong style="color:#16a34a">(save GH₵${savings.toLocaleString()})</strong></div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button class="btn btn-outline btn-sm" onclick="editCombo('${c.id}')"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="confirmAction('Delete this combo deal?','It will be removed from the live Combo Deals page.',()=>deleteCombo('${c.id}'))"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openAddComboModal(){
+  editingComboId = null;
+  comboSelectedProductIds = [];
+  document.getElementById('comboModalTitle').textContent = 'Add Combo Deal';
+  document.getElementById('cb_title').value = '';
+  document.getElementById('cb_productSearch').value = '';
+  document.getElementById('cb_productResults').style.display = 'none';
+  document.getElementById('cb_comboPrice').value = '';
+  document.getElementById('cb_active').checked = true;
+  renderComboSelectedProducts();
+  document.getElementById('comboModal').classList.add('open');
+}
+
+function editCombo(id){
+  const combo = getAllCombos().find(c => c.id === id);
+  if (!combo) return;
+  editingComboId = id;
+  comboSelectedProductIds = [...combo.productIds];
+  document.getElementById('comboModalTitle').textContent = 'Edit Combo Deal';
+  document.getElementById('cb_title').value = combo.title;
+  document.getElementById('cb_productSearch').value = '';
+  document.getElementById('cb_productResults').style.display = 'none';
+  document.getElementById('cb_comboPrice').value = combo.comboPrice;
+  document.getElementById('cb_active').checked = combo.active !== false;
+  renderComboSelectedProducts();
+  document.getElementById('comboModal').classList.add('open');
+}
+
+function searchComboProduct(q){
+  const box = document.getElementById('cb_productResults');
+  if (!q.trim()) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  const prods = (adminProds.length ? adminProds : getAdminProducts())
+    .filter(p => !comboSelectedProductIds.includes(p.id))
+    .filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || (p.model||'').toLowerCase().includes(q.toLowerCase()))
+    .slice(0, 8);
+  if (!prods.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.innerHTML = prods.map(p => `<div style="padding:8px 10px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border-light)" onclick="addComboProduct('${p.id}')">${escHtml(p.name)} <span style="color:var(--muted);font-size:11px">GH₵${p.price.toLocaleString()}</span></div>`).join('');
+  box.style.display = 'block';
+}
+
+function addComboProduct(id){
+  if (!comboSelectedProductIds.includes(id)) comboSelectedProductIds.push(id);
+  document.getElementById('cb_productSearch').value = '';
+  document.getElementById('cb_productResults').style.display = 'none';
+  renderComboSelectedProducts();
+}
+
+function removeComboProduct(id){
+  comboSelectedProductIds = comboSelectedProductIds.filter(x => x !== id);
+  renderComboSelectedProducts();
+}
+
+function renderComboSelectedProducts(){
+  const box = document.getElementById('cb_selectedProducts');
+  const totalsBox = document.getElementById('cb_totalsBox');
+  const prods = (adminProds.length ? adminProds : getAdminProducts());
+  const items = comboSelectedProductIds.map(id => prods.find(p => p.id === id)).filter(Boolean);
+  if (!items.length) {
+    box.innerHTML = '<span style="font-size:12.5px;color:var(--muted)">No products added yet.</span>';
+    totalsBox.style.display = 'none';
+    return;
+  }
+  box.innerHTML = items.map(p => `
+    <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 10px">
+      <div style="width:32px;height:32px;border-radius:6px;background:var(--bg);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center">${p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fas fa-box" style="color:var(--muted);font-size:11px"></i>`}</div>
+      <span style="flex:1;font-size:13px">${escHtml(p.name)}</span>
+      <span style="font-size:12.5px;color:var(--muted)">GH₵${p.price.toLocaleString()}</span>
+      <button type="button" onclick="removeComboProduct('${p.id}')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px"><i class="fas fa-times"></i></button>
+    </div>`).join('');
+  const total = items.reduce((s, p) => s + p.price, 0);
+  document.getElementById('cb_individualTotal').textContent = 'GH₵ ' + total.toLocaleString();
+  totalsBox.style.display = 'block';
+}
+
+function saveComboAdmin(){
+  const title = document.getElementById('cb_title').value.trim();
+  const comboPrice = parseFloat(document.getElementById('cb_comboPrice').value);
+  const active = document.getElementById('cb_active').checked;
+  if (!title) { toast('Enter a combo title', 'err'); return; }
+  if (comboSelectedProductIds.length < 2) { toast('Add at least 2 products to the combo', 'err'); return; }
+  if (!comboPrice || comboPrice <= 0) { toast('Enter a valid combo price', 'err'); return; }
+
+  const combos = getAllCombos();
+  if (editingComboId) {
+    const combo = combos.find(c => c.id === editingComboId);
+    if (combo) Object.assign(combo, { title, productIds: [...comboSelectedProductIds], comboPrice, active });
+  } else {
+    combos.push({ id: 'combo_'+Date.now(), title, productIds: [...comboSelectedProductIds], comboPrice, active, createdAt: new Date().toISOString() });
+  }
+  lsSet('obv_combo_deals', combos);
+  sbPush('obv_combo_deals');
+  closeModal('comboModal');
+  renderCombosAdmin();
+  toast(editingComboId ? 'Combo deal updated' : 'Combo deal added', 'ok');
+}
+
+function deleteCombo(id){
+  let combos = getAllCombos();
+  combos = combos.filter(c => c.id !== id);
+  lsSet('obv_combo_deals', combos);
+  sbPush('obv_combo_deals');
+  renderCombosAdmin();
+  toast('Combo deal deleted', 'ok');
 }
 
 function renderCategoriesGrid(){
