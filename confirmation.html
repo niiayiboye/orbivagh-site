@@ -117,7 +117,7 @@ function renderConfirmationCard() {
     return;
   }
 
-  const methodLabel = { momo: 'MTN Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[order.paymentMethod] || order.paymentMethod;
+  const methodLabel = { momo: 'Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[order.paymentMethod] || order.paymentMethod;
   const isConfirmed = order.status === 'confirmed';
   const itemsHtml = (order.items || []).map(i => `
     <tr>
@@ -180,7 +180,7 @@ function downloadConfirmationReceipt(orderId) {
   const orders = JSON.parse(localStorage.getItem('obv_orders') || '[]');
   const o = orders.find(x => String(x.id) === String(orderId));
   if (!o) return;
-  const methodLabel = { momo: 'MTN Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[o.paymentMethod] || o.paymentMethod;
+  const methodLabel = { momo: 'Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[o.paymentMethod] || o.paymentMethod;
   const itemsRows = (o.items || []).map(i =>
     `<tr><td>${i.name}<br><span style="font-size:11px;color:#94a3b8">SKU: ${i.model || i.sku || '—'}</span></td><td style="text-align:center">×${i.qty}</td><td style="text-align:right">GH₵ ${(i.price * i.qty).toLocaleString()}</td></tr>`
   ).join('');

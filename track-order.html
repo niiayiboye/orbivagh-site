@@ -216,7 +216,7 @@ function renderOrderResult(order) {
   const resultBox = document.getElementById('trackResultBox');
   const isCancelled = order.status === 'cancelled';
   const currentIdx = STATUS_STEPS.findIndex(s => s.key === order.status);
-  const methodLabel = { momo: 'MTN Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[order.paymentMethod] || order.paymentMethod;
+  const methodLabel = { momo: 'Mobile Money', card: 'Card', cod: 'Cash on Delivery' }[order.paymentMethod] || order.paymentMethod;
 
   const timelineHtml = isCancelled ? '' : `
     <div class="track-timeline">

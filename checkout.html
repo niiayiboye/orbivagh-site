@@ -114,8 +114,8 @@
           <div class="payment-method-radio"></div>
           <div class="payment-method-icon icon-momo"><i class="fas fa-mobile-alt"></i></div>
           <div>
-            <strong style="font-size:14px">MTN Mobile Money</strong>
-            <p style="font-size:12px;color:var(--text-muted);margin:0">Pay securely with MTN MoMo</p>
+            <strong style="font-size:14px">Mobile Money</strong>
+            <p style="font-size:12px;color:var(--text-muted);margin:0">MTN, Telecel Cash & AirtelTigo Money accepted</p>
           </div>
         </div>
         <div class="payment-method" onclick="selectPayment(this,'card')">
@@ -140,7 +140,7 @@
 
         <!-- Dynamic payment input -->
         <div id="paymentFields" style="margin-top:16px">
-          <div class="form-group"><label>MTN MoMo Number*</label><input type="tel" placeholder="024 XXX XXXX" id="momoField" /></div>
+          <div class="form-group"><label>Mobile Money Number*</label><input type="tel" placeholder="0XX XXX XXXX" id="momoField" /></div>
         </div>
       </div>
     </div>
@@ -359,7 +359,7 @@ function selectPayment(el, method) {
 
   const fields = document.getElementById('paymentFields');
   const fieldMap = {
-    momo: '<p style="font-size:13px;color:var(--text-muted);padding:12px;background:var(--bg-soft);border-radius:var(--radius-md)"><i class="fas fa-mobile-alt" style="color:#fcd34d"></i> A Paystack popup will open. Enter your MTN MoMo number there to complete payment securely.</p>',
+    momo: '<p style="font-size:13px;color:var(--text-muted);padding:12px;background:var(--bg-soft);border-radius:var(--radius-md)"><i class="fas fa-mobile-alt" style="color:#fcd34d"></i> A Paystack popup will open. Choose your network (MTN, Telecel Cash, or AirtelTigo Money) and enter your mobile money number there to complete payment securely.</p>',
     card: '<p style="font-size:13px;color:var(--text-muted);padding:12px;background:var(--bg-soft);border-radius:var(--radius-md)"><i class="fab fa-cc-visa" style="color:var(--primary)"></i> A secure Paystack popup will open for you to enter your card details.</p>',
     cod: '<p style="font-size:13px;color:var(--text-muted);padding:12px;background:var(--bg-soft);border-radius:var(--radius-md)"><i class="fas fa-info-circle" style="color:var(--primary)"></i> Pay in cash when your order is delivered.</p>'
   };
