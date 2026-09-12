@@ -204,6 +204,16 @@ function renderProductCard(product) {
   const badgeMap = { new: 'badge-new', sale: 'badge-sale', hot: 'badge-hot', best: 'badge-best', soldout: 'badge-soldout' };
   const badgeLabel = { new: 'New', sale: 'Sale', hot: 'Hot', best: 'Best Seller', soldout: 'Sold Out' };
   const badge = (product.badge && localStorage.getItem('obv_badges') === 'on') ? `<span class="badge-tag ${badgeMap[product.badge]}">${badgeLabel[product.badge]}</span>` : '';
+  // Only ever shown when a real stock number has actually been entered in
+  // admin — never fabricated, same principle as reviews never showing a
+  // fake rating. Blank/untracked shows nothing at all.
+  const hasStock = product.stockQty !== undefined && product.stockQty !== null;
+  const outOfStock = hasStock && product.stockQty === 0;
+  const stockBadge = hasStock
+    ? (outOfStock
+        ? `<span class="badge-tag badge-soldout">Out of Stock</span>`
+        : (product.stockQty <= 5 ? `<span class="badge-tag badge-lowstock">Only ${product.stockQty} left!</span>` : ''))
+    : '';
   const wishlisted = isWishlisted(product.id) ? ' wishlisted' : '';
   const catLabel = CAT_NAMES[product.category] || product.brand;
   const specTags = product.specs ? Object.values(product.specs).slice(0, 4).map(v =>
@@ -221,7 +231,7 @@ function renderProductCard(product) {
     <div class="product-card reveal" data-tags="${product.tags.join(',')}" data-id="${product.id}" onclick="openProduct('${product.id}')">
       <div class="product-img-wrap${(product.images && product.images.length) ? ' img-loading' : ''}">
         ${(product.images && product.images.length) ? `<img src="${product.images[0]}" alt="${product.name}" class="product-img-photo" loading="lazy" onload="this.parentNode.classList.remove('img-loading')" onerror="this.onerror=null;this.parentNode.classList.remove('img-loading');this.parentNode.innerHTML='<div class=\\'product-img-icon\\'>${product.icon}</div>'">` : `<div class="product-img-icon">${product.icon}</div>`}
-        <div class="product-badges">${badge}</div>
+        <div class="product-badges">${badge}${stockBadge}</div>
         ${brandBadge}
         <div class="product-actions">
           <button class="prod-action-btn${wishlisted}" data-wishlist="${product.id}" title="Add to Wishlist" onclick="event.stopPropagation();toggleWishlist('${product.id}')">
@@ -243,8 +253,8 @@ function renderProductCard(product) {
           <span class="product-price">${fmt(product.price)}</span>
           <div style="display:flex;align-items:center;gap:6px">${oldPriceStr}${discountStr}</div>
         </div>
-        <button class="add-to-cart-btn" onclick="event.stopPropagation();handleAddToCart(this,'${product.id}')">
-          <i class="fas fa-shopping-cart"></i> Add to Cart
+        <button class="add-to-cart-btn" ${outOfStock ? 'disabled' : ''} onclick="event.stopPropagation();handleAddToCart(this,'${product.id}')">
+          ${outOfStock ? 'Out of Stock' : '<i class="fas fa-shopping-cart"></i> Add to Cart'}
         </button>
       </div>
     </div>

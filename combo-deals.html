@@ -274,6 +274,11 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
   await (window.obvSyncPromise || Promise.resolve());
+  // Without this, PRODUCTS still held the original, un-edited prices from
+  // data.js — any price change made in admin never showed up here, which
+  // is exactly why this page's savings amount could drift out of sync
+  // with anywhere else that correctly applies live admin edits first.
+  try { applyOverrides(); } catch(e) {}
   renderComboDeals();
 });
 

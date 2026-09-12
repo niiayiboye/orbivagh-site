@@ -1557,6 +1557,7 @@ input, select, textarea { font-family: inherit; }
 }
 .product-brand-badge img { max-width: 100%; max-height: 18px; object-fit: contain; display: block; }
 .badge-tag { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: var(--radius-full); }
+.badge-lowstock { background: #dc2626; color: #fff; }
 .badge-sale { background: var(--accent); color: #fff; }
 .badge-new { background: var(--success); color: #fff; }
 .badge-hot { background: var(--gold); color: #fff; }
