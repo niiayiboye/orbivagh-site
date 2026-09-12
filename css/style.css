@@ -806,7 +806,7 @@ input, select, textarea { font-family: inherit; }
 ================================================================ */
 .modal {
   position: fixed; inset: 0; z-index: 1100;
-  display: flex; align-items: flex-end;
+  display: flex; align-items: flex-end; justify-content: center;
   background: rgba(0,0,0,0.5);
   opacity: 0; visibility: hidden;
   transition: all var(--transition);

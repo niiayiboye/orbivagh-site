@@ -318,7 +318,11 @@ function updateOrderTotals() {
     if (delivRow) delivRow.style.display = 'none';
   } else {
     if (delivRow) delivRow.style.display = '';
-    if (freePromoEnabled && (subtotal >= threshold || fee === 0)) {
+    // "Free" only ever shows when the promo toggle is actually on AND the
+    // order genuinely meets the threshold — previously this also
+    // triggered whenever no delivery fee amount had been set at all
+    // (defaulting to 0), showing "Free" regardless of order size.
+    if (freePromoEnabled && subtotal >= threshold) {
       deliveryFee = 0;
       if (delivVal) { delivVal.textContent = 'Free'; delivVal.className = 'free-ship'; }
     } else {
