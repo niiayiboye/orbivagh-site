@@ -563,6 +563,47 @@ function getProductReviewStats(productId) {
   return { avg: Math.round(avg * 10) / 10, count: approved.length };
 }
 
+// Shows up to 3 active combo deals on the homepage, each with real
+// product images and the actual savings amount — hidden entirely if
+// there are no active combos, same pattern as the flash sale section.
+function renderComboPromoSection() {
+  const section = document.getElementById('comboPromoSection');
+  const grid = document.getElementById('comboPromoGrid');
+  if (!section || !grid) return;
+
+  let combos = [];
+  try { combos = JSON.parse(localStorage.getItem('obv_combo_deals') || '[]'); } catch(e) {}
+  combos = combos.filter(c => c.active !== false);
+
+  const cards = combos.slice(0, 3).map(c => {
+    const items = c.productIds.map(id => (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).find(p => p.id === id)).filter(Boolean);
+    if (items.length < 2) return '';
+    const individualTotal = items.reduce((s, p) => s + p.price, 0);
+    const savings = individualTotal - c.comboPrice;
+    const imagesHtml = items.map((p, i) => {
+      const img = (p.images && p.images[0]) ? `<img src="${p.images[0]}" alt="${p.name}">` : `<div style="width:64px;height:64px;background:#eef2f7;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#94a3b8"><i class="fas fa-box"></i></div>`;
+      return (i > 0 ? '<span class="combo-promo-plus">+</span>' : '') + img;
+    }).join('');
+    return `
+      <div class="combo-promo-card">
+        <div class="combo-promo-images">${imagesHtml}</div>
+        <div class="combo-promo-body">
+          <div class="combo-promo-title">${c.title}</div>
+          <div class="combo-promo-price-row">
+            <span class="combo-promo-price-now">GH₵ ${c.comboPrice.toLocaleString()}</span>
+            <span class="combo-promo-price-was">GH₵ ${individualTotal.toLocaleString()}</span>
+          </div>
+          <span class="combo-promo-save">Save GH₵ ${savings.toLocaleString()}</span>
+          <button class="combo-promo-btn" onclick="location.href='combo-deals.html'">View Bundle</button>
+        </div>
+      </div>`;
+  }).filter(Boolean);
+
+  if (!cards.length) { section.style.display = 'none'; return; }
+  grid.innerHTML = cards.join('');
+  section.style.display = '';
+}
+
 function buildCategoryDropdownHtml(cats) {
   const topLevel = cats.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, cats));
   const itemHtml = (c, isSub) => {
@@ -1543,6 +1584,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     const flashEl = document.getElementById('flashSaleSection');
     if (flashEl) flashEl.style.display = localStorage.getItem('obv_flashSale') === 'on' ? '' : 'none';
+    renderComboPromoSection();
   } catch(e) {}
 
   // Footer collapsible columns on mobile
