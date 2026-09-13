@@ -2199,7 +2199,7 @@ function openOrderModal(id) {
     <div class="order-items-list">${(o.items||[]).length
       ?(o.items).map(it=>{
         let model=it.model||'', sku=it.sku||'';
-        if(!model){
+        if(!model && !it.isCombo){
           const prods=typeof PRODUCTS!=='undefined'?PRODUCTS:[];
           const itName=(it.name||'').toLowerCase();
           const match=prods.find(p=>p.id===it.sku)||
@@ -2207,8 +2207,16 @@ function openOrderModal(id) {
                       prods.find(p=>itName.includes(p.name.toLowerCase())||p.name.toLowerCase().includes(itName));
           if(match){model=match.model||'';sku=sku||match.id||'';}
         }
-        return `<div class="order-item-row">
-          <span style="font-weight:600">${escHtml(it.name||it)}${model?`<span style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-top:1px">SKU: ${escHtml(model)}${sku?` &nbsp;·&nbsp; ID: ${escHtml(sku)}`:''}</span>`:''}
+        // Combo bundles aren't a single real product — the SKU that matters
+        // for raising a supplier order is each individual item packed
+        // inside it, not the bundle itself (which has no SKU of its own).
+        const comboSkusHtml = (it.isCombo && Array.isArray(it.comboItems))
+          ? `<div style="margin-top:4px;padding-left:10px;border-left:2px solid var(--border)">${
+              it.comboItems.map(ci => `<div style="font-size:11px;color:var(--muted);line-height:1.6">• ${escHtml(ci.name||ci)}${ci.model?` — <strong>SKU: ${escHtml(ci.model)}</strong>`:''}</div>`).join('')
+            }</div>`
+          : '';
+        return `<div class="order-item-row" style="${it.isCombo?'align-items:flex-start':''}">
+          <span style="font-weight:600">${escHtml(it.name||it)}${model?`<span style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-top:1px">SKU: ${escHtml(model)}${sku?` &nbsp;·&nbsp; ID: ${escHtml(sku)}`:''}</span>`:''}${comboSkusHtml}
           </span>
           <span style="color:var(--muted)">Qty: ${it.qty||1}</span>
           <span style="font-weight:700;color:var(--primary)">${it.price?fmt(it.price*(it.qty||1)):'—'}</span>

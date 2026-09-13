@@ -342,7 +342,7 @@ function addComboToCart(combo) {
       price: combo.comboPrice,
       qty: 1,
       isCombo: true,
-      comboItems: items.map(p => p.name)
+      comboItems: items.map(p => ({ name: p.name, model: p.model || p.id }))
     });
   }
   saveCart();
