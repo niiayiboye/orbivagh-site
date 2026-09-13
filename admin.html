@@ -832,7 +832,12 @@ textarea{resize:vertical;min-height:70px}
     <div class="content" id="page-combos" style="display:none">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
         <div><h2 style="font-size:18px;font-weight:800">Combo Deals</h2><p style="font-size:13px;color:var(--muted)">Bundle 2 or more products together at a special combined price. Shows on the live "Combo Deals" page and in the top nav.</p></div>
-        <button class="btn btn-primary" onclick="openAddComboModal()"><i class="fas fa-plus"></i> Add Combo Deal</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-outline" onclick="downloadComboCsvTemplate()"><i class="fas fa-download"></i> Download Template</button>
+          <button class="btn btn-outline" onclick="document.getElementById('comboCsvFileInput').click()"><i class="fas fa-file-csv"></i> Import CSV</button>
+          <input type="file" id="comboCsvFileInput" accept=".csv" style="display:none" onchange="importCombosFromCsv(this)">
+          <button class="btn btn-primary" onclick="openAddComboModal()"><i class="fas fa-plus"></i> Add Combo Deal</button>
+        </div>
       </div>
       <div id="combosListAdmin" style="display:flex;flex-direction:column;gap:12px"></div>
     </div>
@@ -3979,6 +3984,108 @@ function deleteCombo(id){
   sbPush('obv_combo_deals');
   renderCombosAdmin();
   toast('Combo deal deleted', 'ok');
+}
+
+function downloadComboCsvTemplate(){
+  const rows = [
+    ['Title', 'SKUs (separate multiple with |)', 'Combo Price', 'Active'],
+    ['Home Entertainment Bundle', 'UA32H5000FUXGH | S45H', '3799', 'Y'],
+    ['New Home Starter Kit', 'NASF1-95FL | NAS-J32FBFL', '2099', 'Y'],
+    ['Kitchen Essentials Bundle', 'MK-17S32A2 | BL2518 | YJ308J', '699', 'Y'],
+    ['Laundry Day Bundle', 'NASTT-JS80 | YPJ26A1W', '1899', 'Y'],
+    ['Cool Comfort Bundle', 'NAS-A12INV-X-R32 | FS40-19K', '2999', 'Y'],
+  ];
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'combo_deals_template.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('Template downloaded — includes 5 ready-made combo ideas using your real product SKUs', 'ok');
+}
+
+// Matches each SKU against the live product catalog by model number first
+// (what you'd actually recognize from a supplier invoice), falling back
+// to matching the product ID itself in case that's what got pasted in.
+function findProductBySkuOrId(prods, raw){
+  const needle = raw.trim().toLowerCase();
+  if (!needle) return null;
+  return prods.find(p => (p.model||'').toLowerCase() === needle) ||
+         prods.find(p => p.id.toLowerCase() === needle) ||
+         null;
+}
+
+function importCombosFromCsv(input){
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      const lines = e.target.result.replace(/\r/g,'').split('\n').filter(l => l.trim());
+      if (lines.length < 2) { toast('CSV appears to be empty', 'err'); input.value=''; return; }
+      const hdrs = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
+      const iTitle = hdrs.findIndex(h => h.includes('title'));
+      const iSkus  = hdrs.findIndex(h => h.includes('sku'));
+      const iPrice = hdrs.findIndex(h => h.includes('price'));
+      const iActive = hdrs.findIndex(h => h.includes('active'));
+      if (iTitle === -1 || iSkus === -1 || iPrice === -1) {
+        toast('CSV must have Title, SKUs, and Combo Price columns — download the template to see the exact format', 'err');
+        input.value=''; return;
+      }
+
+      const prods = adminProds.length ? adminProds : getAdminProducts();
+      const combos = getAllCombos();
+      let imported = 0;
+      const skippedRows = [];
+
+      for (let r = 1; r < lines.length; r++) {
+        const cols = parseCSVLine(lines[r]);
+        const title = (cols[iTitle]||'').trim();
+        const skuRaw = (cols[iSkus]||'').trim();
+        const price = parseFloat(cols[iPrice]);
+        const activeVal = iActive !== -1 ? (cols[iActive]||'').trim().toLowerCase() : 'y';
+        const active = !(activeVal === 'n' || activeVal === 'no' || activeVal === 'false' || activeVal === '0');
+
+        if (!title || !skuRaw || !price || price <= 0) {
+          skippedRows.push(`Row ${r+1}: missing title, SKUs, or a valid price`);
+          continue;
+        }
+        const skus = skuRaw.split('|').map(s => s.trim()).filter(Boolean);
+        const matched = skus.map(s => findProductBySkuOrId(prods, s)).filter(Boolean);
+        const unmatchedSkus = skus.filter(s => !findProductBySkuOrId(prods, s));
+
+        if (matched.length < 2) {
+          skippedRows.push(`Row ${r+1} ("${title}"): only found ${matched.length} of ${skus.length} SKUs in your catalog${unmatchedSkus.length ? ' — not found: ' + unmatchedSkus.join(', ') : ''}`);
+          continue;
+        }
+
+        combos.push({
+          id: 'combo_' + Date.now() + '_' + r,
+          title,
+          productIds: matched.map(p => p.id),
+          comboPrice: price,
+          active,
+          createdAt: new Date().toISOString()
+        });
+        imported++;
+      }
+
+      lsSet('obv_combo_deals', combos);
+      sbPush('obv_combo_deals');
+      renderCombosAdmin();
+
+      if (imported > 0) toast(`Imported ${imported} combo deal${imported===1?'':'s'}${skippedRows.length ? `, skipped ${skippedRows.length}` : ''}`, 'ok');
+      if (skippedRows.length) {
+        console.warn('Combo CSV import — skipped rows:\n' + skippedRows.join('\n'));
+        if (!imported) toast(`Nothing imported — ${skippedRows.length} row(s) had problems. Check the browser console for details.`, 'err');
+      }
+    } catch(err) {
+      toast('Could not read that CSV file — check the format matches the template', 'err');
+      console.error(err);
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
 }
 
 function renderCategoriesGrid(){
