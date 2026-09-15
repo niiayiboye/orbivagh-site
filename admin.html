@@ -856,6 +856,17 @@ textarea{resize:vertical;min-height:70px}
               <input type="text" id="cb_title" placeholder="e.g. TV + Soundbar Bundle">
             </div>
             <div class="form-group full">
+              <label>Category</label>
+              <select id="cb_category">
+                <option value="entertainment">Entertainment</option>
+                <option value="kitchen">Kitchen &amp; Cooking</option>
+                <option value="cooling">Cooling &amp; Comfort</option>
+                <option value="laundry">Laundry &amp; Cleaning</option>
+                <option value="home-essentials">New Home Essentials</option>
+                <option value="refrigeration">Refrigeration</option>
+              </select>
+            </div>
+            <div class="form-group full">
               <label>Add Products (search and click to add — need at least 2)</label>
               <input type="text" id="cb_productSearch" placeholder="Search product by name or SKU…" oninput="searchComboProduct(this.value)" autocomplete="off">
               <div id="cb_productResults" style="display:none;border:1px solid var(--border);border-radius:8px;margin-top:4px;max-height:180px;overflow-y:auto"></div>
@@ -3848,6 +3859,10 @@ let comboSelectedProductIds = [];
 
 function getAllCombos(){ return lsGet('obv_combo_deals', []); }
 
+function comboCategoryLabel(cat){
+  return { entertainment:'Entertainment', kitchen:'Kitchen & Cooking', cooling:'Cooling & Comfort',
+    laundry:'Laundry & Cleaning', 'home-essentials':'New Home Essentials', refrigeration:'Refrigeration' }[cat] || 'Entertainment';
+}
 function renderCombosAdmin(){
   const list = document.getElementById('combosListAdmin');
   if (!list) return;
@@ -3869,6 +3884,7 @@ function renderCombosAdmin(){
       <div style="flex:1;min-width:200px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
           <strong style="font-size:14px">${escHtml(c.title)}</strong>
+          <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#eef2ff;color:#4338ca">${comboCategoryLabel(c.category)}</span>
           <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:${c.active?'#f0fdf4':'#f1f5f9'};color:${c.active?'#16a34a':'#64748b'}">${c.active?'Active':'Hidden'}</span>
         </div>
         <div style="font-size:12.5px;color:var(--muted)">${items.length} products · Individual total GH₵${individualTotal.toLocaleString()} · Combo price GH₵${c.comboPrice.toLocaleString()} <strong style="color:#16a34a">(save GH₵${savings.toLocaleString()})</strong></div>
@@ -3886,6 +3902,7 @@ function openAddComboModal(){
   comboSelectedProductIds = [];
   document.getElementById('comboModalTitle').textContent = 'Add Combo Deal';
   document.getElementById('cb_title').value = '';
+  document.getElementById('cb_category').value = 'entertainment';
   document.getElementById('cb_productSearch').value = '';
   document.getElementById('cb_productResults').style.display = 'none';
   document.getElementById('cb_comboPrice').value = '';
@@ -3901,6 +3918,7 @@ function editCombo(id){
   comboSelectedProductIds = [...combo.productIds];
   document.getElementById('comboModalTitle').textContent = 'Edit Combo Deal';
   document.getElementById('cb_title').value = combo.title;
+  document.getElementById('cb_category').value = combo.category || 'entertainment';
   document.getElementById('cb_productSearch').value = '';
   document.getElementById('cb_productResults').style.display = 'none';
   document.getElementById('cb_comboPrice').value = combo.comboPrice;
@@ -3957,6 +3975,7 @@ function renderComboSelectedProducts(){
 
 function saveComboAdmin(){
   const title = document.getElementById('cb_title').value.trim();
+  const category = document.getElementById('cb_category').value;
   const comboPrice = parseFloat(document.getElementById('cb_comboPrice').value);
   const active = document.getElementById('cb_active').checked;
   if (!title) { toast('Enter a combo title', 'err'); return; }
@@ -3966,9 +3985,9 @@ function saveComboAdmin(){
   const combos = getAllCombos();
   if (editingComboId) {
     const combo = combos.find(c => c.id === editingComboId);
-    if (combo) Object.assign(combo, { title, productIds: [...comboSelectedProductIds], comboPrice, active });
+    if (combo) Object.assign(combo, { title, category, productIds: [...comboSelectedProductIds], comboPrice, active });
   } else {
-    combos.push({ id: 'combo_'+Date.now(), title, productIds: [...comboSelectedProductIds], comboPrice, active, createdAt: new Date().toISOString() });
+    combos.push({ id: 'combo_'+Date.now(), title, category, productIds: [...comboSelectedProductIds], comboPrice, active, createdAt: new Date().toISOString() });
   }
   lsSet('obv_combo_deals', combos);
   sbPush('obv_combo_deals');
@@ -3988,13 +4007,22 @@ function deleteCombo(id){
 
 function downloadComboCsvTemplate(){
   const rows = [
-    ['Title', 'SKUs (separate multiple with |)', 'Combo Price', 'Active'],
-    ['Home Entertainment Bundle', 'UA32H5000FUXGH | S45H', '3799', 'Y'],
-    ['New Home Starter Kit', 'NASF1-95FL | NAS-J32FBFL', '2099', 'Y'],
-    ['Kitchen Essentials Bundle', 'MK-17S32A2 | BL2518 | YJ308J', '699', 'Y'],
-    ['Laundry Day Bundle', 'NASTT-JS80 | YPJ26A1W', '1899', 'Y'],
-    ['Cool Comfort Bundle', 'NAS-A12INV-X-R32 | FS40-19K', '2999', 'Y'],
+    ['Title', 'Category', 'SKUs (separate multiple with |)', 'Combo Price', 'Active'],
+    ['Home Entertainment Bundle', 'entertainment', 'UA32H5000FUXGH | S45H', '3799', 'Y'],
+    ['Big Screen Upgrade Bundle', 'entertainment', '55P6L | S45H', '5999', 'Y'],
+    ['New Home Starter Kit', 'home-essentials', 'NASF1-95FL | NAS-J32FBFL', '2099', 'Y'],
+    ['Bachelor Pad Bundle', 'home-essentials', 'NASF1-06 | NAS-J32FBFL', '2099', 'Y'],
+    ['Kitchen Essentials Bundle', 'kitchen', 'MK-17S32A2 | BL2518 | YJ308J', '699', 'Y'],
+    ['Small Kitchen Bundle', 'kitchen', 'MC353 | YJ508J | JE2802', '949', 'Y'],
+    ['Microwave + Blender Bundle', 'kitchen', 'EM9P032MO-B | BL2518', '1499', 'Y'],
+    ['Laundry Day Bundle', 'laundry', 'NASTT-JS80 | YPJ26A1W', '1899', 'Y'],
+    ['Clean Home Bundle', 'laundry', 'VCC4570S4K | FS40-19K', '1999', 'Y'],
+    ['Cool Comfort Bundle', 'cooling', 'NAS-A12INV-X-R32 | FS40-19K', '3399', 'Y'],
+    ['Power Cut Ready AC Bundle', 'cooling', 'TAC-12CSD/ZG21I | FS45-23MRD', '4399', 'Y'],
+    ['Water & Cool Bundle', 'cooling', 'NAS-YD200-W | FS40-19K', '1249', 'Y'],
+    ['Bulk Storage Bundle', 'refrigeration', 'NASF2-18FL | NAS-200SK', '3999', 'Y'],
   ];
+  const validCats = 'entertainment, kitchen, cooling, laundry, home-essentials, refrigeration';
   const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
@@ -4002,7 +4030,7 @@ function downloadComboCsvTemplate(){
   a.href = url; a.download = 'combo_deals_template.csv';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  toast('Template downloaded — includes 5 ready-made combo ideas using your real product SKUs', 'ok');
+  toast(`Template downloaded — 13 ready-made combos across all categories (${validCats})`, 'ok');
 }
 
 // Matches each SKU against the live product catalog by model number first
@@ -4025,6 +4053,7 @@ function importCombosFromCsv(input){
       if (lines.length < 2) { toast('CSV appears to be empty', 'err'); input.value=''; return; }
       const hdrs = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
       const iTitle = hdrs.findIndex(h => h.includes('title'));
+      const iCategory = hdrs.findIndex(h => h.includes('categor'));
       const iSkus  = hdrs.findIndex(h => h.includes('sku'));
       const iPrice = hdrs.findIndex(h => h.includes('price'));
       const iActive = hdrs.findIndex(h => h.includes('active'));
@@ -4041,6 +4070,9 @@ function importCombosFromCsv(input){
       for (let r = 1; r < lines.length; r++) {
         const cols = parseCSVLine(lines[r]);
         const title = (cols[iTitle]||'').trim();
+        const categoryRaw = iCategory !== -1 ? (cols[iCategory]||'').trim().toLowerCase() : '';
+        const validCats = ['entertainment','kitchen','cooling','laundry','home-essentials','refrigeration'];
+        const category = validCats.includes(categoryRaw) ? categoryRaw : 'entertainment';
         const skuRaw = (cols[iSkus]||'').trim();
         const price = parseFloat(cols[iPrice]);
         const activeVal = iActive !== -1 ? (cols[iActive]||'').trim().toLowerCase() : 'y';
@@ -4062,6 +4094,7 @@ function importCombosFromCsv(input){
         combos.push({
           id: 'combo_' + Date.now() + '_' + r,
           title,
+          category,
           productIds: matched.map(p => p.id),
           comboPrice: price,
           active,

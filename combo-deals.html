@@ -170,6 +170,10 @@
   .combo-hero h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
 
   .combo-grid-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 16px 60px; }
+  .combo-filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .combo-filter-tab { padding: 8px 16px; border-radius: 20px; border: 1.5px solid #e2e8f0; background: #fff; font-size: 13px; font-weight: 600; color: #64748b; cursor: pointer; transition: all 0.15s ease; }
+  .combo-filter-tab:hover { border-color: #1d4ed8; color: #1d4ed8; }
+  .combo-filter-tab.active { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
   .combo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
   .combo-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); overflow: hidden; display: flex; flex-direction: column; }
   .combo-card-images { display: flex; background: #f8fafc; padding: 20px; gap: 8px; align-items: center; justify-content: center; }
@@ -194,6 +198,7 @@
 </section>
 
 <div class="combo-grid-wrap">
+  <div class="combo-filter-tabs" id="comboFilterTabs"></div>
   <div class="combo-grid" id="comboGrid"></div>
 </div>
 <!-- Footer (abbreviated) -->
@@ -282,18 +287,38 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderComboDeals();
 });
 
+const COMBO_CATEGORY_LABELS = { entertainment:'Entertainment', kitchen:'Kitchen & Cooking', cooling:'Cooling & Comfort',
+  laundry:'Laundry & Cleaning', 'home-essentials':'New Home Essentials', refrigeration:'Refrigeration' };
+let activeComboFilter = 'all';
+
 function renderComboDeals() {
   const grid = document.getElementById('comboGrid');
+  const tabsEl = document.getElementById('comboFilterTabs');
   let combos = [];
   try { combos = JSON.parse(localStorage.getItem('obv_combo_deals') || '[]'); } catch(e) {}
   combos = combos.filter(c => c.active !== false);
 
   if (!combos.length) {
+    tabsEl.innerHTML = '';
     grid.innerHTML = `<div class="combo-empty" style="grid-column:1/-1"><i class="fas fa-layer-group"></i><p>No combo deals available right now — check back soon.</p></div>`;
     return;
   }
 
-  grid.innerHTML = combos.map(c => {
+  // Filter tabs only ever show categories that actually have at least one
+  // active combo right now — never an empty, dead-end tab.
+  const presentCats = [...new Set(combos.map(c => c.category || 'entertainment'))];
+  if (presentCats.length > 1) {
+    tabsEl.innerHTML = ['all', ...presentCats].map(cat => {
+      const label = cat === 'all' ? 'All Bundles' : (COMBO_CATEGORY_LABELS[cat] || 'Entertainment');
+      return `<button class="combo-filter-tab ${activeComboFilter===cat?'active':''}" onclick="activeComboFilter='${cat}';renderComboDeals()">${label}</button>`;
+    }).join('');
+  } else {
+    tabsEl.innerHTML = '';
+  }
+
+  const filtered = activeComboFilter === 'all' ? combos : combos.filter(c => (c.category || 'entertainment') === activeComboFilter);
+
+  grid.innerHTML = filtered.map(c => {
     const items = c.productIds.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
     if (items.length < 2) return '';
     const individualTotal = items.reduce((s, p) => s + p.price, 0);
