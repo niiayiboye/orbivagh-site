@@ -118,7 +118,79 @@ function generateProductPage(template, p) {
   return out;
 }
 
-function rebuildSitemap(existingXml, products) {
+const COMBO_CATEGORY_LABELS = { entertainment:'Entertainment', kitchen:'Kitchen & Cooking', cooling:'Cooling & Comfort',
+  laundry:'Laundry & Cleaning', 'home-essentials':'New Home Essentials', refrigeration:'Refrigeration' };
+
+function generateComboPage(template, combo, prods) {
+  const cid = String(combo.id);
+  const items = (combo.productIds || []).map(id => prods.find(p => String(p.id) === id)).filter(Boolean);
+  const individualTotal = items.reduce((s, p) => s + (p.price || 0), 0);
+  const savings = individualTotal - combo.comboPrice;
+  const pageUrl = `https://orbivagh.com/combo/${cid}.html`;
+  const title = `${combo.title} – Save GH₵${savings.toLocaleString()} | Orbiva Technologies`;
+  const itemNames = items.map(p => p.name).join(' + ');
+  const shortDesc = `${itemNames} — bundled together for GH₵${combo.comboPrice.toLocaleString()} instead of GH₵${individualTotal.toLocaleString()}. Save GH₵${savings.toLocaleString()} at Orbiva Technologies.`.slice(0, 160);
+  const firstImg = (items[0] && items[0].images && items[0].images[0]) || 'https://orbivagh.com/img/logo.jpeg';
+
+  let out = template;
+  out = out.replace('<title>Combo Deals – Orbiva Technologies</title>', `<title>${escAttr(title)}</title>`);
+  out = setAttr(out, 'metaDescription', 'content', shortDesc);
+  out = setAttr(out, 'canonicalLink', 'href', pageUrl);
+  out = setAttr(out, 'ogTitle', 'content', title);
+  out = setAttr(out, 'ogDescription', 'content', shortDesc);
+  out = setAttr(out, 'ogImage', 'content', firstImg);
+  out = setAttr(out, 'ogUrl', 'content', pageUrl);
+  out = setAttr(out, 'twTitle', 'content', title);
+  out = setAttr(out, 'twDescription', 'content', shortDesc);
+  out = setAttr(out, 'twImage', 'content', firstImg);
+
+  // Baked-in structured data and visible HTML so Google (and anyone with
+  // JS disabled) sees the actual bundle contents immediately — the same
+  // reasoning as static product pages. The JS still re-renders this
+  // identically on load for real visitors, so nothing looks different.
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: combo.title,
+    image: items.map(p => (p.images && p.images[0])).filter(Boolean),
+    description: shortDesc,
+    brand: { '@type': 'Brand', name: 'Orbiva' },
+    offers: {
+      '@type': 'Offer', url: pageUrl, priceCurrency: 'GHS', price: String(combo.comboPrice),
+      availability: 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition'
+    }
+  };
+  const schemaScript = `<script type="application/ld+json">${JSON.stringify(schema)}</script>`;
+
+  const imagesHtml = items.map((p, i) => {
+    const img = (p.images && p.images[0]) ? `<img src="${p.images[0]}" alt="${escAttr(p.name)}">` : `<div style="width:76px;height:76px;background:#eef2f7;border-radius:10px"></div>`;
+    return (i > 0 ? '<span class="combo-plus">+</span>' : '') + img;
+  }).join('');
+  const staticCardHtml = `
+    <div class="combo-card">
+      <div class="combo-card-images">${imagesHtml}</div>
+      <div class="combo-card-body">
+        <div class="combo-card-title">${escAttr(combo.title)}</div>
+        <div class="combo-card-items">${escAttr(itemNames)}</div>
+        <div class="combo-price-row">
+          <span class="combo-price-now">GH₵ ${combo.comboPrice.toLocaleString()}</span>
+          <span class="combo-price-was">GH₵ ${individualTotal.toLocaleString()}</span>
+        </div>
+        <span class="combo-save-badge">Save GH₵ ${savings.toLocaleString()}</span>
+      </div>
+    </div>`;
+
+  out = out.replace('<div class="combo-grid" id="comboGrid"></div>', `<div class="combo-grid" id="comboGrid">${staticCardHtml}</div>`);
+  out = out.replace('<head>', `<head>\n  <script>window.__STATIC_COMBO_ID__=${JSON.stringify(cid)};</script>\n  ${schemaScript}`);
+
+  // This file lives one level deeper (/combo/) than the site root
+  out = out.replace(/(href|src)="(css\/|js\/|img\/)/g, '$1="../$2');
+  out = out.replace(/href="(index\.html|shop\.html|product\.html|checkout\.html|contact\.html|track-order\.html|combo-deals\.html)/g, 'href="../$1');
+
+  return out;
+}
+
+function rebuildSitemap(existingXml, products, combos) {
   let sitemap = existingXml.replace(
     /\s*<url>\s*<loc>https:\/\/orbivagh\.com\/product\.html\?id=[^<]*<\/loc>\s*<changefreq>[^<]*<\/changefreq>\s*<priority>[^<]*<\/priority>\s*<\/url>/g,
     ''
@@ -127,19 +199,28 @@ function rebuildSitemap(existingXml, products) {
     /\s*<url>\s*<loc>https:\/\/orbivagh\.com\/p\/[^<]*<\/loc>\s*<changefreq>[^<]*<\/changefreq>\s*<priority>[^<]*<\/priority>\s*<\/url>/g,
     ''
   );
+  sitemap = sitemap.replace(
+    /\s*<url>\s*<loc>https:\/\/orbivagh\.com\/combo\/[^<]*<\/loc>\s*<changefreq>[^<]*<\/changefreq>\s*<priority>[^<]*<\/priority>\s*<\/url>/g,
+    ''
+  );
   const entries = products
     .filter(p => (p.images || []).some(u => typeof u === 'string' && u.startsWith('http')) && !p.hidden)
     .map(p => `  <url>\n    <loc>https://orbivagh.com/p/${p.id}.html</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`)
     .join('\n');
-  return sitemap.replace('</urlset>', entries + '\n</urlset>');
+  const comboEntries = (combos || [])
+    .filter(c => c.active !== false)
+    .map(c => `  <url>\n    <loc>https://orbivagh.com/combo/${c.id}.html</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`)
+    .join('\n');
+  return sitemap.replace('</urlset>', entries + '\n' + comboEntries + '\n</urlset>');
 }
 
 async function main() {
   console.log('Fetching live catalog data from Supabase...');
-  const [edits, adds, dels] = await Promise.all([
+  const [edits, adds, dels, comboDeals] = await Promise.all([
     fetchKv('obv_prod_edits'),
     fetchKv('obv_prod_adds'),
     fetchKv('obv_prod_dels'),
+    fetchKv('obv_combo_deals'),
   ]);
 
   const { PRODUCTS } = loadBaseCatalog();
@@ -160,9 +241,25 @@ async function main() {
   }
   console.log(`Generated ${count} static product pages`);
 
+  const combos = (comboDeals || []).filter(c => c.active !== false && c.id && (c.productIds || []).length >= 2);
+  const comboTemplate = fs.readFileSync(path.join(SITE_ROOT, 'combo-deals.html'), 'utf8');
+  const comboOutDir = path.join(SITE_ROOT, 'combo');
+  fs.rmSync(comboOutDir, { recursive: true, force: true });
+  fs.mkdirSync(comboOutDir, { recursive: true });
+
+  let comboCount = 0;
+  for (const c of combos) {
+    const items = c.productIds.map(id => merged.find(p => String(p.id) === id)).filter(Boolean);
+    if (items.length < 2) continue;
+    const html = generateComboPage(comboTemplate, c, merged);
+    fs.writeFileSync(path.join(comboOutDir, `${c.id}.html`), html, 'utf8');
+    comboCount++;
+  }
+  console.log(`Generated ${comboCount} static combo deal pages`);
+
   const sitemapPath = path.join(SITE_ROOT, 'sitemap.xml');
   const existingSitemap = fs.readFileSync(sitemapPath, 'utf8');
-  const newSitemap = rebuildSitemap(existingSitemap, merged);
+  const newSitemap = rebuildSitemap(existingSitemap, merged, combos);
   fs.writeFileSync(sitemapPath, newSitemap, 'utf8');
   console.log('Sitemap rebuilt');
 }
@@ -171,4 +268,4 @@ if (require.main === module) {
   main().catch(err => { console.error(err); process.exit(1); });
 }
 
-module.exports = { generateProductPage, rebuildSitemap, mergeProducts, loadBaseCatalog };
+module.exports = { generateProductPage, generateComboPage, rebuildSitemap, mergeProducts, loadBaseCatalog };

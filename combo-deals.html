@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="canonical" href="https://orbivagh.com/combo-deals.html">
-  <meta name="description" content="Bundle deals on TVs, appliances, and electronics at Orbiva Technologies — save more when you buy popular combinations together.">
+  <link rel="canonical" id="canonicalLink" href="https://orbivagh.com/combo-deals.html">
+  <meta name="description" id="metaDescription" content="Bundle deals on TVs, appliances, and electronics at Orbiva Technologies — save more when you buy popular combinations together.">
   <script>if(localStorage.getItem('obv_freeDelivery')==='off')document.documentElement.setAttribute('data-no-delivery','');
   (function(){try{var b=JSON.parse(localStorage.getItem('obv_branding')||'{}');if(b.logoUrl||b.logoSize){document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.logo-img').forEach(function(i){if(b.logoUrl)i.src=b.logoUrl;if(b.logoSize)i.style.height=b.logoSize+'px';});});}}catch(e){}}());
   </script>
@@ -12,14 +12,14 @@
   <title>Combo Deals – Orbiva Technologies</title>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Orbiva Technologies">
-  <meta property="og:title" content="Combo Deals – Orbiva Technologies">
-  <meta property="og:description" content="Shop premium electronics in Ghana — Samsung, TCL, Nasco & more. Televisions, Air Conditioners, Refrigerators, Audio Devices and small appliances at the best prices.">
-  <meta property="og:image" content="https://orbivagh.com/img/logo.jpeg">
-  <meta property="og:url" content="https://orbivagh.com/combo-deals.html">
+  <meta property="og:title" id="ogTitle" content="Combo Deals – Orbiva Technologies">
+  <meta property="og:description" id="ogDescription" content="Shop premium electronics in Ghana — Samsung, TCL, Nasco & more. Televisions, Air Conditioners, Refrigerators, Audio Devices and small appliances at the best prices.">
+  <meta property="og:image" id="ogImage" content="https://orbivagh.com/img/logo.jpeg">
+  <meta property="og:url" id="ogUrl" content="https://orbivagh.com/combo-deals.html">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Combo Deals – Orbiva Technologies">
-  <meta name="twitter:description" content="Shop premium electronics in Ghana — Samsung, TCL, Nasco & more.">
-  <meta name="twitter:image" content="https://orbivagh.com/img/logo.jpeg">
+  <meta name="twitter:title" id="twTitle" content="Combo Deals – Orbiva Technologies">
+  <meta name="twitter:description" id="twDescription" content="Shop premium electronics in Ghana — Samsung, TCL, Nasco & more.">
+  <meta name="twitter:image" id="twImage" content="https://orbivagh.com/img/logo.jpeg">
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/animations.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -298,6 +298,19 @@ function renderComboDeals() {
   try { combos = JSON.parse(localStorage.getItem('obv_combo_deals') || '[]'); } catch(e) {}
   combos = combos.filter(c => c.active !== false);
 
+  // A dedicated per-combo static page (generated for SEO) embeds this
+  // directly rather than relying on JS to figure out which one to show —
+  // same reasoning as __STATIC_PRODUCT_ID__ on product pages. Shows just
+  // that one bundle, plus a link back to browse everything else, instead
+  // of the full catalog replacing it a moment after the page loads.
+  if (window.__STATIC_COMBO_ID__) {
+    combos = combos.filter(c => c.id === window.__STATIC_COMBO_ID__);
+    tabsEl.innerHTML = '';
+    if (combos.length) {
+      grid.insertAdjacentHTML('afterend', `<div style="text-align:center;margin-top:28px"><a href="../combo-deals.html" style="color:#1d4ed8;font-weight:600;font-size:14px;text-decoration:none"><i class="fas fa-arrow-left"></i> View All Combo Deals</a></div>`);
+    }
+  }
+
   if (!combos.length) {
     tabsEl.innerHTML = '';
     grid.innerHTML = `<div class="combo-empty" style="grid-column:1/-1"><i class="fas fa-layer-group"></i><p>No combo deals available right now — check back soon.</p></div>`;
@@ -332,7 +345,7 @@ function renderComboDeals() {
       <div class="combo-card">
         <div class="combo-card-images">${imagesHtml}</div>
         <div class="combo-card-body">
-          <div class="combo-card-title">${c.title}</div>
+          <a href="combo/${c.id}.html" class="combo-card-title" style="text-decoration:none;display:block">${c.title}</a>
           <div class="combo-card-items">${itemsListHtml}</div>
           <div class="combo-price-row">
             <span class="combo-price-now">GH₵ ${c.comboPrice.toLocaleString()}</span>
