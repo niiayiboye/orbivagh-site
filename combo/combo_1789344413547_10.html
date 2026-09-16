@@ -209,7 +209,7 @@
         <div class="combo-card-items">Nasco Water Dispenser + Midea Standing Freezer</div>
         <div class="combo-price-row">
           <span class="combo-price-now">GH₵ 1,249</span>
-          <span class="combo-price-was">GH₵ 1,998</span>
+          <span class="combo-price-was"><span style="font-weight:400;color:#94a3b8;text-decoration:none">Canceled Price:</span> GH₵ 1,998</span>
         </div>
         <span class="combo-save-badge">Save GH₵ 749</span>
       </div>
@@ -363,7 +363,7 @@ function renderComboDeals() {
           <div class="combo-card-items">${itemsListHtml}</div>
           <div class="combo-price-row">
             <span class="combo-price-now">GH₵ ${c.comboPrice.toLocaleString()}</span>
-            <span class="combo-price-was">GH₵ ${individualTotal.toLocaleString()}</span>
+            <span class="combo-price-was"><span style="font-weight:400;color:#94a3b8;text-decoration:none">Canceled Price:</span> GH₵ ${individualTotal.toLocaleString()}</span>
           </div>
           <span class="combo-save-badge">Save GH₵ ${savings.toLocaleString()}</span>
           <button class="combo-add-btn" onclick='addComboToCart(${JSON.stringify(c).replace(/'/g, "&apos;")})'>

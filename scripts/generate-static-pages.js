@@ -174,7 +174,7 @@ function generateComboPage(template, combo, prods) {
         <div class="combo-card-items">${escAttr(itemNames)}</div>
         <div class="combo-price-row">
           <span class="combo-price-now">GH₵ ${combo.comboPrice.toLocaleString()}</span>
-          <span class="combo-price-was">GH₵ ${individualTotal.toLocaleString()}</span>
+          <span class="combo-price-was"><span style="font-weight:400;color:#94a3b8;text-decoration:none">Canceled Price:</span> GH₵ ${individualTotal.toLocaleString()}</span>
         </div>
         <span class="combo-save-badge">Save GH₵ ${savings.toLocaleString()}</span>
       </div>

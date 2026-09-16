@@ -878,7 +878,8 @@ textarea{resize:vertical;min-height:70px}
               </div>
             </div>
             <div class="form-group full" id="cb_totalsBox" style="display:none;background:#f0fdf4;border-radius:8px;padding:12px 14px;font-size:13px">
-              Individual total: <strong id="cb_individualTotal"></strong>
+              Individual total (at current selling prices): <strong id="cb_individualTotal"></strong>
+              <div style="font-size:11.5px;color:var(--muted);margin-top:4px">Customers see a bigger "Canceled Price" on the site based on original (pre-discount) prices — this number here is your real, actual-price margin check.</div>
             </div>
             <div class="form-group full">
               <label>Combo Price (GH₵)</label>
@@ -3874,7 +3875,7 @@ function renderCombosAdmin(){
   const prods = adminProds.length ? adminProds : getAdminProducts();
   list.innerHTML = combos.map(c => {
     const items = c.productIds.map(id => prods.find(p => p.id === id)).filter(Boolean);
-    const individualTotal = items.reduce((s, p) => s + (p.oldPrice || p.price), 0);
+    const individualTotal = items.reduce((s, p) => s + p.price, 0);
     const savings = individualTotal - c.comboPrice;
     const thumbs = items.slice(0,4).map(p =>
       `<div style="width:40px;height:40px;border-radius:8px;background:var(--bg);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 0 0 1px var(--border)">${p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fas fa-box" style="color:var(--muted);font-size:12px"></i>`}</div>`
@@ -3887,7 +3888,7 @@ function renderCombosAdmin(){
           <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#eef2ff;color:#4338ca">${comboCategoryLabel(c.category)}</span>
           <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:${c.active?'#f0fdf4':'#f1f5f9'};color:${c.active?'#16a34a':'#64748b'}">${c.active?'Active':'Hidden'}</span>
         </div>
-        <div style="font-size:12.5px;color:var(--muted)">${items.length} products · Individual total GH₵${individualTotal.toLocaleString()} · Combo price GH₵${c.comboPrice.toLocaleString()} <strong style="color:#16a34a">(save GH₵${savings.toLocaleString()})</strong></div>
+        <div style="font-size:12.5px;color:var(--muted)">${items.length} products · Individual total (selling prices) GH₵${individualTotal.toLocaleString()} · Combo price GH₵${c.comboPrice.toLocaleString()} <strong style="color:#16a34a">(actual margin: GH₵${savings.toLocaleString()})</strong></div>
       </div>
       <div style="display:flex;gap:6px;flex-shrink:0">
         <button class="btn btn-outline btn-sm" onclick="editCombo('${c.id}')"><i class="fas fa-pen"></i></button>
@@ -3968,7 +3969,7 @@ function renderComboSelectedProducts(){
       <span style="font-size:12.5px;color:var(--muted)">GH₵${p.price.toLocaleString()}</span>
       <button type="button" onclick="removeComboProduct('${p.id}')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px"><i class="fas fa-times"></i></button>
     </div>`).join('');
-  const total = items.reduce((s, p) => s + (p.oldPrice || p.price), 0);
+  const total = items.reduce((s, p) => s + p.price, 0);
   document.getElementById('cb_individualTotal').textContent = 'GH₵ ' + total.toLocaleString();
   totalsBox.style.display = 'block';
 }

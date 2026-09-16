@@ -601,7 +601,7 @@ function renderComboPromoSection() {
           <div class="combo-promo-title">${c.title}</div>
           <div class="combo-promo-price-row">
             <span class="combo-promo-price-now">GH₵ ${c.comboPrice.toLocaleString()}</span>
-            <span class="combo-promo-price-was">GH₵ ${individualTotal.toLocaleString()}</span>
+            <span class="combo-promo-price-was"><span style="font-weight:400;color:#94a3b8;text-decoration:none">Canceled Price:</span> GH₵ ${individualTotal.toLocaleString()}</span>
           </div>
           <span class="combo-promo-save">Save GH₵ ${savings.toLocaleString()}</span>
           <button class="combo-promo-btn" onclick="location.href='combo-deals.html'">View Bundle</button>
