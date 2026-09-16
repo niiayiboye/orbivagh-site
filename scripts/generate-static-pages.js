@@ -124,7 +124,7 @@ const COMBO_CATEGORY_LABELS = { entertainment:'Entertainment', kitchen:'Kitchen 
 function generateComboPage(template, combo, prods) {
   const cid = String(combo.id);
   const items = (combo.productIds || []).map(id => prods.find(p => String(p.id) === id)).filter(Boolean);
-  const individualTotal = items.reduce((s, p) => s + (p.price || 0), 0);
+  const individualTotal = items.reduce((s, p) => s + (p.oldPrice || p.price || 0), 0);
   const savings = individualTotal - combo.comboPrice;
   const pageUrl = `https://orbivagh.com/combo/${cid}.html`;
   const title = `${combo.title} – Save GH₵${savings.toLocaleString()} | Orbiva Technologies`;

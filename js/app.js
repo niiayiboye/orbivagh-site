@@ -588,7 +588,7 @@ function renderComboPromoSection() {
   const cards = combos.slice(0, 3).map(c => {
     const items = c.productIds.map(id => (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).find(p => p.id === id)).filter(Boolean);
     if (items.length < 2) return '';
-    const individualTotal = items.reduce((s, p) => s + p.price, 0);
+    const individualTotal = items.reduce((s, p) => s + (p.oldPrice || p.price), 0);
     const savings = individualTotal - c.comboPrice;
     const imagesHtml = items.map((p, i) => {
       const img = (p.images && p.images[0]) ? `<img src="${p.images[0]}" alt="${p.name}">` : `<div style="width:64px;height:64px;background:#eef2f7;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#94a3b8"><i class="fas fa-box"></i></div>`;

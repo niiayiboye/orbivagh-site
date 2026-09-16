@@ -2,25 +2,25 @@
 <html lang="en">
 <head>
   <script>window.__STATIC_COMBO_ID__="combo_1789344413547_6";</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"Bachelor Pad Bundle","image":["https://electrolandgh.com/wp-content/uploads/2025/06/NASCO-32UHD-SMART-FLAT-VIDAA-NAS-J32FBFL-VID-FRONT-jpg.webp"],"description":"Nasco 41 L Bedside Refrigerator + Nasco 32\" LED  FLAT — bundled together for GH₵2,099 instead of GH₵2,399. Save GH₵300 at Orbiva Technologies.","brand":{"@type":"Brand","name":"Orbiva"},"offers":{"@type":"Offer","url":"https://orbivagh.com/combo/combo_1789344413547_6.html","priceCurrency":"GHS","price":"2099","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"Bachelor Pad Bundle","image":["https://electrolandgh.com/wp-content/uploads/2025/06/NASCO-32UHD-SMART-FLAT-VIDAA-NAS-J32FBFL-VID-FRONT-jpg.webp"],"description":"Nasco 41 L Bedside Refrigerator + Nasco 32\" LED  FLAT — bundled together for GH₵2,099 instead of GH₵3,098. Save GH₵999 at Orbiva Technologies.","brand":{"@type":"Brand","name":"Orbiva"},"offers":{"@type":"Offer","url":"https://orbivagh.com/combo/combo_1789344413547_6.html","priceCurrency":"GHS","price":"2099","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition"}}</script>
   <meta charset="UTF-8">
   <link rel="canonical" id="canonicalLink" href="https://orbivagh.com/combo/combo_1789344413547_6.html">
-  <meta name="description" id="metaDescription" content="Nasco 41 L Bedside Refrigerator + Nasco 32&quot; LED  FLAT — bundled together for GH₵2,099 instead of GH₵2,399. Save GH₵300 at Orbiva Technologies.">
+  <meta name="description" id="metaDescription" content="Nasco 41 L Bedside Refrigerator + Nasco 32&quot; LED  FLAT — bundled together for GH₵2,099 instead of GH₵3,098. Save GH₵999 at Orbiva Technologies.">
   <script>if(localStorage.getItem('obv_freeDelivery')==='off')document.documentElement.setAttribute('data-no-delivery','');
   (function(){try{var b=JSON.parse(localStorage.getItem('obv_branding')||'{}');if(b.logoUrl||b.logoSize){document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.logo-img').forEach(function(i){if(b.logoUrl)i.src=b.logoUrl;if(b.logoSize)i.style.height=b.logoSize+'px';});});}}catch(e){}}());
   </script>
   <link rel="icon" type="image/jpeg" href="../img/logo.jpeg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bachelor Pad Bundle – Save GH₵300 | Orbiva Technologies</title>
+  <title>Bachelor Pad Bundle – Save GH₵999 | Orbiva Technologies</title>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Orbiva Technologies">
-  <meta property="og:title" id="ogTitle" content="Bachelor Pad Bundle – Save GH₵300 | Orbiva Technologies">
-  <meta property="og:description" id="ogDescription" content="Nasco 41 L Bedside Refrigerator + Nasco 32&quot; LED  FLAT — bundled together for GH₵2,099 instead of GH₵2,399. Save GH₵300 at Orbiva Technologies.">
+  <meta property="og:title" id="ogTitle" content="Bachelor Pad Bundle – Save GH₵999 | Orbiva Technologies">
+  <meta property="og:description" id="ogDescription" content="Nasco 41 L Bedside Refrigerator + Nasco 32&quot; LED  FLAT — bundled together for GH₵2,099 instead of GH₵3,098. Save GH₵999 at Orbiva Technologies.">
   <meta property="og:image" id="ogImage" content="https://orbivagh.com/img/logo.jpeg">
   <meta property="og:url" id="ogUrl" content="https://orbivagh.com/combo/combo_1789344413547_6.html">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" id="twTitle" content="Bachelor Pad Bundle – Save GH₵300 | Orbiva Technologies">
-  <meta name="twitter:description" id="twDescription" content="Nasco 41 L Bedside Refrigerator + Nasco 32&quot; LED  FLAT — bundled together for GH₵2,099 instead of GH₵2,399. Save GH₵300 at Orbiva Technologies.">
+  <meta name="twitter:title" id="twTitle" content="Bachelor Pad Bundle – Save GH₵999 | Orbiva Technologies">
+  <meta name="twitter:description" id="twDescription" content="Nasco 41 L Bedside Refrigerator + Nasco 32&quot; LED  FLAT — bundled together for GH₵2,099 instead of GH₵3,098. Save GH₵999 at Orbiva Technologies.">
   <meta name="twitter:image" id="twImage" content="https://orbivagh.com/img/logo.jpeg">
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/animations.css" />
@@ -209,9 +209,9 @@
         <div class="combo-card-items">Nasco 41 L Bedside Refrigerator + Nasco 32&quot; LED  FLAT</div>
         <div class="combo-price-row">
           <span class="combo-price-now">GH₵ 2,099</span>
-          <span class="combo-price-was">GH₵ 2,399</span>
+          <span class="combo-price-was">GH₵ 3,098</span>
         </div>
-        <span class="combo-save-badge">Save GH₵ 300</span>
+        <span class="combo-save-badge">Save GH₵ 999</span>
       </div>
     </div></div>
 </div>
@@ -348,7 +348,7 @@ function renderComboDeals() {
   grid.innerHTML = filtered.map(c => {
     const items = c.productIds.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
     if (items.length < 2) return '';
-    const individualTotal = items.reduce((s, p) => s + p.price, 0);
+    const individualTotal = items.reduce((s, p) => s + (p.oldPrice || p.price), 0);
     const savings = individualTotal - c.comboPrice;
     const imagesHtml = items.map((p, i) => {
       const img = (p.images && p.images[0]) ? `<img src="${p.images[0]}" alt="${p.name}">` : `<div style="width:76px;height:76px;background:#eef2f7;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#94a3b8"><i class="fas fa-box"></i></div>`;
