@@ -3873,22 +3873,37 @@ function renderCombosAdmin(){
     return;
   }
   const prods = adminProds.length ? adminProds : getAdminProducts();
-  list.innerHTML = combos.map(c => {
+  // A combo needs at least 2 real, currently-existing products to actually
+  // appear on the live site — catalog changes (edits, deletions, SKU
+  // changes) can silently break this well after a combo was created and
+  // working fine, with nothing telling you until a customer can't find it.
+  const withHealth = combos.map(c => {
     const items = c.productIds.map(id => prods.find(p => p.id === id)).filter(Boolean);
+    const missingIds = c.productIds.filter(id => !prods.find(p => p.id === id));
+    return { c, items, missingIds, broken: items.length < 2 };
+  });
+  withHealth.sort((a, b) => (b.broken - a.broken));
+  const brokenCount = withHealth.filter(x => x.broken).length;
+
+  const banner = brokenCount ? `<div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#991b1b"><i class="fas fa-triangle-exclamation"></i> <strong>${brokenCount} combo${brokenCount===1?'':'s'} won't show on the live site</strong> — each needs at least 2 real products, flagged below.</div>` : '';
+
+  list.innerHTML = banner + withHealth.map(({c, items, missingIds, broken}) => {
     const individualTotal = items.reduce((s, p) => s + p.price, 0);
     const savings = individualTotal - c.comboPrice;
     const thumbs = items.slice(0,4).map(p =>
       `<div style="width:40px;height:40px;border-radius:8px;background:var(--bg);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 0 0 1px var(--border)">${p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fas fa-box" style="color:var(--muted);font-size:12px"></i>`}</div>`
     ).join('');
-    return `<div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    const warningHtml = broken ? `<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 10px;margin-top:8px;font-size:12px;color:#991b1b"><i class="fas fa-triangle-exclamation"></i> Won't show on the site — only ${items.length} of ${c.productIds.length} products found. Missing: ${missingIds.map(id=>escHtml(id)).join(', ')}. Edit this combo and swap in a current product.</div>` : '';
+    return `<div style="background:#fff;border:1.5px solid ${broken?'#fecaca':'var(--border)'};border-radius:12px;padding:16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
       <div style="display:flex;margin-left:8px">${thumbs.replace(/margin-left:8px/g,'')}</div>
       <div style="flex:1;min-width:200px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
           <strong style="font-size:14px">${escHtml(c.title)}</strong>
           <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#eef2ff;color:#4338ca">${comboCategoryLabel(c.category)}</span>
           <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:${c.active?'#f0fdf4':'#f1f5f9'};color:${c.active?'#16a34a':'#64748b'}">${c.active?'Active':'Hidden'}</span>
         </div>
         <div style="font-size:12.5px;color:var(--muted)">${items.length} products · Individual total (selling prices) GH₵${individualTotal.toLocaleString()} · Combo price GH₵${c.comboPrice.toLocaleString()} <strong style="color:#16a34a">(actual margin: GH₵${savings.toLocaleString()})</strong></div>
+        ${warningHtml}
       </div>
       <div style="display:flex;gap:6px;flex-shrink:0">
         <button class="btn btn-outline btn-sm" onclick="editCombo('${c.id}')"><i class="fas fa-pen"></i></button>
@@ -3936,7 +3951,13 @@ function searchComboProduct(q){
     .filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || (p.model||'').toLowerCase().includes(q.toLowerCase()))
     .slice(0, 8);
   if (!prods.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
-  box.innerHTML = prods.map(p => `<div style="padding:8px 10px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border-light)" onclick="addComboProduct('${p.id}')">${escHtml(p.name)} <span style="color:var(--muted);font-size:11px">GH₵${p.price.toLocaleString()}</span></div>`).join('');
+  box.innerHTML = prods.map(p => `<div style="padding:8px 10px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:8px" onclick="addComboProduct('${p.id}')">
+    <div style="flex:1">
+      <div>${escHtml(p.name)} ${p.hidden ? '<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;background:#f1f5f9;color:#64748b;margin-left:4px"><i class="fas fa-eye-slash"></i> Hidden</span>' : ''}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">SKU: ${escHtml(p.model||'—')}</div>
+    </div>
+    <span style="color:var(--muted);font-size:11px;white-space:nowrap">GH₵${p.price.toLocaleString()}</span>
+  </div>`).join('');
   box.style.display = 'block';
 }
 
@@ -3965,8 +3986,11 @@ function renderComboSelectedProducts(){
   box.innerHTML = items.map(p => `
     <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 10px">
       <div style="width:32px;height:32px;border-radius:6px;background:var(--bg);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center">${p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fas fa-box" style="color:var(--muted);font-size:11px"></i>`}</div>
-      <span style="flex:1;font-size:13px">${escHtml(p.name)}</span>
-      <span style="font-size:12.5px;color:var(--muted)">GH₵${p.price.toLocaleString()}</span>
+      <div style="flex:1">
+        <div style="font-size:13px">${escHtml(p.name)} ${p.hidden ? '<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;background:#f1f5f9;color:#64748b;margin-left:4px"><i class="fas fa-eye-slash"></i> Hidden</span>' : ''}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">SKU: ${escHtml(p.model||'—')}</div>
+      </div>
+      <span style="font-size:12.5px;color:var(--muted);white-space:nowrap">GH₵${p.price.toLocaleString()}</span>
       <button type="button" onclick="removeComboProduct('${p.id}')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px"><i class="fas fa-times"></i></button>
     </div>`).join('');
   const total = items.reduce((s, p) => s + p.price, 0);
