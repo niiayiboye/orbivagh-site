@@ -109,6 +109,44 @@ function generateProductPage(template, p) {
     (_, a, b) => a + schemaJson + b
   );
 
+  // Baked-in visible product HTML so Google (and anyone with JS disabled)
+  // sees the real product card immediately, instead of the empty
+  // #productPageWrap + hidden "Product not found" placeholder that used to
+  // be all that existed until product.html's own JS ran. Mirrors the
+  // client-side renderer's markup (see the `wrap.innerHTML = ...` block in
+  // product.html) so nothing visually changes once that JS re-renders it
+  // for real visitors — same reasoning already applied to combo pages
+  // below in generateComboPage.
+  const fmtMoney = n => 'GH₵ ' + (n || 0).toLocaleString();
+  const discountPct = p.discount || (p.oldPrice && p.price ? Math.round(100 - (p.price / p.oldPrice) * 100) : null);
+  const mainImgHtml = images.length
+    ? `<img id="ppMainImg" src="${images[0]}" alt="${escAttr(name)}">`
+    : '';
+  const thumbsHtml = images.length > 1
+    ? images.map((src, i) => `<div class="pp-thumb${i === 0 ? ' active' : ''}" data-idx="${i}"><img src="${src}" alt="${escAttr(name)} ${i + 1}"></div>`).join('')
+    : '';
+  const staticProductHtml = `
+    <div class="pp-gallery">
+      <div class="pp-main-img" id="ppMainImgWrap" title="Click to enlarge">${mainImgHtml}</div>
+      <div class="pp-thumbs" id="ppThumbs">${thumbsHtml}</div>
+    </div>
+    <div class="pp-info">
+      <button class="pp-back-btn" onclick="history.length > 1 ? history.back() : window.location='shop.html'"><i class="fas fa-arrow-left"></i> Back</button>
+      ${brand ? `<div class="pp-brand-badge">${escAttr(brand)}</div>` : ''}
+      <h1 class="pp-name">${escAttr(name)}</h1>
+      ${sku ? `<div style="font-size:13px;color:var(--text-muted);font-weight:500;margin-bottom:10px">SKU: <strong style="color:var(--text-body)">${escAttr(sku)}</strong></div>` : ''}
+      <div class="pp-desc">${escAttr(descRaw || shortDesc)}</div>
+      <div class="pp-price-row">
+        <span class="pp-price">${fmtMoney(p.price)}</span>
+        ${p.oldPrice ? `<span class="pp-old-price">${fmtMoney(p.oldPrice)}</span>` : ''}
+        ${discountPct ? `<span class="pp-discount-badge">-${discountPct}% OFF</span>` : ''}
+      </div>
+    </div>`;
+  out = out.replace(
+    '<div class="product-page-wrap" id="productPageWrap">',
+    `<div class="product-page-wrap" id="productPageWrap">${staticProductHtml}`
+  );
+
   out = out.replace('<head>', `<head>\n  <script>window.__STATIC_PRODUCT_ID__=${JSON.stringify(pid)};</script>`);
 
   // This file lives one level deeper (/p/) than the site root
