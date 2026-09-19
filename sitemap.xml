@@ -926,6 +926,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://orbivagh.com/p/admin-1783295250152.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://orbivagh.com/p/admin-1783490261695.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -1012,6 +1017,11 @@
   </url>
   <url>
     <loc>https://orbivagh.com/combo/combo_1789344413547_10.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://orbivagh.com/combo/combo_1789790121828.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
