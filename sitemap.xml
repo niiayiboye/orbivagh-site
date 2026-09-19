@@ -691,11 +691,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://orbivagh.com/p/nasco-nasj32fbfl.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://orbivagh.com/p/nasco-nasb43fbfl.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -787,16 +782,6 @@
   </url>
   <url>
     <loc>https://orbivagh.com/p/nasco-nasd240wd.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://orbivagh.com/p/nasco-nasf106.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://orbivagh.com/p/nasco-nasf195fl.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
