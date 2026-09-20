@@ -3989,15 +3989,52 @@ function renderComboSelectedProducts(){
     <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 10px">
       <div style="width:32px;height:32px;border-radius:6px;background:var(--bg);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center">${p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fas fa-box" style="color:var(--muted);font-size:11px"></i>`}</div>
       <div style="flex:1">
-        <div style="font-size:13px">${escHtml(p.name)} ${p.hidden ? '<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;background:#f1f5f9;color:#64748b;margin-left:4px"><i class="fas fa-eye-slash"></i> Hidden</span>' : ''}</div>
+        <div style="font-size:13px;display:flex;align-items:center;gap:4px;flex-wrap:wrap">
+          <span>${escHtml(p.name)}</span>
+          ${p.hidden ? `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;background:#f1f5f9;color:#64748b"><i class="fas fa-eye-slash"></i> Hidden</span>
+          <button type="button" onclick="comboUnhideProduct('${p.id}')" style="border:none;background:none;color:#2563eb;font-size:11px;font-weight:700;cursor:pointer;text-decoration:underline;padding:0">Unhide</button>` : ''}
+        </div>
         <div style="font-size:11px;color:var(--muted);margin-top:1px">SKU: ${escHtml(p.model||'—')}</div>
       </div>
-      <span style="font-size:12.5px;color:var(--muted);white-space:nowrap">GH₵${p.price.toLocaleString()}</span>
+      <div style="display:flex;align-items:center;gap:3px;white-space:nowrap">
+        <span style="font-size:12px;color:var(--muted)">GH₵</span>
+        <input type="number" value="${p.price}" min="0" step="0.01" onchange="saveComboProductPrice('${p.id}', this.value)"
+          style="width:76px;font-size:12.5px;padding:3px 6px;border:1px solid var(--border);border-radius:6px;text-align:right" title="Edit selling price">
+      </div>
       <button type="button" onclick="removeComboProduct('${p.id}')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px"><i class="fas fa-times"></i></button>
     </div>`).join('');
   const total = items.reduce((s, p) => s + p.price, 0);
   document.getElementById('cb_individualTotal').textContent = 'GH₵ ' + total.toLocaleString();
   totalsBox.style.display = 'block';
+}
+
+// Lets an admin unhide a hidden product right from inside the combo editor —
+// previously the only way to fix a combo blocked by a hidden product was to
+// cancel out, go find that product on the Products page, unhide it there,
+// then come back and re-open the combo. Reuses the exact same
+// toggleProductHidden() the Products page itself uses, so it's the same
+// edit (obv_prod_edits + sbPush), just reachable from here too.
+function comboUnhideProduct(id){
+  toggleProductHidden(id);
+  renderComboSelectedProducts();
+}
+
+// Lets an admin correct a product's selling price right from inside the
+// combo editor, since a stale price here silently threw off both the
+// "Individual total" shown to customers and the margin check shown above.
+// Writes to the same obv_prod_edits overlay every other product edit uses.
+function saveComboProductPrice(id, newPriceStr){
+  const newPrice = parseFloat(newPriceStr);
+  const p = adminProds.find(x => x.id === id);
+  if (!p || isNaN(newPrice) || newPrice < 0) { renderComboSelectedProducts(); return; }
+  if (p.price === newPrice) return;
+  const edits = lsGet('obv_prod_edits', {});
+  edits[id] = Object.assign({}, edits[id] || {}, { price: newPrice });
+  lsSet('obv_prod_edits', edits); sbPush('obv_prod_edits');
+  logHistory({type:'price_change', label:'Changed selling price for: '+p.name, undoData:{productId:id}});
+  loadProducts();
+  renderComboSelectedProducts();
+  toast('Selling price updated', 'ok');
 }
 
 function saveComboAdmin(){
