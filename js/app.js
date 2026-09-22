@@ -140,9 +140,15 @@ function applyOverrides() {
       // the page's nicely-formatted default number visibly flashes into
       // whatever raw formatting was typed in, the instant sync finishes.
       const ph = formatGhPhone(s.storePhone);
+      const ph2 = s.storePhone2 ? formatGhPhone(s.storePhone2) : '';
+      // Displayed text can show both numbers ("050 257 8905 / 055 676
+      // 2816"), but a tel: link can only ever dial one number, so every
+      // click-to-call link — including [data-store-phone] elements when
+      // they're an <a> — always points at the primary number.
+      const phDisplay = ph2 ? ph + ' / ' + ph2 : ph;
       const telHref = 'tel:' + ph.replace(/\D/g,'');
       document.querySelectorAll('[data-store-phone]').forEach(el => {
-        el.textContent = ph;
+        el.textContent = phDisplay;
         if (el.tagName === 'A') el.href = telHref; // link is clickable itself
       });
       document.querySelectorAll('a[href^="tel:"]:not([data-store-phone])').forEach(el => {
