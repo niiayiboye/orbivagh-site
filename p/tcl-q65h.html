@@ -823,10 +823,19 @@ function renderStarPicker() {
   if (!picker) return;
   const currentRating = () => parseInt(document.getElementById('revFormRating').value) || 0;
   const draw = (selected) => {
+    // Extra padding around each star enlarges the tap target well beyond
+    // the visible glyph — important on phones/tablets where a bare 26px
+    // character is too small to reliably hit with a finger.
     picker.innerHTML = [1,2,3,4,5].map(i =>
-      `<span data-star="${i}" style="color:${i<=selected?'#f59e0b':'#e2e8f0'}">★</span>`).join('');
+      `<span data-star="${i}" style="color:${i<=selected?'#f59e0b':'#e2e8f0'};display:inline-block;padding:6px 3px">★</span>`).join('');
   };
   draw(currentRating());
+
+  const setRating = (val) => {
+    document.getElementById('revFormRating').value = val;
+    draw(parseInt(val));
+    picker.style.boxShadow = 'none';
+  };
 
   // Event delegation on the container itself, not the individual stars.
   // draw() above replaces all five <span> elements on every hover, which
@@ -845,9 +854,21 @@ function renderStarPicker() {
   picker.onclick = (e) => {
     const star = e.target.closest('[data-star]');
     if (!star) return;
-    document.getElementById('revFormRating').value = star.dataset.star;
-    draw(parseInt(star.dataset.star));
-    picker.style.boxShadow = 'none';
+    setRating(star.dataset.star);
+  };
+  // Touch devices (phone/tablet): some mobile browsers fire a synthetic
+  // "hover" on first tap and only treat a second tap as the real click,
+  // which makes the picker feel unresponsive/require double-tapping.
+  // Handling touchstart directly sets the rating on the very first tap.
+  // preventDefault stops the follow-up synthetic mouseover/click from
+  // re-processing the same tap.
+  picker.ontouchstart = (e) => {
+    const touch = e.touches && e.touches[0];
+    const target = (touch && touch.target) || e.target;
+    const star = target && target.closest && target.closest('[data-star]');
+    if (!star) return;
+    e.preventDefault();
+    setRating(star.dataset.star);
   };
 }
 
