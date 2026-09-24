@@ -788,7 +788,8 @@ function renderProductReviews(productId) {
     <div style="max-width:640px;margin-top:${approved.length?'8px':'0'};padding-top:24px;${approved.length?'border-top:1px solid var(--border-light)':''}">
       <h3 style="font-size:15px;font-weight:700;margin-bottom:14px">Write a Review</h3>
       <div style="margin-bottom:12px">
-        <div id="reviewStarPicker" style="font-size:26px;color:#e2e8f0;letter-spacing:4px;cursor:pointer;user-select:none"></div>
+        <label style="font-size:13px;font-weight:600;color:var(--text-body);display:block;margin-bottom:6px">Your Rating <span style="color:#ef4444">*</span></label>
+        <div id="reviewStarPicker" style="font-size:26px;color:#e2e8f0;letter-spacing:4px;cursor:pointer;user-select:none;display:inline-block;border-radius:6px;transition:box-shadow 0.15s ease"></div>
         <input type="hidden" id="revFormRating" value="0">
       </div>
       <input type="text" id="revFormName" placeholder="Your name" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:10px;box-sizing:border-box">
@@ -803,26 +804,49 @@ function renderProductReviews(productId) {
 function renderStarPicker() {
   const picker = document.getElementById('reviewStarPicker');
   if (!picker) return;
+  const currentRating = () => parseInt(document.getElementById('revFormRating').value) || 0;
   const draw = (selected) => {
     picker.innerHTML = [1,2,3,4,5].map(i =>
       `<span data-star="${i}" style="color:${i<=selected?'#f59e0b':'#e2e8f0'}">★</span>`).join('');
   };
-  draw(0);
-  picker.querySelectorAll('span').forEach(star => {
-    star.addEventListener('mouseenter', () => draw(parseInt(star.dataset.star)));
-    star.addEventListener('click', () => {
-      document.getElementById('revFormRating').value = star.dataset.star;
-      draw(parseInt(star.dataset.star));
-    });
-  });
-  picker.addEventListener('mouseleave', () => draw(parseInt(document.getElementById('revFormRating').value) || 0));
+  draw(currentRating());
+
+  // Event delegation on the container itself, not the individual stars.
+  // draw() above replaces all five <span> elements on every hover, which
+  // would silently detach any listeners bound directly to them after the
+  // very first hover — leaving the picker completely unresponsive to
+  // further clicks. Binding to the (stable) container instead sidesteps
+  // that entirely. Using on___ properties rather than addEventListener
+  // also means calling renderStarPicker() again later (e.g. after a
+  // submit resets the form) replaces the old handler instead of stacking
+  // a duplicate on top of it.
+  picker.onmouseover = (e) => {
+    const star = e.target.closest('[data-star]');
+    if (star) draw(parseInt(star.dataset.star));
+  };
+  picker.onmouseleave = () => draw(currentRating());
+  picker.onclick = (e) => {
+    const star = e.target.closest('[data-star]');
+    if (!star) return;
+    document.getElementById('revFormRating').value = star.dataset.star;
+    draw(parseInt(star.dataset.star));
+    picker.style.boxShadow = 'none';
+  };
 }
 
 function submitProductReview(productId) {
   const rating = parseInt(document.getElementById('revFormRating').value) || 0;
   const name = document.getElementById('revFormName').value.trim();
   const comment = document.getElementById('revFormComment').value.trim();
-  if (!rating) { showToast('error', 'Rating Needed', 'Tap a star to rate this product.', 'fas fa-star'); return; }
+  const picker = document.getElementById('reviewStarPicker');
+  // A rating is required — flash the star picker itself, not just a
+  // toast, so it's obvious exactly what's missing before the review can
+  // be submitted.
+  if (!rating) {
+    if (picker) { picker.style.boxShadow = '0 0 0 2px #ef4444'; picker.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    showToast('error', 'Rating Needed', 'Tap a star to rate this product before submitting.', 'fas fa-star');
+    return;
+  }
   if (!name) { showToast('error', 'Name Needed', 'Enter your name so we know who to thank.', 'fas fa-user'); return; }
   if (!comment) { showToast('error', 'Review Needed', 'Share a few words about the product.', 'fas fa-comment'); return; }
 
