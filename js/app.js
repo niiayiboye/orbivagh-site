@@ -18,6 +18,32 @@ function formatGhPhone(raw) {
   return raw; // unexpected format — leave as-is rather than mangling it
 }
 
+/* ── Product photo pop-up (used on combo bundles) ──
+   Shows a bigger picture of one product right on the current page
+   instead of navigating away — so a customer browsing a combo bundle
+   never loses their place or gets confused about what they're buying. */
+function openImageLightbox(src, caption) {
+  const box = document.getElementById('imgLightbox');
+  if (!box || !src) return;
+  document.getElementById('imgLightboxImg').src = src;
+  document.getElementById('imgLightboxImg').alt = caption || '';
+  document.getElementById('imgLightboxCaption').textContent = caption || '';
+  box.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeImageLightbox() {
+  const box = document.getElementById('imgLightbox');
+  if (!box) return;
+  box.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function showProductImageLightbox(id) {
+  const p = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).find(x => x.id === id);
+  if (!p) return;
+  openImageLightbox((p.images && p.images[0]) || '', p.name);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeImageLightbox(); });
+
 function showToast(type, title, msg, icon) {
   const container = document.getElementById('toastContainer');
   if (!container) return;
@@ -598,7 +624,7 @@ function renderComboPromoSection() {
     const savings = individualTotal - c.comboPrice;
     const imagesHtml = items.map((p, i) => {
       const inner = (p.images && p.images[0]) ? `<img src="${p.images[0]}" alt="${p.name}">` : `<div style="width:64px;height:64px;background:#eef2f7;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#94a3b8"><i class="fas fa-box"></i></div>`;
-      const link = `<a href="product.html?id=${p.id}" class="combo-promo-item-link" title="View ${p.name} details" onclick="event.stopPropagation()">${inner}</a>`;
+      const link = `<button type="button" class="combo-promo-item-link" onclick="event.stopPropagation();showProductImageLightbox('${p.id}')" title="View ${p.name} photo">${inner}</button>`;
       return (i > 0 ? '<span class="combo-promo-plus">+</span>' : '') + link;
     }).join('');
     return `

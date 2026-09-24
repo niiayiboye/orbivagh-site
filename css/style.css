@@ -125,6 +125,9 @@ input, select, textarea { font-family: inherit; }
 .combo-promo-card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px rgba(0,0,0,0.1); }
 .combo-promo-images { display: flex; background: var(--bg); padding: 18px; gap: 8px; align-items: center; justify-content: center; }
 .combo-promo-images img { width: 64px; height: 64px; object-fit: contain; background: #fff; border-radius: 9px; border: 1px solid var(--border-light); }
+.combo-promo-item-link { display: inline-block; line-height: 0; border-radius: 9px; border: none; background: none; padding: 0; cursor: pointer; transition: transform 0.15s ease; }
+.combo-promo-item-link:hover { transform: scale(1.06); }
+.combo-promo-item-link:hover img { border-color: var(--primary); }
 .combo-promo-plus { font-size: 16px; color: #94a3b8; font-weight: 700; }
 .combo-promo-body { padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column; }
 .combo-promo-title { font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
@@ -1951,6 +1954,15 @@ input, select, textarea { font-family: inherit; }
   .whatsapp-float { bottom: 30px; left: auto; right: 24px; width: 56px; height: 56px; font-size: 28px; }
 }
 .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(37,211,102,0.55); animation-play-state: paused; }
+
+/* ── Product photo pop-up (combo bundles) ── */
+.img-lightbox { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.86); z-index: 9999; align-items: center; justify-content: center; padding: 24px; }
+.img-lightbox.open { display: flex; }
+.img-lightbox-content { max-width: min(90vw, 480px); text-align: center; }
+.img-lightbox-content img { max-width: 100%; max-height: 68vh; border-radius: 14px; background: #fff; object-fit: contain; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.img-lightbox-caption { color: #fff; margin-top: 16px; font-size: 15px; font-weight: 600; }
+.img-lightbox-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.15); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease; }
+.img-lightbox-close:hover { background: rgba(255,255,255,0.3); }
 
 /* ── Why Buy From Us ── */
 .why-buy-section { padding: 48px 0 40px; background: #f0f4ff; }

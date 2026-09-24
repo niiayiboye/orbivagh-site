@@ -708,5 +708,15 @@
   <i class="fab fa-whatsapp"></i>
 </a>
 
+<!-- Product photo pop-up — lets a customer see a bigger picture of an item
+     inside a combo bundle without leaving this page. -->
+<div class="img-lightbox" id="imgLightbox" onclick="if(event.target===this)closeImageLightbox()">
+  <button class="img-lightbox-close" onclick="closeImageLightbox()" aria-label="Close"><i class="fas fa-times"></i></button>
+  <div class="img-lightbox-content">
+    <img id="imgLightboxImg" src="" alt="">
+    <div class="img-lightbox-caption" id="imgLightboxCaption"></div>
+  </div>
+</div>
+
 </body>
 </html>
