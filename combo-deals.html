@@ -178,6 +178,9 @@
   .combo-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); overflow: hidden; display: flex; flex-direction: column; }
   .combo-card-images { display: flex; background: #f8fafc; padding: 20px; gap: 8px; align-items: center; justify-content: center; }
   .combo-card-images img { width: 76px; height: 76px; object-fit: contain; background: #fff; border-radius: 10px; border: 1px solid #eef2f7; }
+  .combo-item-link { display: inline-block; line-height: 0; border-radius: 10px; transition: transform 0.15s ease; }
+  .combo-item-link:hover { transform: scale(1.06); }
+  .combo-item-link:hover img { border-color: #2563eb; }
   .combo-plus { font-size: 18px; color: #94a3b8; font-weight: 700; }
   .combo-card-body { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; }
   .combo-card-title { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
@@ -190,6 +193,31 @@
   .combo-add-btn:hover { background: #1e40af; }
   .combo-empty { text-align: center; padding: 60px 16px; color: #94a3b8; }
   .combo-empty i { font-size: 40px; margin-bottom: 14px; display: block; }
+
+  /* Single-combo detail view (shown instead of the grid when visiting one
+     specific bundle's own page) — every product in the bundle gets its
+     own row with a proper-sized photo, not a row of small thumbnails. */
+  .combo-detail-back { display: inline-flex; align-items: center; gap: 6px; color: #1d4ed8; font-weight: 600; font-size: 13.5px; text-decoration: none; margin-bottom: 20px; }
+  .combo-detail-back:hover { text-decoration: underline; }
+  .combo-detail-title { font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+  .combo-detail-sub { font-size: 14px; color: #64748b; margin-bottom: 26px; }
+  .combo-detail-items { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .combo-detail-item { display: flex; align-items: center; gap: 18px; background: #fff; border: 1px solid #eef2f7; border-radius: 14px; padding: 16px; text-decoration: none; transition: box-shadow 0.15s ease, transform 0.15s ease; }
+  .combo-detail-item:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.07); transform: translateY(-2px); }
+  .combo-detail-item-imgwrap { width: 110px; height: 110px; flex-shrink: 0; background: #f8fafc; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .combo-detail-item-imgwrap img { width: 100%; height: 100%; object-fit: contain; }
+  .combo-detail-item-info { flex: 1; min-width: 0; }
+  .combo-detail-item-name { font-weight: 700; font-size: 15.5px; color: #0f172a; margin-bottom: 5px; }
+  .combo-detail-item-price { font-size: 13px; color: #64748b; }
+  .combo-detail-item-price s { color: #94a3b8; margin-left: 6px; }
+  .combo-detail-item-cta { font-size: 12.5px; font-weight: 700; color: #1d4ed8; white-space: nowrap; }
+  .combo-detail-summary { background: #f8fafc; border-radius: 16px; padding: 22px 24px; }
+  .combo-detail-price-row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+  .combo-detail-price-now { font-size: 26px; font-weight: 800; color: #1d4ed8; }
+  .combo-detail-price-was { font-size: 15px; color: #94a3b8; text-decoration: line-through; }
+  .combo-detail-save { display: inline-block; font-size: 12px; font-weight: 700; color: #16a34a; background: #f0fdf4; padding: 4px 10px; border-radius: 20px; margin-bottom: 18px; }
+  .combo-detail-add-btn { width: 100%; padding: 14px; background: #1d4ed8; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.15s ease; }
+  .combo-detail-add-btn:hover { background: #1e40af; }
 </style>
 
 <section class="combo-hero">
@@ -197,9 +225,10 @@
   <h1>Combo Deals — Save Big with Exclusive Bundles</h1>
 </section>
 
-<div class="combo-grid-wrap">
+<div class="combo-grid-wrap" id="comboGridWrap">
   <div class="combo-filter-tabs" id="comboFilterTabs"></div>
   <div class="combo-grid" id="comboGrid"></div>
+  <div id="comboDetailView" style="display:none"></div>
 </div>
 <!-- Footer (abbreviated) -->
 <footer class="footer">
@@ -298,18 +327,23 @@ function renderComboDeals() {
   try { combos = JSON.parse(localStorage.getItem('obv_combo_deals') || '[]'); } catch(e) {}
   combos = combos.filter(c => c.active !== false);
 
-  // A dedicated per-combo static page (generated for SEO) embeds this
-  // directly rather than relying on JS to figure out which one to show —
-  // same reasoning as __STATIC_PRODUCT_ID__ on product pages. Shows just
-  // that one bundle, plus a link back to browse everything else, instead
-  // of the full catalog replacing it a moment after the page loads.
-  if (window.__STATIC_COMBO_ID__) {
-    combos = combos.filter(c => c.id === window.__STATIC_COMBO_ID__);
+  // A dedicated per-combo static page (generated for SEO) sets this
+  // directly rather than relying on a URL param — same reasoning as
+  // __STATIC_PRODUCT_ID__ on product pages. Shows a full detail view of
+  // just that one bundle (every item with its own photo) instead of the
+  // whole catalog grid.
+  const detailId = window.__STATIC_COMBO_ID__ || new URLSearchParams(location.search).get('id');
+  if (detailId) {
+    const combo = combos.find(c => c.id === detailId);
     tabsEl.innerHTML = '';
-    if (combos.length) {
-      grid.insertAdjacentHTML('afterend', `<div style="text-align:center;margin-top:28px"><a href="../combo-deals.html" style="color:#1d4ed8;font-weight:600;font-size:14px;text-decoration:none"><i class="fas fa-arrow-left"></i> View All Combo Deals</a></div>`);
-    }
+    grid.style.display = 'none';
+    if (combo) { renderComboDetail(combo); return; }
+    document.getElementById('comboDetailView').style.display = '';
+    document.getElementById('comboDetailView').innerHTML = `<div class="combo-empty"><i class="fas fa-layer-group"></i><p>This bundle isn't available right now.</p><a href="combo-deals.html" class="combo-detail-back" style="margin-top:14px"><i class="fas fa-arrow-left"></i> View All Combo Deals</a></div>`;
+    return;
   }
+  document.getElementById('comboDetailView').style.display = 'none';
+  grid.style.display = '';
 
   if (!combos.length) {
     tabsEl.innerHTML = '';
@@ -337,8 +371,9 @@ function renderComboDeals() {
     const individualTotal = items.reduce((s, p) => s + (p.oldPrice || p.price), 0);
     const savings = individualTotal - c.comboPrice;
     const imagesHtml = items.map((p, i) => {
-      const img = (p.images && p.images[0]) ? `<img src="${p.images[0]}" alt="${p.name}">` : `<div style="width:76px;height:76px;background:#eef2f7;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#94a3b8"><i class="fas fa-box"></i></div>`;
-      return (i > 0 ? '<span class="combo-plus">+</span>' : '') + img;
+      const inner = (p.images && p.images[0]) ? `<img src="${p.images[0]}" alt="${p.name}">` : `<div style="width:76px;height:76px;background:#eef2f7;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#94a3b8"><i class="fas fa-box"></i></div>`;
+      const link = `<a href="product.html?id=${p.id}" class="combo-item-link" title="View ${p.name} details">${inner}</a>`;
+      return (i > 0 ? '<span class="combo-plus">+</span>' : '') + link;
     }).join('');
     const itemsListHtml = items.map(p => p.name).join(' + ');
     return `
@@ -358,6 +393,53 @@ function renderComboDeals() {
         </div>
       </div>`;
   }).join('');
+}
+
+// Full detail view for a single bundle — every product gets its own row
+// with a proper-sized photo (not the small side-by-side thumbnails used
+// in the grid card), so a customer can actually see what they're buying
+// before clicking through to that item's own product page.
+function renderComboDetail(combo) {
+  const items = combo.productIds.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+  const view = document.getElementById('comboDetailView');
+  if (items.length < 2) {
+    view.style.display = '';
+    view.innerHTML = `<div class="combo-empty"><i class="fas fa-layer-group"></i><p>This bundle isn't available right now.</p><a href="combo-deals.html" class="combo-detail-back" style="margin-top:14px"><i class="fas fa-arrow-left"></i> View All Combo Deals</a></div>`;
+    return;
+  }
+  const individualTotal = items.reduce((s, p) => s + (p.oldPrice || p.price), 0);
+  const savings = individualTotal - combo.comboPrice;
+  const itemsHtml = items.map(p => {
+    const img = (p.images && p.images[0])
+      ? `<img src="${p.images[0]}" alt="${p.name}">`
+      : `<i class="fas fa-box" style="font-size:28px;color:#94a3b8"></i>`;
+    return `
+      <a href="product.html?id=${p.id}" class="combo-detail-item">
+        <div class="combo-detail-item-imgwrap">${img}</div>
+        <div class="combo-detail-item-info">
+          <div class="combo-detail-item-name">${p.name}</div>
+          <div class="combo-detail-item-price">GH₵ ${p.price.toLocaleString()}${p.oldPrice ? ` <s>GH₵ ${p.oldPrice.toLocaleString()}</s>` : ''}</div>
+        </div>
+        <span class="combo-detail-item-cta">View Details <i class="fas fa-chevron-right fa-xs"></i></span>
+      </a>`;
+  }).join('');
+
+  view.style.display = '';
+  view.innerHTML = `
+    <a href="combo-deals.html" class="combo-detail-back"><i class="fas fa-arrow-left"></i> View All Combo Deals</a>
+    <h1 class="combo-detail-title">${combo.title}</h1>
+    <p class="combo-detail-sub">${items.length} items bundled together — click any product below to see its full details and photos.</p>
+    <div class="combo-detail-items">${itemsHtml}</div>
+    <div class="combo-detail-summary">
+      <div class="combo-detail-price-row">
+        <span class="combo-detail-price-now">GH₵ ${combo.comboPrice.toLocaleString()}</span>
+        <span class="combo-detail-price-was">GH₵ ${individualTotal.toLocaleString()}</span>
+      </div>
+      <span class="combo-detail-save">Save GH₵ ${savings.toLocaleString()}</span>
+      <button class="combo-detail-add-btn" onclick='addComboToCart(${JSON.stringify(combo).replace(/'/g, "&apos;")})'>
+        <i class="fas fa-shopping-cart"></i> Add Bundle to Cart
+      </button>
+    </div>`;
 }
 
 // Combo bundles aren't real catalog products, so this adds a single cart

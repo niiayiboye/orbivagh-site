@@ -597,8 +597,9 @@ function renderComboPromoSection() {
     const individualTotal = items.reduce((s, p) => s + (p.oldPrice || p.price), 0);
     const savings = individualTotal - c.comboPrice;
     const imagesHtml = items.map((p, i) => {
-      const img = (p.images && p.images[0]) ? `<img src="${p.images[0]}" alt="${p.name}">` : `<div style="width:64px;height:64px;background:#eef2f7;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#94a3b8"><i class="fas fa-box"></i></div>`;
-      return (i > 0 ? '<span class="combo-promo-plus">+</span>' : '') + img;
+      const inner = (p.images && p.images[0]) ? `<img src="${p.images[0]}" alt="${p.name}">` : `<div style="width:64px;height:64px;background:#eef2f7;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#94a3b8"><i class="fas fa-box"></i></div>`;
+      const link = `<a href="product.html?id=${p.id}" class="combo-promo-item-link" title="View ${p.name} details" onclick="event.stopPropagation()">${inner}</a>`;
+      return (i > 0 ? '<span class="combo-promo-plus">+</span>' : '') + link;
     }).join('');
     return `
       <div class="combo-promo-card">
@@ -610,7 +611,7 @@ function renderComboPromoSection() {
             <span class="combo-promo-price-was">GH₵ ${individualTotal.toLocaleString()}</span>
           </div>
           <span class="combo-promo-save">Save GH₵ ${savings.toLocaleString()}</span>
-          <button class="combo-promo-btn" onclick="location.href='combo-deals.html'">View Bundle</button>
+          <button class="combo-promo-btn" onclick="location.href='combo-deals.html?id=${c.id}'">View Bundle</button>
         </div>
       </div>`;
   }).filter(Boolean);

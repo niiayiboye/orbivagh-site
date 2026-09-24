@@ -200,25 +200,39 @@ function generateComboPage(template, combo, prods) {
   };
   const schemaScript = `<script type="application/ld+json">${JSON.stringify(schema)}</script>`;
 
-  const imagesHtml = items.map((p, i) => {
-    const img = (p.images && p.images[0]) ? `<img src="${p.images[0]}" alt="${escAttr(p.name)}">` : `<div style="width:76px;height:76px;background:#eef2f7;border-radius:10px"></div>`;
-    return (i > 0 ? '<span class="combo-plus">+</span>' : '') + img;
-  }).join('');
-  const staticCardHtml = `
-    <div class="combo-card">
-      <div class="combo-card-images">${imagesHtml}</div>
-      <div class="combo-card-body">
-        <div class="combo-card-title">${escAttr(combo.title)}</div>
-        <div class="combo-card-items">${escAttr(itemNames)}</div>
-        <div class="combo-price-row">
-          <span class="combo-price-now">GH₵ ${combo.comboPrice.toLocaleString()}</span>
-          <span class="combo-price-was">GH₵ ${individualTotal.toLocaleString()}</span>
+  // Full detail view baked in statically — mirrors renderComboDetail() in
+  // combo-deals.html's own JS exactly, so a crawler (or a visitor with JS
+  // off) sees every item in the bundle with its own proper-sized photo,
+  // not just a row of tiny side-by-side thumbnails.
+  const itemsHtml = items.map(p => {
+    const img = (p.images && p.images[0])
+      ? `<img src="${p.images[0]}" alt="${escAttr(p.name)}">`
+      : `<i class="fas fa-box" style="font-size:28px;color:#94a3b8"></i>`;
+    return `
+      <a href="../product.html?id=${p.id}" class="combo-detail-item">
+        <div class="combo-detail-item-imgwrap">${img}</div>
+        <div class="combo-detail-item-info">
+          <div class="combo-detail-item-name">${escAttr(p.name)}</div>
+          <div class="combo-detail-item-price">GH₵ ${p.price.toLocaleString()}${p.oldPrice ? ` <s>GH₵ ${p.oldPrice.toLocaleString()}</s>` : ''}</div>
         </div>
-        <span class="combo-save-badge">Save GH₵ ${savings.toLocaleString()}</span>
+        <span class="combo-detail-item-cta">View Details <i class="fas fa-chevron-right fa-xs"></i></span>
+      </a>`;
+  }).join('');
+  const staticDetailHtml = `
+    <a href="../combo-deals.html" class="combo-detail-back"><i class="fas fa-arrow-left"></i> View All Combo Deals</a>
+    <h1 class="combo-detail-title">${escAttr(combo.title)}</h1>
+    <p class="combo-detail-sub">${items.length} items bundled together — click any product below to see its full details and photos.</p>
+    <div class="combo-detail-items">${itemsHtml}</div>
+    <div class="combo-detail-summary">
+      <div class="combo-detail-price-row">
+        <span class="combo-detail-price-now">GH₵ ${combo.comboPrice.toLocaleString()}</span>
+        <span class="combo-detail-price-was">GH₵ ${individualTotal.toLocaleString()}</span>
       </div>
+      <span class="combo-detail-save">Save GH₵ ${savings.toLocaleString()}</span>
     </div>`;
 
-  out = out.replace('<div class="combo-grid" id="comboGrid"></div>', `<div class="combo-grid" id="comboGrid">${staticCardHtml}</div>`);
+  out = out.replace('<div id="comboDetailView" style="display:none"></div>', `<div id="comboDetailView">${staticDetailHtml}</div>`);
+  out = out.replace('<div class="combo-grid" id="comboGrid"></div>', `<div class="combo-grid" id="comboGrid" style="display:none"></div>`);
   out = out.replace('<head>', `<head>\n  <script>window.__STATIC_COMBO_ID__=${JSON.stringify(cid)};</script>\n  ${schemaScript}`);
 
   // This file lives one level deeper (/combo/) than the site root
