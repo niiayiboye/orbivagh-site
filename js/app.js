@@ -167,19 +167,58 @@ function applyOverrides() {
       // whatever raw formatting was typed in, the instant sync finishes.
       const ph = formatGhPhone(s.storePhone);
       const ph2 = s.storePhone2 ? formatGhPhone(s.storePhone2) : '';
-      // Displayed text can show both numbers ("050 257 8905 / 055 676
-      // 2816"), but a tel: link can only ever dial one number, so every
-      // click-to-call link — including [data-store-phone] elements when
-      // they're an <a> — always points at the primary number.
-      const phDisplay = ph2 ? ph + ' / ' + ph2 : ph;
       const telHref = 'tel:' + ph.replace(/\D/g,'');
+      const telHref2 = ph2 ? 'tel:' + ph2.replace(/\D/g,'') : '';
+
+      // Elements explicitly marked as the store's phone display (e.g. the
+      // footer). With two numbers, each is shown and behaves as its own
+      // separate, independently clickable number — not one combined block
+      // of text that always dials the first number no matter which part
+      // a customer taps.
       document.querySelectorAll('[data-store-phone]').forEach(el => {
-        el.textContent = phDisplay;
-        if (el.tagName === 'A') el.href = telHref; // link is clickable itself
+        if (el.tagName === 'A') {
+          if (ph2) {
+            // Two <a> tags can't nest inside one <a> — HTML doesn't allow
+            // it — so this anchor becomes a plain wrapper holding both
+            // real, separately-dialable links instead.
+            const span = document.createElement('span');
+            for (const attr of el.attributes) { if (attr.name !== 'href') span.setAttribute(attr.name, attr.value); }
+            const icon = el.querySelector('i');
+            span.innerHTML = (icon ? icon.outerHTML + ' ' : '') +
+              `<a href="${telHref}" class="tel-link">${ph}</a> / <a href="${telHref2}" class="tel-link">${ph2}</a>`;
+            el.replaceWith(span);
+          } else {
+            el.textContent = ph;
+            el.href = telHref;
+          }
+        } else {
+          el.innerHTML = ph2
+            ? `<a href="${telHref}" class="tel-link">${ph}</a> / <a href="${telHref2}" class="tel-link">${ph2}</a>`
+            : ph;
+        }
       });
-      document.querySelectorAll('a[href^="tel:"]:not([data-store-phone])').forEach(el => {
+
+      // Plain click-to-call links elsewhere (e.g. the top bar) that
+      // aren't tagged with data-store-phone. These keep their own
+      // markup/classes for styling — a second number, when set, is added
+      // as its own separate link right next to this one rather than
+      // merged into it.
+      document.querySelectorAll('a[href^="tel:"]:not([data-store-phone]):not(.tel-link)').forEach(el => {
         el.href = telHref;
         Array.from(el.childNodes).filter(n => n.nodeType === 3 && n.textContent.trim()).forEach(n => { n.textContent = ' ' + ph; });
+        // Clear out a secondary-number link/separator a previous sync
+        // added, before deciding whether to add a fresh one.
+        if (el.nextSibling && el.nextSibling.nodeType === 3 && el.nextSibling.textContent === ' / ') el.nextSibling.remove();
+        if (el.nextElementSibling && el.nextElementSibling.classList && el.nextElementSibling.classList.contains('tel-link-secondary')) el.nextElementSibling.remove();
+        if (ph2) {
+          const sep = document.createTextNode(' / ');
+          const link2 = document.createElement('a');
+          link2.href = telHref2;
+          link2.className = 'tel-link tel-link-secondary';
+          link2.textContent = ph2;
+          el.parentNode.insertBefore(sep, el.nextSibling);
+          el.parentNode.insertBefore(link2, sep.nextSibling);
+        }
       });
     }
     if (s.storeEmail) {
