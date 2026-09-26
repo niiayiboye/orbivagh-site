@@ -617,6 +617,25 @@ textarea{resize:vertical;min-height:70px}
         <div style="margin-top:16px"><button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> Save Settings</button></div>
       </div>
       <div class="settings-section">
+        <h3><i class="fab fa-google-drive" style="color:#0f9d58"></i> Google Drive Integration</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px;max-width:640px">
+          Lets you paste a Google Drive <strong>folder</strong> link when adding a product and auto-fill every image inside it, instead of pasting each photo's link one at a time.
+          One-time setup — free, no card required:
+        </p>
+        <ol style="font-size:13px;color:var(--muted);margin:0 0 16px 20px;max-width:640px;line-height:1.9">
+          <li>Go to <a href="https://console.cloud.google.com/apis/library/drive.googleapis.com" target="_blank" rel="noopener">Google Cloud Console → Drive API</a> and click <strong>Enable</strong> (create a free project first if asked).</li>
+          <li>Go to <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">Credentials</a> → <strong>Create Credentials → API key</strong>. Copy the key.</li>
+          <li>Click that key → under <strong>Application restrictions</strong> choose <strong>Websites</strong> and add your admin page's domain (e.g. <code>niiayiboye.github.io/*</code> or <code>orbivagh.com/*</code>) so no one else can use your key.</li>
+          <li>Under <strong>API restrictions</strong>, restrict it to <strong>Google Drive API</strong> only, then Save.</li>
+          <li>Paste the key below.</li>
+        </ol>
+        <div class="form-grid">
+          <div class="form-group full"><label>Google Drive API Key</label><input type="text" id="s_driveApiKey" placeholder="AIzaSy..."></div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:8px">Each product's image folder must be shared as <strong>"Anyone with the link → Viewer"</strong> in Google Drive, or the import will fail.</p>
+        <div style="margin-top:16px"><button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> Save Settings</button></div>
+      </div>
+      <div class="settings-section">
         <h3><i class="fas fa-image" style="color:#7c3aed"></i> Logo &amp; Branding</h3>
         <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
           <div style="flex:1;min-width:220px">
@@ -1017,6 +1036,11 @@ textarea{resize:vertical;min-height:70px}
         </div>
         <div class="form-group full">
           <label>Product Images <span style="font-weight:400;color:var(--muted);font-size:12px">— paste a Google Drive share link or upload directly · first image is the main photo</span></label>
+          <div id="folderImportBox" style="display:flex;gap:8px;align-items:center;margin-bottom:10px;background:#f8fafc;border:1px dashed var(--border);border-radius:8px;padding:10px">
+            <i class="fab fa-google-drive" style="color:#0f9d58;font-size:16px;flex-shrink:0"></i>
+            <input type="text" id="folderImportUrl" placeholder="Paste a Google Drive FOLDER link to import every image inside it" style="flex:1;min-width:0">
+            <button type="button" class="btn btn-outline btn-sm" style="white-space:nowrap" onclick="importImagesFromDriveFolder()"><i class="fas fa-download"></i> Fetch Images</button>
+          </div>
           <div id="imgSlotList"></div>
           <button type="button" class="add-spec-btn" id="addImgBtn" onclick="addImageSlot()"><i class="fas fa-plus"></i> Add Another Image</button>
         </div>
@@ -2700,6 +2724,7 @@ function openAddModal(){
   document.getElementById('f_hidden').checked=false;
   document.getElementById('specsContainer').innerHTML='';
   clearImageSlots();addImageSlot();
+  document.getElementById('folderImportUrl').value='';
   populateBrandSelect();
   document.getElementById('productModal').classList.add('open');
 }
@@ -2720,6 +2745,7 @@ function openEditModal(id){
   let imgs=(p.images&&p.images.length)?p.images:null;
   if(!imgs&&p.model){const skuMap=lsGet('obv_sku_img_map',{});imgs=skuMap[(p.model||'').trim()]||null;}
   (imgs||['']).forEach(url=>addImageSlot(url));
+  document.getElementById('folderImportUrl').value='';
   populateBrandSelect(p.brand);
   document.getElementById('productModal').classList.add('open');
 }
@@ -2758,6 +2784,67 @@ function driveToDirectUrl(url){
   if(!m)m=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
   if(m)return toCloudinaryFetchUrl('https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1000');
   return url;
+}
+
+/* ── Import every image inside a Google Drive folder at once ──
+   Unlike a single-file share link (handled above, no API needed), listing
+   what's INSIDE a folder requires the Drive API itself — there's no way to
+   read a folder's contents from just its share link. Needs a free API key
+   from Settings → Google Drive Integration, and the folder shared as
+   "Anyone with the link". */
+function driveFolderIdFromUrl(url){
+  let m=url.match(/\/folders\/([a-zA-Z0-9_-]+)/);
+  if(!m)m=url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  return m?m[1]:null;
+}
+async function importImagesFromDriveFolder(){
+  const input=document.getElementById('folderImportUrl');
+  const url=input.value.trim();
+  if(!url){toast('Paste a Google Drive folder link first','err');return;}
+  const apiKey=(lsGet('obv_settings',{}).driveApiKey||'').trim();
+  if(!apiKey){toast('Add a Google Drive API key first — go to Settings → Google Drive Integration','err');return;}
+  const folderId=driveFolderIdFromUrl(url);
+  if(!folderId){toast('That doesn\'t look like a Google Drive folder link','err');return;}
+
+  const btn=document.querySelector('#folderImportBox button');
+  const origHtml=btn.innerHTML;
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Fetching…';
+  try{
+    const q=encodeURIComponent(`'${folderId}' in parents and trashed=false and mimeType contains 'image/'`);
+    const apiUrl=`https://www.googleapis.com/drive/v3/files?q=${q}&orderBy=name_natural&fields=files(id,name)&pageSize=1000&key=${encodeURIComponent(apiKey)}`;
+    const res=await fetch(apiUrl);
+    const data=await res.json();
+    if(!res.ok){
+      const msg=(data&&data.error&&data.error.message)||'Request failed';
+      // The two most common real-world causes, spelled out plainly instead
+      // of just surfacing Google's raw (often cryptic) error message.
+      if(res.status===403)toast('Drive API blocked this request — check the API key is unrestricted to your domain and the Drive API is enabled. ('+msg+')','err');
+      else if(res.status===404)toast('Folder not found — make sure it\'s shared as "Anyone with the link"','err');
+      else toast('Google Drive error: '+msg,'err');
+      return;
+    }
+    const files=(data.files||[]);
+    if(!files.length){toast('No images found in that folder — check it\'s shared as "Anyone with the link" and actually contains image files','info');return;}
+
+    // Clear the empty starting slot(s) so imported images don't leave a
+    // blank slot in front of them, but keep any images the admin already
+    // typed in by hand.
+    const existing=getImageSlotUrls();
+    clearImageSlots();
+    existing.forEach(u=>addImageSlot(u));
+    const room=10-document.getElementById('imgSlotList').children.length;
+    files.slice(0,Math.max(room,0)).forEach(f=>{
+      addImageSlot(toCloudinaryFetchUrl('https://drive.google.com/thumbnail?id='+f.id+'&sz=w1000'));
+    });
+    if(document.getElementById('imgSlotList').children.length===0)addImageSlot();
+    input.value='';
+    const imported=Math.min(files.length,Math.max(room,0));
+    toast(imported+' image'+(imported!==1?'s':'')+' imported from folder'+(files.length>imported?' (10-image limit reached, '+(files.length-imported)+' left out)':''),'ok');
+  }catch(e){
+    toast('Could not reach Google Drive — check your internet connection and try again','err');
+  }finally{
+    btn.disabled=false;btn.innerHTML=origHtml;
+  }
 }
 function slotUrlChange(input){
   const thumb=input.closest('.img-slot').querySelector('.img-slot-thumb');
@@ -3458,6 +3545,7 @@ function loadSettings(){
   document.getElementById('s_name').value=s.storeName||'';
   document.getElementById('s_phone').value=s.storePhone||'';
   document.getElementById('s_phone2').value=s.storePhone2||'';
+  document.getElementById('s_driveApiKey').value=s.driveApiKey||'';
   document.getElementById('s_email').value=s.storeEmail||'';
   document.getElementById('s_currency').value=s.currency||'GH₵';
   document.getElementById('s_address').value=s.storeAddress||'';
@@ -3620,6 +3708,7 @@ function saveSettings(){
     storeName:document.getElementById('s_name').value.trim(),
     storePhone:document.getElementById('s_phone').value.trim(),
     storePhone2:document.getElementById('s_phone2').value.trim(),
+    driveApiKey:document.getElementById('s_driveApiKey').value.trim(),
     storeEmail:document.getElementById('s_email').value.trim(),
     currency:document.getElementById('s_currency').value.trim(),
     storeAddress:document.getElementById('s_address').value.trim(),
