@@ -550,6 +550,9 @@ textarea{resize:vertical;min-height:70px}
         <select class="filter-sel" id="filterImg" onchange="filterProducts()">
           <option value="">All Products</option>
           <option value="noimg">No Image</option><option value="hasimg">Has Image</option>
+        </select>
+        <select class="filter-sel" id="filterVis" onchange="filterProducts()">
+          <option value="">All (Hidden + Visible)</option>
           <option value="hidden">Hidden from Site</option><option value="visible">Visible on Site</option>
         </select>
         <button class="btn btn-outline btn-sm" id="clearFiltersBtn" onclick="clearProductFilters()" style="display:none"><i class="fas fa-times"></i> Clear</button>
@@ -1566,7 +1569,7 @@ function showPage(page) {
   if (page==='dashboard') renderDashboard();
   if (page==='orders')    { document.getElementById('orderSearch').value=''; document.getElementById('orderStatusFilter').value=''; const ocb=document.getElementById('clearOrderFiltersBtn');if(ocb)ocb.style.display='none'; filteredOrders=[...ORDERS].reverse(); renderOrdersTable(); }
   if (page==='deals')     { populateDealBrandSelect(); renderDeals(); loadFlashPicker(); renderPromoCodes(); }
-  if (page==='products')  { document.getElementById('searchBox').value=''; document.getElementById('filterCat').value=''; document.getElementById('filterImg').value=''; const pcb=document.getElementById('clearFiltersBtn');if(pcb)pcb.style.display='none'; populateFilterBrand(); filtered=[...adminProds]; renderTable(); }
+  if (page==='products')  { document.getElementById('searchBox').value=''; document.getElementById('filterCat').value=''; document.getElementById('filterImg').value=''; document.getElementById('filterVis').value=''; const pcb=document.getElementById('clearFiltersBtn');if(pcb)pcb.style.display='none'; populateFilterBrand(); filtered=[...adminProds]; renderTable(); }
   if (page==='images')    loadImages();
   if (page==='brands')     renderBrands();
   if (page==='categories') renderCategoriesGrid();
@@ -2595,6 +2598,7 @@ function filterProducts(preservePage){
   const cat=document.getElementById('filterCat').value;
   const br=document.getElementById('filterBrand').value;
   const img=document.getElementById('filterImg').value;
+  const vis=document.getElementById('filterVis').value;
   filtered=adminProds.filter(p=>{
     if(q&&!p.name.toLowerCase().includes(q)&&!(p.model||'').toLowerCase().includes(q)&&!(p.brand||'').toLowerCase().includes(q)&&!(p.id||'').toLowerCase().includes(q)) return false;
     if(cat&&p.category!==cat) return false;
@@ -2602,13 +2606,13 @@ function filterProducts(preservePage){
     const hasImg=p.images&&p.images[0];
     if(img==='noimg'&&hasImg) return false;
     if(img==='hasimg'&&!hasImg) return false;
-    if(img==='hidden'&&!p.hidden) return false;
-    if(img==='visible'&&p.hidden) return false;
+    if(vis==='hidden'&&!p.hidden) return false;
+    if(vis==='visible'&&p.hidden) return false;
     return true;
   });
   if(!preservePage) currentPage=1;
   renderTable();
-  const active=q||cat||br||img;
+  const active=q||cat||br||img||vis;
   const btn=document.getElementById('clearFiltersBtn');
   if(btn) btn.style.display=active?'inline-flex':'none';
 }
@@ -2617,6 +2621,7 @@ function clearProductFilters(){
   document.getElementById('filterCat').value='';
   document.getElementById('filterBrand').value='';
   document.getElementById('filterImg').value='';
+  document.getElementById('filterVis').value='';
   const btn=document.getElementById('clearFiltersBtn');
   if(btn) btn.style.display='none';
   filtered=[...adminProds];currentPage=1;renderTable();
