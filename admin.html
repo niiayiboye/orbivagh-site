@@ -2820,7 +2820,7 @@ async function importImagesFromDriveFolder(){
   const input=document.getElementById('folderImportUrl');
   const url=input.value.trim();
   if(!url){toast('Paste a Google Drive folder link first','err');return;}
-  const apiKey=(lsGet('obv_settings',{}).driveApiKey||'').trim();
+  const apiKey=(lsGet('obv_admin_secrets',{}).driveApiKey||lsGet('obv_settings',{}).driveApiKey||'').trim();
   if(!apiKey){toast('Add a Google Drive API key first — go to Settings → Google Drive Integration','err');return;}
   const folderId=driveFolderIdFromUrl(url);
   if(!folderId){toast('That doesn\'t look like a Google Drive folder link','err');return;}
@@ -2955,7 +2955,7 @@ async function scanDriveBySku(){
   applyBtn.disabled=true;applyBtn.style.opacity='.5';applyBtn.style.cursor='not-allowed';
   _driveSkuPlan=null;
   if(!url){toast('Paste a Google Drive folder link first','err');return;}
-  const apiKey=(lsGet('obv_settings',{}).driveApiKey||'').trim();
+  const apiKey=(lsGet('obv_admin_secrets',{}).driveApiKey||lsGet('obv_settings',{}).driveApiKey||'').trim();
   if(!apiKey){toast('Add a Google Drive API key first — go to Settings → Google Drive Integration','err');return;}
   const folderId=driveFolderIdFromUrl(url);
   if(!folderId){toast('That doesn\'t look like a Google Drive folder link','err');return;}
@@ -3753,7 +3753,10 @@ function loadSettings(){
   document.getElementById('s_name').value=s.storeName||'';
   document.getElementById('s_phone').value=s.storePhone||'';
   document.getElementById('s_phone2').value=s.storePhone2||'';
-  document.getElementById('s_driveApiKey').value=s.driveApiKey||'';
+  // Falls back to the old obv_settings.driveApiKey once, for anyone who
+  // saved a key before this moved to obv_admin_secrets — saveSettings()
+  // rewrites it to the new spot the next time this page is saved.
+  document.getElementById('s_driveApiKey').value=lsGet('obv_admin_secrets',{}).driveApiKey||s.driveApiKey||'';
   document.getElementById('s_email').value=s.storeEmail||'';
   document.getElementById('s_currency').value=s.currency||'GH₵';
   document.getElementById('s_address').value=s.storeAddress||'';
@@ -3911,12 +3914,17 @@ function saveDeliverySettings(){
 }
 function saveSettings(){
   const s=lsGet('obv_settings',{});
+  // driveApiKey no longer lives in obv_settings — that key is world-readable
+  // by design (the storefront needs storeName/phone/currency/etc. without
+  // logging in), so a secret sitting in it was readable by anyone who asked
+  // Supabase for it directly. It's now saved to obv_admin_secrets instead,
+  // which the database only hands back to a signed-in admin session.
+  delete s.driveApiKey;
   lsSet('obv_settings',{
     ...s,
     storeName:document.getElementById('s_name').value.trim(),
     storePhone:document.getElementById('s_phone').value.trim(),
     storePhone2:document.getElementById('s_phone2').value.trim(),
-    driveApiKey:document.getElementById('s_driveApiKey').value.trim(),
     storeEmail:document.getElementById('s_email').value.trim(),
     currency:document.getElementById('s_currency').value.trim(),
     storeAddress:document.getElementById('s_address').value.trim(),
@@ -3924,6 +3932,9 @@ function saveSettings(){
     hoursSunday:document.getElementById('s_hoursSunday').value.trim()
   });
   sbPush('obv_settings');
+  const secrets=lsGet('obv_admin_secrets',{});
+  lsSet('obv_admin_secrets',{...secrets,driveApiKey:document.getElementById('s_driveApiKey').value.trim()});
+  sbPush('obv_admin_secrets');
   toast('Settings saved & published!','ok');
 }
 async function changePassword(){

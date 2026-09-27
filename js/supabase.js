@@ -5,13 +5,19 @@
 const SB_URL = 'https://gvvzcudpcotoicnrhapz.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2dnpjdWRwY290b2ljbnJoYXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxODQ0MjgsImV4cCI6MjEwMjc2MDQyOH0.BCh__U3fedTDvh0S8UAiPs7o1SnsqqKwuf_56bywWUw';
 
-/* Pull all rows from kv_store into localStorage, then resolve. */
+/* Pull all rows from kv_store into localStorage, then resolve.
+   Uses a signed-in admin's own token when one is available, the same way
+   sbPush() already does for writes — a couple of keys (obv_admin_secrets,
+   the legacy obv_pass) are now only readable that way. A logged-out visitor
+   still gets everything the storefront needs; they just never receive those
+   two rows at all, straight from the database's own access rules. */
 async function sbSync() {
   try {
+    const adminToken = await getValidAdminAccessToken();
     const res = await fetch(`${SB_URL}/rest/v1/kv_store?select=*`, {
       headers: {
         'apikey': SB_KEY,
-        'Authorization': `Bearer ${SB_KEY}`
+        'Authorization': `Bearer ${adminToken || SB_KEY}`
       }
     });
     if (!res.ok) return;
