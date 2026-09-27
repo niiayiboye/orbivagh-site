@@ -734,7 +734,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.pp-thumb').forEach((t, i) => {
       t.classList.toggle('active', i === idx);
     });
+    startPPAuto(); // any switch (auto or manual) restarts the 2s countdown fresh
   }
+
+  // Auto-advance through the photos every 2s while someone's viewing the
+  // product, so they see all the shots without having to click through —
+  // pauses while the mouse is actually over the image, and never starts at
+  // all when there's only one photo to show.
+  let ppAutoTimer = null;
+  function startPPAuto() {
+    stopPPAuto();
+    if (imgs.length < 2) return;
+    ppAutoTimer = setInterval(() => {
+      switchPPImg((currentIdx + 1) % imgs.length);
+    }, 2000);
+  }
+  function stopPPAuto() {
+    if (ppAutoTimer) { clearInterval(ppAutoTimer); ppAutoTimer = null; }
+  }
+  mainWrap.addEventListener('mouseenter', stopPPAuto);
+  mainWrap.addEventListener('mouseleave', startPPAuto);
+  startPPAuto();
 
   initMegaBackdrop();
 
