@@ -601,11 +601,12 @@ textarea{resize:vertical;min-height:70px}
       <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;padding:14px 16px;margin-bottom:18px">
         <strong style="font-size:13.5px"><i class="fab fa-google-drive" style="color:#0f9d58"></i> Bulk Import by SKU Folders</strong>
         <p style="font-size:12.5px;color:var(--muted);margin:6px 0 10px;line-height:1.6">
-          In Google Drive, put each product's photos in its own folder named after its <strong>Model/SKU</strong> (any depth of parent folders above that is fine — e.g. Brand → Category → SKU). Share the top-level folder as "Anyone with the link", paste its link below, and every matching product gets its images filled in at once. Folder names are matched loosely (case and spacing don't need to match exactly).
+          In Google Drive, put each product's photos in its own folder named after its <strong>Model/SKU</strong> (any depth of parent folders above that is fine — e.g. Brand → Category → SKU). Share the top-level folder as "Anyone with the link", paste its link below. <strong>Scan Only</strong> shows you exactly what it would do — nothing is changed on the site until you review the plan and click Apply.
         </p>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <input type="text" id="bulkSkuFolderUrl" placeholder="Paste the top-level Google Drive folder link" style="flex:1;min-width:260px">
-          <button class="btn btn-primary btn-sm" onclick="importImagesFromDriveBySku()" id="bulkSkuImportBtn"><i class="fas fa-download"></i> Scan &amp; Import</button>
+          <button class="btn btn-outline btn-sm" onclick="scanDriveBySku()" id="bulkSkuScanBtn"><i class="fas fa-search"></i> Scan Only (preview)</button>
+          <button class="btn btn-primary btn-sm" onclick="applyDriveSkuPlan()" id="bulkSkuApplyBtn" disabled style="opacity:.5;cursor:not-allowed"><i class="fas fa-check"></i> Apply Changes</button>
         </div>
         <div id="bulkSkuProgress" style="font-size:12.5px;color:var(--muted);margin-top:8px"></div>
       </div>
@@ -2885,75 +2886,167 @@ async function driveListChildren(folderId,apiKey){
   }while(pageToken);
   return out;
 }
-async function driveWalkForSkuFolders(folderId,folderName,apiKey,results){
+async function driveWalkForSkuFolders(folderId,folderName,path,apiKey,results,loose){
   const children=await driveListChildren(folderId,apiKey);
   const subfolders=children.filter(f=>f.mimeType==='application/vnd.google-apps.folder');
   const images=children.filter(f=>f.mimeType&&f.mimeType.startsWith('image/'));
-  if(images.length&&folderName)results.push({folderName,images});
-  for(const sub of subfolders)await driveWalkForSkuFolders(sub.id,sub.name,apiKey,results);
+  if(images.length&&folderName){
+    // Only a true LEAF folder (no subfolders of its own) counts as a real SKU
+    // folder. A Brand or Category folder that also happens to have a few
+    // loose photos dropped directly in it is NOT one — those stray photos
+    // would otherwise get filed under the brand/category name itself and
+    // risk landing on whichever product happens to share that name.
+    if(subfolders.length===0)results.push({folderName,path:path.concat(folderName).join(' / '),images});
+    else loose.push({folderName,path:path.concat(folderName).join(' / '),count:images.length});
+  }
+  for(const sub of subfolders)await driveWalkForSkuFolders(sub.id,sub.name,path.concat(folderName||[]).filter(Boolean),apiKey,results,loose);
 }
-async function importImagesFromDriveBySku(){
+let _driveSkuPlan=null; // holds the last scan's computed plan, awaiting Apply — nothing is written until then
+function renderDriveSkuReport(plan){
+  const {toApply,loose,dupProductNames,dupFolderNames,unmatchedNames}=plan;
+  const section=(title,color,items,renderItem)=>items.length?`
+    <div style="margin-top:10px;padding:10px 12px;background:#fff;border:1px solid ${color};border-radius:8px">
+      <strong style="color:${color};font-size:12.5px">${title} (${items.length})</strong>
+      <ul style="margin:6px 0 0 18px;padding:0;font-size:12px;color:var(--text-body)">${items.map(renderItem).join('')}</ul>
+    </div>`:'';
+  // Each matched product gets a checkbox (checked by default) plus a thumbnail
+  // of its first photo, so you can eyeball the match and manually exclude
+  // anything that looks wrong before clicking Apply — no need to Apply then
+  // undo just to fix one bad match.
+  const toApplyBlock=toApply.length?`
+    <div style="margin-top:10px;padding:10px 12px;background:#fff;border:1px solid #15803d;border-radius:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong style="color:#15803d;font-size:12.5px">Would update these products (${toApply.length})</strong>
+        <span style="font-size:11.5px">
+          <a href="#" onclick="event.preventDefault();document.querySelectorAll('.drive-sku-check').forEach(c=>c.checked=true)">select all</a> ·
+          <a href="#" onclick="event.preventDefault();document.querySelectorAll('.drive-sku-check').forEach(c=>c.checked=false)">select none</a>
+        </span>
+      </div>
+      <div style="margin-top:6px;display:flex;flex-direction:column;gap:6px">
+        ${toApply.map((r,i)=>`
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;border-radius:6px;cursor:pointer" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+            <input type="checkbox" class="drive-sku-check" data-idx="${i}" checked style="flex:none">
+            <img src="${escHtml(r.urls[0]||'')}" style="width:36px;height:36px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex:none" onerror="this.style.visibility='hidden'">
+            <span style="font-size:12px;color:var(--text-body);line-height:1.3">
+              <strong>${escHtml(r.product.name)}</strong> (${escHtml(r.product.model||'')})<br>
+              <span style="color:var(--muted)">← <code>${escHtml(r.path)}</code>, ${r.urls.length} image${r.urls.length!==1?'s':''}</span>
+            </span>
+          </label>`).join('')}
+      </div>
+    </div>`:'';
+  document.getElementById('bulkSkuProgress').innerHTML=
+    `<div style="font-size:12.5px;color:var(--muted)"><strong>${toApply.length} product${toApply.length!==1?'s':''}</strong> would be updated if you click Apply · ${unmatchedNames.length} unmatched folder${unmatchedNames.length!==1?'s':''} would be saved for later</div>`
+    +toApplyBlock
+    +section('Stray images ignored — dropped directly in a Brand/Category folder instead of their own SKU subfolder','#b45309',loose,l=>`<li><code>${escHtml(l.path)}</code> — ${l.count} image${l.count!==1?'s':''}. Move them into a proper SKU subfolder, or delete if unused.</li>`)
+    +section('Would skip — two different products share the same Model/SKU value','#dc2626',dupProductNames,n=>`<li><code>${escHtml(n)}</code> — fix the duplicate SKU in Products first, then re-scan.</li>`)
+    +section('Would skip — the same SKU folder name appears in more than one place in Drive','#dc2626',dupFolderNames,p=>`<li><code>${escHtml(p)}</code> — rename one of the duplicate folders so each SKU has one folder, then re-scan.</li>`)
+    +section('Not matched to any current product (would be saved for later — auto-fills if you add a matching product)','var(--muted)',unmatchedNames,u=>`<li><code>${escHtml(u.folderName)}</code></li>`);
+}
+async function scanDriveBySku(){
   const input=document.getElementById('bulkSkuFolderUrl');
   const url=input.value.trim();
   const progressEl=document.getElementById('bulkSkuProgress');
+  const applyBtn=document.getElementById('bulkSkuApplyBtn');
+  applyBtn.disabled=true;applyBtn.style.opacity='.5';applyBtn.style.cursor='not-allowed';
+  _driveSkuPlan=null;
   if(!url){toast('Paste a Google Drive folder link first','err');return;}
   const apiKey=(lsGet('obv_settings',{}).driveApiKey||'').trim();
   if(!apiKey){toast('Add a Google Drive API key first — go to Settings → Google Drive Integration','err');return;}
   const folderId=driveFolderIdFromUrl(url);
   if(!folderId){toast('That doesn\'t look like a Google Drive folder link','err');return;}
 
-  const btn=document.getElementById('bulkSkuImportBtn');
+  const btn=document.getElementById('bulkSkuScanBtn');
   const origHtml=btn.innerHTML;
   btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Scanning…';
-  progressEl.textContent='Scanning folder tree — this can take a moment for large libraries…';
+  progressEl.textContent='Scanning folder tree — nothing is changed yet, this only reads from Drive…';
   try{
-    const results=[];
-    await driveWalkForSkuFolders(folderId,null,apiKey,results);
-    if(!results.length){
-      toast('No SKU folders with images found — check the folder is shared as "Anyone with the link" and contains subfolders of images','info');
+    const results=[],loose=[];
+    await driveWalkForSkuFolders(folderId,null,[],apiKey,results,loose);
+    if(!results.length&&!loose.length){
+      progressEl.textContent='';
+      toast('No images found — check the folder is shared as "Anyone with the link" and contains subfolders of images','info');
       return;
     }
 
     const prods=getAdminProducts();
-    const bySku={};
-    prods.forEach(p=>{const k=normSku(p.model);if(k&&!bySku[k])bySku[k]=p;});
+    // Detect products that accidentally share the same Model/SKU value —
+    // applying one folder's photos to either of them would be a guess, so
+    // those are flagged and skipped rather than silently picking one.
+    const bySku={},dupProductSkus=new Set();
+    prods.forEach(p=>{
+      const k=normSku(p.model);if(!k)return;
+      if(bySku[k])dupProductSkus.add(k);else bySku[k]=p;
+    });
+    // Two differently-placed folders that normalize to the same SKU name are
+    // just as ambiguous (which one is "really" that product's photos?) —
+    // flag and skip both rather than letting the second overwrite the first.
+    const folderNameCounts={};
+    results.forEach(r=>{const k=normSku(r.folderName);folderNameCounts[k]=(folderNameCounts[k]||0)+1;});
 
-    const skuMap=lsGet('obv_sku_img_map',{});
-    const edits=lsGet('obv_prod_edits',{});
-    let updated=0,unmatched=0;
-    const unmatchedNames=[];
+    const toApply=[],unmatchedNames=[],dupProductNames=[],dupFolderNames=[];
     results.forEach(r=>{
+      const key=normSku(r.folderName);
       const urls=r.images.slice(0,10).map(f=>toCloudinaryFetchUrl('https://drive.google.com/thumbnail?id='+f.id+'&sz=w1000'));
-      const p=bySku[normSku(r.folderName)];
-      if(p){
-        skuMap[(p.model||'').trim()]=urls;
-        edits[p.id]={...(edits[p.id]||{}),images:urls};
-        updated++;
-      }else{
-        skuMap[r.folderName.trim()]=urls;
-        unmatched++;
-        unmatchedNames.push(r.folderName);
-      }
+      if(folderNameCounts[key]>1){dupFolderNames.push(r.path);return;}
+      if(dupProductSkus.has(key)){dupProductNames.push(r.folderName);return;}
+      const p=bySku[key];
+      if(p)toApply.push({product:p,folderName:r.folderName,path:r.path,urls});
+      else unmatchedNames.push({folderName:r.folderName,urls});
     });
 
-    lsSet('obv_sku_img_map',skuMap);
-    lsSet('obv_prod_edits',edits);
-    sbPush('obv_prod_edits');
-    loadProducts();filterProducts();renderDashboard();loadImages();
-    logHistory({type:'edit',label:'Bulk-imported images from Drive for '+updated+' product'+(updated!==1?'s':'')+' by SKU folder',undoData:{}});
-
-    let msg=updated+' product'+(updated!==1?'s':'')+' updated with images from Drive.';
-    if(unmatched)msg+=' '+unmatched+' folder'+(unmatched!==1?'s':'')+' didn\'t match any current product — saved for later, they\'ll auto-fill if you add a matching product: '+unmatchedNames.slice(0,5).join(', ')+(unmatchedNames.length>5?'…':'');
-    toast(msg,updated?'ok':'info');
+    _driveSkuPlan={toApply,unmatchedNames,loose,dupProductNames,dupFolderNames};
+    renderDriveSkuReport(_driveSkuPlan);
+    if(toApply.length){applyBtn.disabled=false;applyBtn.style.opacity='1';applyBtn.style.cursor='pointer';}
+    toast('Scan complete — review the plan below, nothing has been changed yet','info');
     input.value='';
   }catch(e){
+    progressEl.textContent='';
     if(e.status===403)toast('Drive API blocked this request — check the API key is unrestricted to your domain and the Drive API is enabled. ('+e.message+')','err');
     else if(e.status===404)toast('Folder not found — make sure it\'s shared as "Anyone with the link"','err');
     else toast('Could not complete the scan: '+(e.message||'check your connection and try again'),'err');
   }finally{
     btn.disabled=false;btn.innerHTML=origHtml;
-    progressEl.textContent='';
   }
+}
+function applyDriveSkuPlan(){
+  if(!_driveSkuPlan||!_driveSkuPlan.toApply.length){toast('Run "Scan Only" first','err');return;}
+  const {unmatchedNames}=_driveSkuPlan;
+  // Only the products still checked in the report get applied — this lets you
+  // manually exclude any match that looked wrong on inspection, without
+  // needing to Apply everything and then undo just the bad ones.
+  const checks=[...document.querySelectorAll('.drive-sku-check')];
+  const checkedIdx=new Set(checks.filter(c=>c.checked).map(c=>parseInt(c.dataset.idx)));
+  const toApply=_driveSkuPlan.toApply.filter((_,i)=>checkedIdx.has(i));
+  if(!toApply.length){toast('Nothing is checked — check at least one product, or select all','err');return;}
+  const skuMap=lsGet('obv_sku_img_map',{});
+  const edits=lsGet('obv_prod_edits',{});
+  // Snapshot each affected product's PRIOR images (or "had no override at
+  // all" if none) before overwriting, so this whole batch can be undone
+  // with one click from History if the result isn't what was expected.
+  const undoSnapshots=toApply.map(({product})=>({
+    productId:product.id,
+    hadOverride:!!(edits[product.id]&&'images' in edits[product.id]),
+    prevImages:edits[product.id]?edits[product.id].images:undefined
+  }));
+  toApply.forEach(({product,urls})=>{
+    skuMap[(product.model||'').trim()]=urls;
+    edits[product.id]={...(edits[product.id]||{}),images:urls};
+  });
+  // Unmatched folders touch no existing product, so there's nothing to
+  // undo for these — just cache them under their own folder name in case
+  // a matching product gets added later.
+  unmatchedNames.forEach(u=>{skuMap[u.folderName.trim()]=u.urls;});
+  lsSet('obv_sku_img_map',skuMap);
+  lsSet('obv_prod_edits',edits);
+  sbPush('obv_prod_edits');
+  loadProducts();filterProducts();renderDashboard();loadImages();
+  logHistory({type:'bulk_drive_images',label:'Bulk-imported images from Drive for '+toApply.length+' product'+(toApply.length!==1?'s':'')+' by SKU folder',undoData:{snapshots:undoSnapshots}});
+
+  toast(toApply.length+' product'+(toApply.length!==1?'s':'')+' updated and published.','ok');
+  document.getElementById('bulkSkuProgress').innerHTML=`<div style="font-size:12.5px;color:#15803d"><i class="fas fa-check-circle"></i> Applied — ${toApply.length} product${toApply.length!==1?'s':''} updated. You can undo this whole batch from History if needed.</div>`;
+  const applyBtn=document.getElementById('bulkSkuApplyBtn');
+  applyBtn.disabled=true;applyBtn.style.opacity='.5';applyBtn.style.cursor='not-allowed';
+  _driveSkuPlan=null;
 }
 
 function slotUrlChange(input){
@@ -4976,8 +5069,8 @@ function renderHistory(){
   const list=document.getElementById('historyList');
   const hist=lsGet('obv_history',[]);
   if(!hist.length){list.innerHTML='<div class="empty-state"><i class="fas fa-history"></i><p>No changes recorded yet.</p></div>';return;}
-  const icons={edit:'fas fa-edit',add:'fas fa-plus-circle',delete:'fas fa-trash',add_delete:'fas fa-minus-circle',display:'fas fa-sliders-h',brand_add:'fas fa-copyright',brand_delete:'fas fa-copyright',delete_all_keep_img:'fas fa-images'};
-  const colors={edit:'#1d4ed8',add:'#15803d',delete:'#dc2626',add_delete:'#dc2626',display:'#7c3aed',brand_add:'#0ea5e9',brand_delete:'#f59e0b',delete_all_keep_img:'#b45309'};
+  const icons={edit:'fas fa-edit',add:'fas fa-plus-circle',delete:'fas fa-trash',add_delete:'fas fa-minus-circle',display:'fas fa-sliders-h',brand_add:'fas fa-copyright',brand_delete:'fas fa-copyright',delete_all_keep_img:'fas fa-images',bulk_drive_images:'fab fa-google-drive'};
+  const colors={edit:'#1d4ed8',add:'#15803d',delete:'#dc2626',add_delete:'#dc2626',display:'#7c3aed',brand_add:'#0ea5e9',brand_delete:'#f59e0b',delete_all_keep_img:'#b45309',bulk_drive_images:'#0f9d58'};
   list.innerHTML=hist.map(h=>`
     <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1.5px solid var(--border);border-radius:10px;margin-bottom:10px">
       <div style="width:36px;height:36px;border-radius:50%;background:${colors[h.type]||'#64748b'}20;display:flex;align-items:center;justify-content:center;flex-shrink:0">
@@ -5013,6 +5106,16 @@ function undoHistory(id){
     lsSet('obv_brand_adds',lsGet('obv_brand_adds',[]).filter(b=>b.id!==u.brandId));sbPush('obv_brand_adds');
   } else if(entry.type==='brand_delete'){
     lsSet('obv_brand_dels',lsGet('obv_brand_dels',[]).filter(id=>id!==u.brandId));sbPush('obv_brand_dels');
+  } else if(entry.type==='bulk_drive_images'&&u.snapshots){
+    // Restores every product this batch touched back to whatever images
+    // (or lack of an override) it had immediately before Apply ran.
+    const edits=lsGet('obv_prod_edits',{});
+    u.snapshots.forEach(s=>{
+      if(!edits[s.productId])return;
+      if(s.hadOverride)edits[s.productId]={...edits[s.productId],images:s.prevImages};
+      else{const {images,...rest}=edits[s.productId];edits[s.productId]=rest;}
+    });
+    lsSet('obv_prod_edits',edits);sbPush('obv_prod_edits');
   }
   lsSet('obv_history',hist.filter(h=>h.id!==id));
   toast('Undone!','ok');
