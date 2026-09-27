@@ -597,6 +597,19 @@ textarea{resize:vertical;min-height:70px}
         <span style="font-size:13px;color:var(--muted)">Or upload locally — name files by SKU (e.g. <em>QA55Q6FAAUXGH.jpg</em>) then click Auto-Map.</span>
         <div id="skuMapInfo" style="margin-left:auto;font-size:12px;color:var(--muted);background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:6px 12px"></div>
       </div>
+
+      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;padding:14px 16px;margin-bottom:18px">
+        <strong style="font-size:13.5px"><i class="fab fa-google-drive" style="color:#0f9d58"></i> Bulk Import by SKU Folders</strong>
+        <p style="font-size:12.5px;color:var(--muted);margin:6px 0 10px;line-height:1.6">
+          In Google Drive, put each product's photos in its own folder named after its <strong>Model/SKU</strong> (any depth of parent folders above that is fine — e.g. Brand → Category → SKU). Share the top-level folder as "Anyone with the link", paste its link below, and every matching product gets its images filled in at once. Folder names are matched loosely (case and spacing don't need to match exactly).
+        </p>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input type="text" id="bulkSkuFolderUrl" placeholder="Paste the top-level Google Drive folder link" style="flex:1;min-width:260px">
+          <button class="btn btn-primary btn-sm" onclick="importImagesFromDriveBySku()" id="bulkSkuImportBtn"><i class="fas fa-download"></i> Scan &amp; Import</button>
+        </div>
+        <div id="bulkSkuProgress" style="font-size:12.5px;color:var(--muted);margin-top:8px"></div>
+      </div>
+
       <div id="imageGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px"></div>
     </div>
 
@@ -2846,6 +2859,103 @@ async function importImagesFromDriveFolder(){
     btn.disabled=false;btn.innerHTML=origHtml;
   }
 }
+
+/* ── Bulk import: whole Drive folder tree matched to products by SKU ──
+   Organize Drive as: <any parent folders> / <SKU folder> / <images>. Every
+   folder that directly contains at least one image is treated as one
+   product's SKU folder, named however deep in the tree it sits. Matching
+   against each product's Model field is deliberately forgiving (case and
+   whitespace don't have to match) since folder names get typed/renamed by
+   hand and a strict match would silently skip products over a stray space. */
+function normSku(s){return (s||'').toString().trim().toUpperCase().replace(/\s+/g,' ');}
+async function driveListChildren(folderId,apiKey){
+  let out=[],pageToken='';
+  do{
+    const q=encodeURIComponent(`'${folderId}' in parents and trashed=false`);
+    const apiUrl=`https://www.googleapis.com/drive/v3/files?q=${q}&orderBy=name_natural&fields=nextPageToken,files(id,name,mimeType)&pageSize=1000&key=${encodeURIComponent(apiKey)}`+(pageToken?`&pageToken=${encodeURIComponent(pageToken)}`:'');
+    const res=await fetch(apiUrl);
+    const data=await res.json();
+    if(!res.ok){
+      const err=new Error((data&&data.error&&data.error.message)||'Drive request failed');
+      err.status=res.status;
+      throw err;
+    }
+    out=out.concat(data.files||[]);
+    pageToken=data.nextPageToken||'';
+  }while(pageToken);
+  return out;
+}
+async function driveWalkForSkuFolders(folderId,folderName,apiKey,results){
+  const children=await driveListChildren(folderId,apiKey);
+  const subfolders=children.filter(f=>f.mimeType==='application/vnd.google-apps.folder');
+  const images=children.filter(f=>f.mimeType&&f.mimeType.startsWith('image/'));
+  if(images.length&&folderName)results.push({folderName,images});
+  for(const sub of subfolders)await driveWalkForSkuFolders(sub.id,sub.name,apiKey,results);
+}
+async function importImagesFromDriveBySku(){
+  const input=document.getElementById('bulkSkuFolderUrl');
+  const url=input.value.trim();
+  const progressEl=document.getElementById('bulkSkuProgress');
+  if(!url){toast('Paste a Google Drive folder link first','err');return;}
+  const apiKey=(lsGet('obv_settings',{}).driveApiKey||'').trim();
+  if(!apiKey){toast('Add a Google Drive API key first — go to Settings → Google Drive Integration','err');return;}
+  const folderId=driveFolderIdFromUrl(url);
+  if(!folderId){toast('That doesn\'t look like a Google Drive folder link','err');return;}
+
+  const btn=document.getElementById('bulkSkuImportBtn');
+  const origHtml=btn.innerHTML;
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Scanning…';
+  progressEl.textContent='Scanning folder tree — this can take a moment for large libraries…';
+  try{
+    const results=[];
+    await driveWalkForSkuFolders(folderId,null,apiKey,results);
+    if(!results.length){
+      toast('No SKU folders with images found — check the folder is shared as "Anyone with the link" and contains subfolders of images','info');
+      return;
+    }
+
+    const prods=getAdminProducts();
+    const bySku={};
+    prods.forEach(p=>{const k=normSku(p.model);if(k&&!bySku[k])bySku[k]=p;});
+
+    const skuMap=lsGet('obv_sku_img_map',{});
+    const edits=lsGet('obv_prod_edits',{});
+    let updated=0,unmatched=0;
+    const unmatchedNames=[];
+    results.forEach(r=>{
+      const urls=r.images.slice(0,10).map(f=>toCloudinaryFetchUrl('https://drive.google.com/thumbnail?id='+f.id+'&sz=w1000'));
+      const p=bySku[normSku(r.folderName)];
+      if(p){
+        skuMap[(p.model||'').trim()]=urls;
+        edits[p.id]={...(edits[p.id]||{}),images:urls};
+        updated++;
+      }else{
+        skuMap[r.folderName.trim()]=urls;
+        unmatched++;
+        unmatchedNames.push(r.folderName);
+      }
+    });
+
+    lsSet('obv_sku_img_map',skuMap);
+    lsSet('obv_prod_edits',edits);
+    sbPush('obv_prod_edits');
+    loadProducts();filterProducts();renderDashboard();loadImages();
+    logHistory({type:'edit',label:'Bulk-imported images from Drive for '+updated+' product'+(updated!==1?'s':'')+' by SKU folder',undoData:{}});
+
+    let msg=updated+' product'+(updated!==1?'s':'')+' updated with images from Drive.';
+    if(unmatched)msg+=' '+unmatched+' folder'+(unmatched!==1?'s':'')+' didn\'t match any current product — saved for later, they\'ll auto-fill if you add a matching product: '+unmatchedNames.slice(0,5).join(', ')+(unmatchedNames.length>5?'…':'');
+    toast(msg,updated?'ok':'info');
+    input.value='';
+  }catch(e){
+    if(e.status===403)toast('Drive API blocked this request — check the API key is unrestricted to your domain and the Drive API is enabled. ('+e.message+')','err');
+    else if(e.status===404)toast('Folder not found — make sure it\'s shared as "Anyone with the link"','err');
+    else toast('Could not complete the scan: '+(e.message||'check your connection and try again'),'err');
+  }finally{
+    btn.disabled=false;btn.innerHTML=origHtml;
+    progressEl.textContent='';
+  }
+}
+
 function slotUrlChange(input){
   const thumb=input.closest('.img-slot').querySelector('.img-slot-thumb');
   const img=thumb.querySelector('img');
