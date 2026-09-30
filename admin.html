@@ -3138,6 +3138,28 @@ function saveProduct(stayOpen=false){
   const _sku=document.getElementById('f_model').value.trim();
   let _imgs=getImageSlotUrls();
   if(!_imgs.length&&_sku){const skuMap=lsGet('obv_sku_img_map',{});_imgs=skuMap[_sku]||[];}
+  // Warn (don't block) if this Model/SKU or exact Name already belongs to a
+  // different product. Someone re-adding the same item by mistake is the
+  // common case this catches; deliberately reusing a SKU/name is still
+  // allowed if they confirm.
+  const _dupe = (adminProds||[]).find(p =>
+    p.id !== editingId && (
+      (_sku && p.model && p.model.trim().toLowerCase() === _sku.toLowerCase()) ||
+      (p.name && p.name.trim().toLowerCase() === name.toLowerCase())
+    )
+  );
+  if (_dupe) {
+    const field = (_sku && _dupe.model && _dupe.model.trim().toLowerCase() === _sku.toLowerCase()) ? 'Model/SKU' : 'Name';
+    confirmAction(
+      'This looks like a duplicate product',
+      `Another product already uses this ${field} — "${_dupe.name}"${_dupe.model ? ' (Model: ' + _dupe.model + ')' : ''}. If this is meant to be a different product, give it a unique ${field} first. Otherwise you can save anyway and end up with two listings for the same item.`,
+      () => _continueSaveProduct(stayOpen, name, price, _sku, _imgs)
+    );
+    return;
+  }
+  _continueSaveProduct(stayOpen, name, price, _sku, _imgs);
+}
+function _continueSaveProduct(stayOpen, name, price, _sku, _imgs){
   // Enforce the "no image = don't publish" rule at the actual point of
   // saving, not just by hiding it reactively on the live site afterward —
   // this was the real gap: nothing ever stopped an image-less product from
