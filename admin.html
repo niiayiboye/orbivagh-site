@@ -2671,11 +2671,12 @@ function toggleProductHidden(id){
   const edits=lsGet('obv_prod_edits',{});
   const p=adminProds.find(x=>x.id===id);
   if(!p)return;
+  const _prevEdit=edits[id]?{...edits[id]}:undefined;
   const newHidden=!p.hidden;
   edits[id]=Object.assign({},edits[id]||{},{hidden:newHidden});
   lsSet('obv_prod_edits',edits);sbPush('obv_prod_edits');
   toast(newHidden?'Product hidden from site':'Product visible on site again','ok');
-  logHistory({type:'toggle_hidden',label:(newHidden?'Hid':'Unhid')+': '+p.name,undoData:{productId:id}});
+  logHistory({type:'toggle_hidden',label:(newHidden?'Hid':'Unhid')+': '+p.name,undoData:{productId:id,prevEdit:_prevEdit}});
   loadProducts();filterProducts(true);
 }
 // Turns a clicked category pill into a dropdown right in place, so the
@@ -2705,9 +2706,10 @@ function saveInlineCategory(id,newCatId){
   const p=adminProds.find(x=>x.id===id);
   if(p&&p.category===newCatId){filterProducts(true);return;} // no actual change
   const edits=lsGet('obv_prod_edits',{});
+  const _prevEdit=edits[id]?{...edits[id]}:undefined;
   edits[id]=Object.assign({},edits[id]||{},{category:newCatId});
   lsSet('obv_prod_edits',edits);sbPush('obv_prod_edits');
-  logHistory({type:'category_change',label:'Changed category for: '+(p?p.name:id),undoData:{productId:id}});
+  logHistory({type:'category_change',label:'Changed category for: '+(p?p.name:id),undoData:{productId:id,prevEdit:_prevEdit}});
   loadProducts();filterProducts(true);
   toast('Category updated','ok');
 }
@@ -3221,11 +3223,12 @@ function _doSaveProduct(stayOpen, name, price, _sku, _imgs){
       const orig=adminProds.find(p=>p.id===editingId);
       if(orig){product.reviews=orig.reviews;product.id=orig.id;}
       const edits=lsGet('obv_prod_edits',{});
+      const _prevEdit=edits[editingId]?{...edits[editingId]}:undefined;
       edits[editingId]=product;
       lsSet('obv_prod_edits',edits);
       sbPush('obv_prod_edits');
       toast('Updated!','ok');
-      try{logHistory({type:'edit',label:'Edited: '+product.name,undoData:{productId:editingId}});}catch(e){}
+      try{logHistory({type:'edit',label:'Edited: '+product.name,undoData:{productId:editingId,prevEdit:_prevEdit}});}catch(e){}
     } else {
       const adds=lsGet('obv_prod_adds',[]);
       product.id='admin-'+Date.now();product.reviews=Math.floor(Math.random()*200+50);
@@ -3712,7 +3715,7 @@ function importProductsCSV(input){
         imgMapped?imgMapped+' images auto-mapped from SKU':'',
         skipped?skipped+' skipped (no ID or name)':''
       ].filter(Boolean).join(' · ');
-      logHistory({type:'edit',label:'Bulk CSV import: '+summary,undoData:{}});
+      logHistory({type:'bulk_edit',label:'Bulk CSV import: '+summary,undoData:{}});
       toast(summary,'ok');
     }catch(err){toast('CSV error: '+err.message,'err');}
     input.value='';
@@ -3792,7 +3795,7 @@ function autoMapFromLibrary(){
   lsSet('obv_prod_edits',edits);
   sbPush('obv_prod_edits');
   loadProducts();filterProducts();renderDashboard();loadImages();
-  logHistory({type:'edit',label:'Auto-mapped '+matched+' products from image library by SKU',undoData:{}});
+  logHistory({type:'bulk_edit',label:'Auto-mapped '+matched+' products from image library by SKU',undoData:{}});
   const note=alreadyDone?' ('+alreadyDone+' already had images)':'';
   toast(matched+' product'+(matched!==1?'s':'')+' mapped & published to site!'+note,'ok');
 }
@@ -4394,9 +4397,10 @@ function saveComboProductPrice(id, newPriceStr){
   if (!p || isNaN(newPrice) || newPrice < 0) { renderComboSelectedProducts(); return; }
   if (p.price === newPrice) return;
   const edits = lsGet('obv_prod_edits', {});
+  const _prevEdit = edits[id] ? {...edits[id]} : undefined;
   edits[id] = Object.assign({}, edits[id] || {}, { price: newPrice });
   lsSet('obv_prod_edits', edits); sbPush('obv_prod_edits');
-  logHistory({type:'price_change', label:'Changed selling price for: '+p.name, undoData:{productId:id}});
+  logHistory({type:'price_change', label:'Changed selling price for: '+p.name, undoData:{productId:id,prevEdit:_prevEdit}});
   loadProducts();
   renderComboSelectedProducts();
   toast('Selling price updated', 'ok');
@@ -4666,9 +4670,10 @@ function saveCategory(){
     // same pattern used for product edits, so built-in categories become
     // genuinely editable instead of only hideable.
     const edits=lsGet('obv_cat_edits',{});
+    const _prevCatEdit=edits[editingCatId]?{...edits[editingCatId]}:undefined;
     edits[editingCatId]={name,parentId,icon,color,bg};
     lsSet('obv_cat_edits',edits);sbPush('obv_cat_edits');
-    logHistory({type:'category_edit',label:'Edited category: '+name,undoData:{categoryId:editingCatId}});
+    logHistory({type:'category_edit',label:'Edited category: '+name,undoData:{categoryId:editingCatId,prevCatEdit:_prevCatEdit}});
     toast('Category updated!','ok');
   } else {
     const id=name.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
@@ -4683,22 +4688,26 @@ function saveCategory(){
 }
 
 function deleteCategory(id){
+  const _catBeingDeleted=getAllCategories().find(c=>c.id===id);
   // Any subcategories under this one become top-level rather than vanishing
   // silently or pointing at a parent that no longer exists.
   const edits=lsGet('obv_cat_edits',{});
+  const _subPrev=[];
   getAllCategories().filter(c=>c.parentId===id).forEach(c=>{
+    _subPrev.push({id:c.id,prevEdit:edits[c.id]?{...edits[c.id]}:undefined});
     edits[c.id]=Object.assign({},edits[c.id]||{},{parentId:null});
   });
   lsSet('obv_cat_edits',edits);sbPush('obv_cat_edits');
 
   const adds=lsGet('obv_cat_adds',[]);
   const newAdds=adds.filter(c=>c.id!==id);
-  if(newAdds.length<adds.length){
+  const _wasAdded=newAdds.length<adds.length;
+  if(_wasAdded){
     lsSet('obv_cat_adds',newAdds);sbPush('obv_cat_adds');
   } else {
     const dels=lsGet('obv_cat_dels',[]);if(!dels.includes(id))dels.push(id);lsSet('obv_cat_dels',dels);sbPush('obv_cat_dels');
   }
-  logHistory({type:'category_delete',label:'Removed category: '+id,undoData:{categoryId:id}});
+  logHistory({type:'category_delete',label:'Removed category: '+id,undoData:{categoryId:id,category:_catBeingDeleted,wasAdded:_wasAdded,subPrev:_subPrev}});
   toast('Category deleted','ok');renderCategoriesGrid();populateCategoryDropdowns();
 }
 
@@ -5126,11 +5135,25 @@ function exportCustomersCSV(){
 
 
 /* ── Change History ── */
+// Entry types that Undo actually knows how to reverse. Anything else still
+// shows up in the log (for visibility), but without a live Undo button —
+// better than a button that silently does nothing when clicked.
+const UNDOABLE_HISTORY_TYPES=new Set(['edit','toggle_hidden','category_change','price_change','add','delete','add_delete','display','brand_add','brand_delete','category_edit','category_add','category_delete','bulk_drive_images']);
+// Only strip base64 (data:) image data — those are the large blobs that
+// bloat localStorage. Real Drive/http image URLs are short strings and are
+// kept, so a restored product/edit keeps its actual images.
+function _stripB64Images(obj){
+  if(!obj||typeof obj!=='object'||!Array.isArray(obj.images))return obj;
+  return {...obj,images:obj.images.filter(img=>!String(img).startsWith('data:'))};
+}
 function logHistory(entry){
   try{
     const hist=lsGet('obv_history',[]);
-    // Strip images from undoData to keep history size small
-    const safe={...entry,undoData:entry.undoData?Object.fromEntries(Object.entries(entry.undoData).filter(([k])=>k!=='product'&&k!=='prevEdit')):{}};
+    const rawUndo=entry.undoData||{};
+    const safeUndo={...rawUndo};
+    if(safeUndo.prevEdit!==undefined)safeUndo.prevEdit=_stripB64Images(safeUndo.prevEdit);
+    if(safeUndo.product!==undefined)safeUndo.product=_stripB64Images(safeUndo.product);
+    const safe={...entry,undoData:safeUndo};
     hist.unshift({...safe,id:Date.now(),timestamp:new Date().toISOString()});
     lsSet('obv_history',hist.slice(0,100));
   }catch(e){}
@@ -5139,8 +5162,8 @@ function renderHistory(){
   const list=document.getElementById('historyList');
   const hist=lsGet('obv_history',[]);
   if(!hist.length){list.innerHTML='<div class="empty-state"><i class="fas fa-history"></i><p>No changes recorded yet.</p></div>';return;}
-  const icons={edit:'fas fa-edit',add:'fas fa-plus-circle',delete:'fas fa-trash',add_delete:'fas fa-minus-circle',display:'fas fa-sliders-h',brand_add:'fas fa-copyright',brand_delete:'fas fa-copyright',delete_all_keep_img:'fas fa-images',bulk_drive_images:'fab fa-google-drive'};
-  const colors={edit:'#1d4ed8',add:'#15803d',delete:'#dc2626',add_delete:'#dc2626',display:'#7c3aed',brand_add:'#0ea5e9',brand_delete:'#f59e0b',delete_all_keep_img:'#b45309',bulk_drive_images:'#0f9d58'};
+  const icons={edit:'fas fa-edit',toggle_hidden:'fas fa-eye-slash',category_change:'fas fa-tag',price_change:'fas fa-tag',add:'fas fa-plus-circle',delete:'fas fa-trash',add_delete:'fas fa-minus-circle',display:'fas fa-sliders-h',brand_add:'fas fa-copyright',brand_delete:'fas fa-copyright',delete_all_keep_img:'fas fa-images',bulk_drive_images:'fab fa-google-drive',bulk_edit:'fas fa-layer-group',category_edit:'fas fa-folder',category_add:'fas fa-folder-plus',category_delete:'fas fa-folder-minus',faq_save:'fas fa-question-circle',faq_delete:'fas fa-question-circle',supplier_request:'fas fa-truck',supplier_request_delete:'fas fa-truck',supplier_topup:'fas fa-coins'};
+  const colors={edit:'#1d4ed8',toggle_hidden:'#7c3aed',category_change:'#0891b2',price_change:'#0891b2',add:'#15803d',delete:'#dc2626',add_delete:'#dc2626',display:'#7c3aed',brand_add:'#0ea5e9',brand_delete:'#f59e0b',delete_all_keep_img:'#b45309',bulk_drive_images:'#0f9d58',bulk_edit:'#b45309',category_edit:'#1d4ed8',category_add:'#15803d',category_delete:'#dc2626',faq_save:'#0ea5e9',faq_delete:'#dc2626',supplier_request:'#0ea5e9',supplier_request_delete:'#dc2626',supplier_topup:'#15803d'};
   list.innerHTML=hist.map(h=>`
     <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1.5px solid var(--border);border-radius:10px;margin-bottom:10px">
       <div style="width:36px;height:36px;border-radius:50%;background:${colors[h.type]||'#64748b'}20;display:flex;align-items:center;justify-content:center;flex-shrink:0">
@@ -5150,7 +5173,9 @@ function renderHistory(){
         <div style="font-weight:600;font-size:13.5px">${escHtml(h.label)}</div>
         <div style="font-size:12px;color:var(--muted)">${fmtDate(h.timestamp)}</div>
       </div>
-      <button class="btn btn-outline btn-sm" onclick="undoHistory(${h.id})"><i class="fas fa-undo"></i> Undo</button>
+      ${UNDOABLE_HISTORY_TYPES.has(h.type)
+        ?`<button class="btn btn-outline btn-sm" onclick="undoHistory(${h.id})"><i class="fas fa-undo"></i> Undo</button>`
+        :`<span style="font-size:11.5px;color:var(--muted)" title="This action can't be automatically reversed">Not undoable</span>`}
     </div>`).join('');
 }
 function undoHistory(id){
@@ -5158,10 +5183,32 @@ function undoHistory(id){
   const entry=hist.find(h=>h.id===id);
   if(!entry){toast('Entry not found','err');return;}
   const u=entry.undoData||{};
-  if(entry.type==='edit'){
+  if(entry.type==='edit'||entry.type==='toggle_hidden'||entry.type==='category_change'||entry.type==='price_change'){
+    // All four just write into obv_prod_edits for one productId, so undoing
+    // any of them means the same thing: put that product's edit overlay
+    // back to whatever it was immediately before this specific change
+    // (not wipe every edit ever made to the product).
     const edits=lsGet('obv_prod_edits',{});
-    if(u.prevEdit)edits[u.productId]=u.prevEdit;else delete edits[u.productId];
+    if(u.prevEdit!==undefined)edits[u.productId]=u.prevEdit;else delete edits[u.productId];
     lsSet('obv_prod_edits',edits);sbPush('obv_prod_edits');
+  } else if(entry.type==='category_edit'){
+    const catEdits=lsGet('obv_cat_edits',{});
+    if(u.prevCatEdit!==undefined)catEdits[u.categoryId]=u.prevCatEdit;else delete catEdits[u.categoryId];
+    lsSet('obv_cat_edits',catEdits);sbPush('obv_cat_edits');
+  } else if(entry.type==='category_add'){
+    lsSet('obv_cat_adds',lsGet('obv_cat_adds',[]).filter(c=>c.id!==u.categoryId));sbPush('obv_cat_adds');
+  } else if(entry.type==='category_delete'){
+    if(u.wasAdded&&u.category){
+      const adds=lsGet('obv_cat_adds',[]);adds.push(u.category);lsSet('obv_cat_adds',adds);sbPush('obv_cat_adds');
+    } else {
+      lsSet('obv_cat_dels',lsGet('obv_cat_dels',[]).filter(cid=>cid!==u.categoryId));sbPush('obv_cat_dels');
+    }
+    if(u.subPrev&&u.subPrev.length){
+      const catEdits=lsGet('obv_cat_edits',{});
+      u.subPrev.forEach(s=>{ if(s.prevEdit!==undefined)catEdits[s.id]=s.prevEdit; else delete catEdits[s.id]; });
+      lsSet('obv_cat_edits',catEdits);sbPush('obv_cat_edits');
+    }
+    renderCategoriesGrid();populateCategoryDropdowns();
   } else if(entry.type==='add'){
     lsSet('obv_prod_adds',lsGet('obv_prod_adds',[]).filter(p=>p.id!==u.productId));sbPush('obv_prod_adds');
   } else if(entry.type==='delete'){
