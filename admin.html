@@ -3237,6 +3237,13 @@ function _doSaveProduct(stayOpen, name, price, _sku, _imgs){
       sbPush('obv_prod_adds');
       toast('Product added!','ok');
       try{logHistory({type:'add',label:'Added: '+product.name,undoData:{productId:product.id}});}catch(e){}
+      // Switch into "editing this product" mode now that it exists. Without
+      // this, editingId stayed null after the first save — so "Save &
+      // Continue Editing" (or just clicking Save again before closing)
+      // treated every following click as a brand-new product and created a
+      // duplicate each time instead of updating the one just created.
+      editingId=product.id;
+      document.getElementById('modalTitle').textContent='Edit: '+product.name;
     }
     if(!stayOpen)closeModal('productModal');
     loadProducts();filterProducts(true);renderDashboard();
