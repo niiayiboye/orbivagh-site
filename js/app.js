@@ -1666,6 +1666,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     const flashEl = document.getElementById('flashSaleSection');
     if (flashEl) flashEl.style.display = localStorage.getItem('obv_flashSale') === 'on' ? '' : 'none';
+    // Black November banner — separate on/off switch from Flash Sale so the
+    // seasonal campaign can run independently (set from Settings → Display).
+    const bfEl = document.getElementById('bfBanner');
+    if (bfEl) bfEl.style.display = localStorage.getItem('obv_blackFriday') === 'on' ? '' : 'none';
     renderComboPromoSection();
   } catch(e) {}
 

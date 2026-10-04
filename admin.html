@@ -697,6 +697,16 @@ textarea{resize:vertical;min-height:70px}
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)">
           <div>
+            <div style="font-size:13px;font-weight:600">Black Friday Banner</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">Show the Black November banner on the home page, linking to the Black Friday deals page. Turn on when ready to launch the campaign.</div>
+          </div>
+          <label class="toggle-wrap">
+            <input type="checkbox" id="t_blackFriday" onchange="saveBlackFridaySetting()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)">
+          <div>
             <div style="font-size:13px;font-weight:600">Product Badges</div>
             <div style="font-size:12px;color:var(--muted);margin-top:3px">Show New, Sale, Hot, Best Seller badges on product cards</div>
           </div>
@@ -3904,6 +3914,7 @@ async function resetBranding(){
 }
 function loadDisplaySettings(){
   document.getElementById('t_flashSale').checked=localStorage.getItem('obv_flashSale')==='on';
+  document.getElementById('t_blackFriday').checked=localStorage.getItem('obv_blackFriday')==='on';
   document.getElementById('t_badges').checked=localStorage.getItem('obv_badges')==='on';
   document.getElementById('t_freeDelivery').checked=localStorage.getItem('obv_freeDelivery')!=='off';
   document.getElementById('t_freeDeliveryPromo').checked=localStorage.getItem('obv_freeDeliveryPromo')!=='off';
@@ -3929,6 +3940,13 @@ function saveFlashSaleSetting(){
   localStorage.setItem('obv_flashSale',document.getElementById('t_flashSale').checked?'on':'off');
   sbPush('obv_flashSale');
   try{logHistory({type:'display',label:'Flash sale banner setting changed',undoData:{flashSale:prev}});}catch(e){}
+  toast('Setting saved!','ok');
+}
+function saveBlackFridaySetting(){
+  const prev=localStorage.getItem('obv_blackFriday');
+  localStorage.setItem('obv_blackFriday',document.getElementById('t_blackFriday').checked?'on':'off');
+  sbPush('obv_blackFriday');
+  try{logHistory({type:'display',label:'Black Friday banner setting changed',undoData:{blackFriday:prev}});}catch(e){}
   toast('Setting saved!','ok');
 }
 function saveBadgesSetting(){
@@ -5223,9 +5241,17 @@ function undoHistory(id){
   } else if(entry.type==='add_delete'&&u.product){
     const adds=lsGet('obv_prod_adds',[]);adds.push(u.product);lsSet('obv_prod_adds',adds);sbPush('obv_prod_adds');
   } else if(entry.type==='display'){
-    if(u.flashSale!==null){localStorage.setItem('obv_flashSale',u.flashSale||'off');sbPush('obv_flashSale');}
-    if(u.badges!==null){localStorage.setItem('obv_badges',u.badges||'off');sbPush('obv_badges');}
-    if(u.freeDelivery!==null){localStorage.setItem('obv_freeDelivery',u.freeDelivery||'on');sbPush('obv_freeDelivery');}
+    // Each display-setting save only ever puts ONE of these keys in
+    // undoData (whichever setting actually changed) — checking "!== null"
+    // doesn't distinguish "this key is genuinely absent" from "this key
+    // is present but happens to be null", since a key that was never set
+    // reads back as undefined, not null. That let every undo of ANY one
+    // display toggle silently force-reset all the others too. "!==
+    // undefined" is the correct presence check.
+    if(u.flashSale!==undefined){localStorage.setItem('obv_flashSale',u.flashSale||'off');sbPush('obv_flashSale');}
+    if(u.blackFriday!==undefined){localStorage.setItem('obv_blackFriday',u.blackFriday||'off');sbPush('obv_blackFriday');}
+    if(u.badges!==undefined){localStorage.setItem('obv_badges',u.badges||'off');sbPush('obv_badges');}
+    if(u.freeDelivery!==undefined){localStorage.setItem('obv_freeDelivery',u.freeDelivery||'on');sbPush('obv_freeDelivery');}
   } else if(entry.type==='brand_add'){
     lsSet('obv_brand_adds',lsGet('obv_brand_adds',[]).filter(b=>b.id!==u.brandId));sbPush('obv_brand_adds');
   } else if(entry.type==='brand_delete'){
