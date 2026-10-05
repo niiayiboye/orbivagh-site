@@ -287,7 +287,8 @@ function renderProductCard(product) {
     : '';
   // Black Friday flag: only while the Black November toggle is on.
   const bfBadge = (product.blackFriday && localStorage.getItem('obv_blackFriday') === 'on')
-    ? `<span class="badge-tag badge-bf"><i class="fas fa-bolt"></i> Black Friday</span>` : '';
+    ? `<span class="badge-tag badge-bf"><i class="fas fa-bolt"></i> BLACK FRIDAY</span>` : '';
+  const bfStrip = bfBadge ? `<div class="bf-strip"><i class="fas fa-bolt"></i> BLACK FRIDAY DEAL <i class="fas fa-bolt"></i></div>` : '';
   const wishlisted = isWishlisted(product.id) ? ' wishlisted' : '';
   const catLabel = CAT_NAMES[product.category] || product.brand;
   const specTags = product.specs ? Object.values(product.specs).slice(0, 4).map(v =>
@@ -302,10 +303,11 @@ function renderProductCard(product) {
     : '';
 
   return `
-    <div class="product-card reveal" data-tags="${product.tags.join(',')}" data-id="${product.id}" onclick="openProduct('${product.id}')">
+    <div class="product-card reveal${bfBadge ? ' bf-card' : ''}" data-tags="${product.tags.join(',')}" data-id="${product.id}" onclick="openProduct('${product.id}')">
       <div class="product-img-wrap${(product.images && product.images.length) ? ' img-loading' : ''}">
         ${(product.images && product.images.length) ? `<img src="${product.images[0]}" alt="${product.name}" class="product-img-photo" loading="lazy" onload="this.parentNode.classList.remove('img-loading')" onerror="this.onerror=null;this.parentNode.classList.remove('img-loading');this.parentNode.innerHTML='<div class=\\'product-img-icon\\'>${product.icon}</div>'">` : `<div class="product-img-icon">${product.icon}</div>`}
         <div class="product-badges">${bfBadge}${badge}${stockBadge}</div>
+        ${bfStrip}
         ${brandBadge}
         <div class="product-actions">
           <button class="prod-action-btn${wishlisted}" data-wishlist="${product.id}" title="Add to Wishlist" onclick="event.stopPropagation();toggleWishlist('${product.id}')">
