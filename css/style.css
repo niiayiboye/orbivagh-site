@@ -1653,6 +1653,9 @@ input, select, textarea { font-family: inherit; }
 .product-brand-badge img { max-width: 100%; max-height: 18px; object-fit: contain; display: block; }
 .badge-tag { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: var(--radius-full); }
 .badge-lowstock { background: #dc2626; color: #fff; }
+.badge-bf { background: linear-gradient(135deg,#f5c542,#e0a100); color: #111; font-weight: 800; letter-spacing: .3px; box-shadow: 0 2px 8px rgba(0,0,0,.35); }
+.badge-bf i { margin-right: 3px; }
+.pp-bf-badge { display:inline-flex; align-items:center; gap:6px; background:#111; color:#f5c542; border:1px solid #f5c542; font-size:12px; font-weight:800; letter-spacing:.5px; padding:5px 12px; border-radius:20px; margin-bottom:10px; }
 .badge-sale { background: var(--accent); color: #fff; }
 .badge-new { background: var(--success); color: #fff; }
 .badge-hot { background: var(--gold); color: #fff; }

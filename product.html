@@ -659,6 +659,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <i class="fas fa-arrow-left"></i> Back
       </button>
       <div class="pp-brand-badge">${(typeof BRANDS !== 'undefined' ? BRANDS.find(b => b.id === p.brandId)?.logo : null) ? `<img src="${BRANDS.find(b => b.id === p.brandId).logo}" alt="" onerror="this.remove()">` : ''}${p.brand}</div>
+      ${(p.blackFriday && localStorage.getItem('obv_blackFriday') === 'on') ? '<div class="pp-bf-badge"><i class="fas fa-bolt"></i> BLACK FRIDAY DEAL</div>' : ''}
       <h1 class="pp-name">${p.name}</h1>
       ${p.model ? `<div style="font-size:13px;color:var(--text-muted);font-weight:500;margin-bottom:10px">SKU: <strong style="color:var(--text-body)">${p.model}</strong></div>` : ''}
       ${reviewStatsHtml}
