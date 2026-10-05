@@ -314,21 +314,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderBlackFridayDeals();
 });
 
-// This page deliberately has no products of its own — it just shows
-// whatever is currently discounted on the real catalog (same 'top-deals'
-// tag the rest of the site uses whenever a product has an Old Price set
-// in admin). That way, turning on real Black Friday pricing on existing
-// products is all it takes to populate this page — no separate data entry.
+// Shows only products explicitly marked "Black Friday deal" in admin
+// (checkbox on the product form, or the tag button in the Products list).
+// The catalog's own "top-deals" tag can't be used here — nearly every
+// product already carries it, so it would list the whole store.
 function renderBlackFridayDeals() {
   const grid = document.getElementById('bfGrid');
   if (!grid) return;
-  const deals = PRODUCTS.filter(p => p.tags.includes('top-deals'));
+  const deals = PRODUCTS.filter(p => p.blackFriday);
 
   if (!deals.length) {
     grid.innerHTML = `<div class="bf-empty" style="grid-column:1/-1">
       <i class="fas fa-tags"></i>
       <h2>Black Friday deals are being loaded up</h2>
-      <p>Check back soon — discounted products will appear here automatically as soon as they go live.</p>
+      <p>Check back soon — deals will appear here as soon as they go live.</p>
     </div>`;
     return;
   }
