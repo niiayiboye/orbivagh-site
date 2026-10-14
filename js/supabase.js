@@ -25,6 +25,7 @@ async function sbSync() {
     rows.forEach(r => localStorage.setItem(r.key, r.value));
     applyBranding();
     applyDeliveryText();
+    applyComboPageVisibility();
   } catch(e) {}
 }
 
@@ -152,6 +153,28 @@ function applyDeliveryText() {
     });
   } catch(e) {}
 }
+
+/* Combo Deals page on/off switch (admin > Combo Deals). When off: hides every
+   "Combo Deals" link, the homepage combo section, and sends anyone who lands
+   on the combo pages back to the home page. Default is ON if never set. */
+function applyComboPageVisibility() {
+  try {
+    if (localStorage.getItem('obv_combo_page') !== 'off') return;
+    var css = document.getElementById('obvComboHide');
+    if (!css) {
+      css = document.createElement('style'); css.id = 'obvComboHide';
+      css.textContent = '#comboPromoSection{display:none!important}';
+      document.head.appendChild(css);
+    }
+    document.querySelectorAll('a[href*="combo-deals.html"]').forEach(function(a) {
+      if (a.closest('.combo-detail-back')) return;
+      var li = a.parentElement && a.parentElement.tagName === 'LI' && a.parentElement.children.length === 1 ? a.parentElement : a;
+      li.style.display = 'none';
+    });
+    if (/combo-deals\.html|\/combo\//.test(location.pathname)) location.replace('/');
+  } catch(e) {}
+}
+document.addEventListener('DOMContentLoaded', applyComboPageVisibility);
 
 /* Kick off sync immediately so it's ready by DOMContentLoaded. */
 window.obvSyncPromise = sbSync();

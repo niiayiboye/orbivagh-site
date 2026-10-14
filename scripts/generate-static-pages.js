@@ -268,11 +268,12 @@ function rebuildSitemap(existingXml, products, combos) {
 
 async function main() {
   console.log('Fetching live catalog data from Supabase...');
-  const [edits, adds, dels, comboDeals] = await Promise.all([
+  const [edits, adds, dels, comboDeals, comboPageSetting] = await Promise.all([
     fetchKv('obv_prod_edits'),
     fetchKv('obv_prod_adds'),
     fetchKv('obv_prod_dels'),
     fetchKv('obv_combo_deals'),
+    fetchKv('obv_combo_page').catch(() => null),
   ]);
 
   const { PRODUCTS } = loadBaseCatalog();
@@ -293,7 +294,10 @@ async function main() {
   }
   console.log(`Generated ${count} static product pages`);
 
-  const combos = (comboDeals || []).filter(c => c.active !== false && c.id && (c.productIds || []).length >= 2);
+  // Admin switch: when the Combo Deals page is hidden, publish no combo pages
+  // and drop them (and the main combo page) from the sitemap.
+  const comboPageOff = comboPageSetting === 'off';
+  const combos = comboPageOff ? [] : (comboDeals || []).filter(c => c.active !== false && c.id && (c.productIds || []).length >= 2);
   const comboTemplate = fs.readFileSync(path.join(SITE_ROOT, 'combo-deals.html'), 'utf8');
   const comboOutDir = path.join(SITE_ROOT, 'combo');
   fs.rmSync(comboOutDir, { recursive: true, force: true });
@@ -311,7 +315,8 @@ async function main() {
 
   const sitemapPath = path.join(SITE_ROOT, 'sitemap.xml');
   const existingSitemap = fs.readFileSync(sitemapPath, 'utf8');
-  const newSitemap = rebuildSitemap(existingSitemap, merged, combos);
+  let newSitemap = rebuildSitemap(existingSitemap, merged, combos);
+  if (comboPageOff) newSitemap = newSitemap.replace(/\s*<url>\s*<loc>https:\/\/orbivagh\.com\/combo-deals\.html<\/loc>[\s\S]*?<\/url>/g, '');
   fs.writeFileSync(sitemapPath, newSitemap, 'utf8');
   console.log('Sitemap rebuilt');
 }

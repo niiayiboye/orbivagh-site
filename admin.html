@@ -883,7 +883,11 @@ textarea{resize:vertical;min-height:70px}
     <div class="content" id="page-combos" style="display:none">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
         <div><h2 style="font-size:18px;font-weight:800">Combo Deals</h2><p style="font-size:13px;color:var(--muted)">Bundle 2 or more products together at a special combined price. Shows on the live "Combo Deals" page and in the top nav.</p></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-right:6px" title="Hide or show the Combo Deals page, menu links and homepage section">
+            <span id="comboPageLabel">Page visible</span>
+            <span class="toggle-wrap"><input type="checkbox" id="t_comboPage" onchange="saveComboPageSetting()"><span class="toggle-slider"></span></span>
+          </label>
           <button class="btn btn-outline" onclick="downloadComboCsvTemplate()"><i class="fas fa-download"></i> Download Template</button>
           <button class="btn btn-outline" onclick="document.getElementById('comboCsvFileInput').click()"><i class="fas fa-file-csv"></i> Import CSV</button>
           <input type="file" id="comboCsvFileInput" accept=".csv" style="display:none" onchange="importCombosFromCsv(this)">
@@ -4283,7 +4287,21 @@ function comboCategoryLabel(cat){
   return { entertainment:'Entertainment', kitchen:'Kitchen & Cooking', cooling:'Cooling & Comfort',
     laundry:'Laundry & Cleaning', 'home-essentials':'New Home Essentials', refrigeration:'Refrigeration' }[cat] || 'Entertainment';
 }
+function loadComboPageSetting(){
+  const on=localStorage.getItem('obv_combo_page')!=='off';
+  const el=document.getElementById('t_comboPage'); if(el) el.checked=on;
+  const lb=document.getElementById('comboPageLabel');
+  if(lb){ lb.textContent=on?'Page visible':'Page hidden'; lb.style.color=on?'':'#b91c1c'; }
+}
+function saveComboPageSetting(){
+  const on=document.getElementById('t_comboPage').checked;
+  localStorage.setItem('obv_combo_page',on?'on':'off');
+  sbPush('obv_combo_page');
+  loadComboPageSetting();
+  toast(on?'Combo Deals page is now visible':'Combo Deals page is now hidden','ok');
+}
 function renderCombosAdmin(){
+  loadComboPageSetting();
   const list = document.getElementById('combosListAdmin');
   if (!list) return;
   const combos = getAllCombos();
