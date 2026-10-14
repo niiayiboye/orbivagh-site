@@ -887,6 +887,7 @@ textarea{resize:vertical;min-height:70px}
           <button class="btn btn-outline" onclick="downloadComboCsvTemplate()"><i class="fas fa-download"></i> Download Template</button>
           <button class="btn btn-outline" onclick="document.getElementById('comboCsvFileInput').click()"><i class="fas fa-file-csv"></i> Import CSV</button>
           <input type="file" id="comboCsvFileInput" accept=".csv" style="display:none" onchange="importCombosFromCsv(this)">
+          <button class="btn btn-danger" onclick="clearAllCombos()"><i class="fas fa-trash"></i> Clear All Combos</button>
           <button class="btn btn-primary" onclick="openAddComboModal()"><i class="fas fa-plus"></i> Add Combo Deal</button>
         </div>
       </div>
@@ -4484,6 +4485,23 @@ function deleteCombo(id){
   sbPush('obv_combo_deals');
   renderCombosAdmin();
   toast('Combo deal deleted', 'ok');
+}
+
+// Deletes every combo deal in one go (so a fresh CSV can be imported
+// without leaving the old combos behind). Asks for confirmation first.
+function clearAllCombos(){
+  const n = getAllCombos().length;
+  if (!n) { toast('There are no combo deals to clear', 'err'); return; }
+  confirmAction(
+    `Delete all ${n} combo deal${n===1?'':'s'}?`,
+    'This removes every combo from the website and cannot be undone. You can then import a new CSV.',
+    function(){
+      lsSet('obv_combo_deals', []);
+      sbPush('obv_combo_deals');
+      renderCombosAdmin();
+      toast(`Cleared ${n} combo deal${n===1?'':'s'}`, 'ok');
+    }
+  );
 }
 
 function downloadComboCsvTemplate(){
