@@ -228,7 +228,7 @@ input, select, textarea { font-family: inherit; }
   text-decoration: none;
 }
 .logo-img {
-  height: 54px;
+  height: 46px;
   width: auto;
   max-width: 180px;
   object-fit: contain;
@@ -1990,7 +1990,7 @@ input, select, textarea { font-family: inherit; }
 .footer-grid { display: flex; flex-direction: column; gap: 28px; padding: 0 16px 40px; border-bottom: 1px solid rgba(255,255,255,0.07); }
 .footer-brand .logo-main { color: #fff; }
 .footer-brand .logo-sub { color: rgba(255,255,255,0.4); }
-.footer-brand .logo-img { height: 80px; max-width: 240px; }
+.footer-brand .logo-img { height: 56px; max-width: 220px; }
 .footer-about { font-size: 13px; color: rgba(255,255,255,0.5); margin: 14px 0; line-height: 1.65; }
 .footer-socials { display: flex; gap: 10px; }
 .footer-socials a {
@@ -2419,7 +2419,7 @@ input, select, textarea { font-family: inherit; }
   }
 
   /* Logo + header layout — compact on small phones */
-  .logo-img { height: 38px; max-width: 90px; }
+  .logo-img { height: 34px; max-width: 115px; }
   .header-inner { gap: 6px; padding: 0 10px; }
   .header-actions { gap: 0; }
   /* Minimise search bar so wishlist + cart fit beside it */
@@ -2486,7 +2486,7 @@ input, select, textarea { font-family: inherit; }
   .hamburger { display: none; }
   .cart-total-label { display: flex; font-size: 13px; font-weight: 700; white-space: nowrap; }
   .cart-btn { width: auto !important; padding: 0 10px; gap: 6px; }
-  .logo-img { height: 80px; max-width: 280px; }
+  .logo-img { height: 52px; max-width: 220px; }
   .logo-sub { display: block; }
   .logo-main { font-size: 20px; }
   .logo-icon { width: 40px; height: 40px; font-size: 17px; }
@@ -2992,7 +2992,7 @@ input, select, textarea { font-family: inherit; }
   .product-price { font-size: 16px; }
   .cat-name { font-size: 11px; }
   .cat-count { font-size: 10px; }
-  .logo-img { height: 32px; max-width: 80px; }
+  .logo-img { height: 30px; max-width: 100px; }
 }
 
 /* ================================================================
