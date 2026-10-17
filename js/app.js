@@ -1543,6 +1543,78 @@ async function trackVisit() {
   } catch(e) {}
 }
 
+
+/* ── Ad "promo link" support ───────────────────────────────────────────────
+   orbivagh.com/?promo=anything  → shows a "Featured from our ads" section at
+                                   the very top of the homepage with every
+                                   product ticked "Advertise" in admin
+                                   (saved as an ordered id list in the
+                                   obv_promo_list key — admin controls order).
+   orbivagh.com/?p=ID_OR_MODEL   → opens that product's page directly.
+   The ?promo / ?p value is kept in the address bar (and carried onto the
+   product page) so it's visible in analytics / Facebook's link data. */
+function _promoNorm(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+
+function getPromoProducts() {
+  let ids = [];
+  try { ids = JSON.parse(localStorage.getItem('obv_promo_list') || '[]'); } catch(e) {}
+  if (!Array.isArray(ids)) return [];
+  const seen = new Set();
+  const out = [];
+  ids.forEach(id => {
+    const key = String(id);
+    if (seen.has(key)) return;
+    seen.add(key);
+    // PRODUCTS already has hidden / image-less products removed by
+    // applyOverrides(), so a ticked-but-hidden product can never appear.
+    const p = PRODUCTS.find(x => String(x.id) === key);
+    if (p && !p.hidden) out.push(p);
+  });
+  return out;
+}
+
+function findProductByIdOrModel(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return null;
+  let p = PRODUCTS.find(x => String(x.id) === raw);
+  if (p) return p;
+  const n = _promoNorm(raw);
+  if (!n) return null;
+  return PRODUCTS.find(x => _promoNorm(x.id) === n) || PRODUCTS.find(x => x.model && _promoNorm(x.model) === n) || null;
+}
+
+/* ?p=… — jump straight to the product. Unknown / hidden → normal homepage. */
+function handleProductDeepLink() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('p')) return false;
+    const val = params.get('p');
+    const p = findProductByIdOrModel(val);
+    if (!p || p.hidden) return false;
+    const dest = new URLSearchParams();
+    dest.set('id', p.id);
+    params.forEach((v, k) => { if (k !== 'id') dest.append(k, v); }); // keeps p=, utm_*, fbclid…
+    showPageLoadingOverlay();
+    window.location.replace('product.html?' + dest.toString());
+    return true;
+  } catch(e) { return false; }
+}
+
+/* ?promo=… — top-of-page section with the advertised products. */
+function renderPromoSection() {
+  const sec = document.getElementById('promoSection');
+  const grid = document.getElementById('promoGrid');
+  if (!sec || !grid) return;
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has('promo')) { sec.style.display = 'none'; return; }
+  const list = getPromoProducts();
+  if (!list.length) { sec.style.display = 'none'; return; } // never show an empty box
+  grid.innerHTML = list.map(p => renderProductCard(p)).join('');
+  sec.style.display = '';
+  try { updateWishlistButtons(); } catch(e) {}
+  try { triggerReveal(); } catch(e) {}
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   /* Mobile search must be ready immediately — before the Supabase wait */
   try { initSearchPanel(); } catch(e) {}
@@ -1583,6 +1655,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await Promise.race([window.obvSyncPromise || Promise.resolve(), new Promise(r => setTimeout(r, 3000))]);
   try { applyOverrides(); } catch(e) {}
+  if (handleProductDeepLink()) return;
+  try { renderPromoSection(); } catch(e) {}
   try { renderFaqs(); } catch(e) {}
   try { renderCategories(); } catch(e) {}
   try { renderFlashProducts(); } catch(e) {}

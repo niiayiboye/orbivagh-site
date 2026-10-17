@@ -544,6 +544,7 @@ textarea{resize:vertical;min-height:70px}
 
     <!-- PRODUCTS -->
     <div class="content" id="page-products" style="display:none">
+      <div id="promoPanel" style="background:#fff;border:1.5px solid #bfdbfe;border-radius:12px;padding:14px 16px;margin-bottom:14px"></div>
       <div class="toolbar">
         <input class="search-input" type="text" id="searchBox" placeholder="Search products..." oninput="filterProducts()">
         <select class="filter-sel" id="filterCat" onchange="filterProducts()">
@@ -1092,6 +1093,12 @@ textarea{resize:vertical;min-height:70px}
             Black Friday deal
           </label>
           <p style="font-size:12px;color:#cbd5e1;margin:4px 0 0 26px">Show this product on the Black Friday deals page. Set the Old Price above to the original price so the discount shows.</p>
+        </div>
+        <div class="form-group full" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 14px">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;color:#1d4ed8">
+            <input type="checkbox" id="f_promoted" style="width:16px;height:16px">
+            <i class="fas fa-bullhorn"></i> Advertise — show in the "Featured from our ads" section of the promo link
+          </label>
         </div>
         <div class="form-group full" style="background:#fef3c7;border-radius:8px;padding:12px 14px">
           <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600">
@@ -2681,6 +2688,7 @@ function renderTable(){
         ?'<span style="color:var(--success);font-size:12px;font-weight:600"><i class="fas fa-check-circle"></i> Yes</span>'
         :'<span style="color:#ea580c;font-size:12px;font-weight:700"><i class="fas fa-exclamation-triangle"></i> No image</span>'}</td>
       <td><div class="actions-cell">
+        <button class="btn btn-outline btn-sm" onclick="togglePromoted('${p.id}')" title="${getPromoList().includes(String(p.id))?'Remove from ads promo link':'Advertise — add to the ads promo link'}" style="${getPromoList().includes(String(p.id))?'background:#1d4ed8;color:#fff;border-color:#1d4ed8':''}"><i class="fas fa-bullhorn"></i></button>
         <button class="btn btn-outline btn-sm" onclick="toggleProductBlackFriday('${p.id}')" title="${p.blackFriday?'Remove from Black Friday deals':'Add to Black Friday deals'}" style="${p.blackFriday?'background:#111;color:#f5c542;border-color:#111':''}"><i class="fas fa-tag"></i></button>
         <button class="btn btn-outline btn-sm" onclick="toggleProductHidden('${p.id}')" title="${p.hidden?'Unhide':'Hide from site'}"><i class="fas ${p.hidden?'fa-eye':'fa-eye-slash'}"></i></button>
         <button class="btn btn-outline btn-sm" onclick="openEditModal('${p.id}')"><i class="fas fa-edit"></i></button>
@@ -2689,6 +2697,63 @@ function renderTable(){
     </tr>`;}).join('')
     :'<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">No products found</td></tr>';
   renderPagination();
+  try{renderPromoPanel();}catch(e){}
+}
+
+/* ── Ads promo link: which products are advertised, and in what order ──
+   Stored as one ordered list of product ids under the 'obv_promo_list' key
+   (saved to Supabase like every other setting). The live link
+   orbivagh.com/?promo=deals reads this list, so ticking / unticking /
+   re-ordering here updates the same link instantly — no new link needed. */
+function getPromoList(){ const l=lsGet('obv_promo_list',[]); return Array.isArray(l)?l.map(String):[]; }
+function savePromoList(list){ lsSet('obv_promo_list',list); sbPush('obv_promo_list'); }
+function setPromoted(id,on,silent){
+  id=String(id);
+  let list=getPromoList().filter(x=>x!==id);
+  if(on) list.push(id);
+  const before=getPromoList();
+  if(JSON.stringify(before)===JSON.stringify(list)) return;
+  savePromoList(list);
+  if(!silent) toast(on?'Added to the ads promo link':'Removed from the ads promo link','ok');
+}
+function togglePromoted(id){
+  setPromoted(id,!getPromoList().includes(String(id)));
+  renderTable();
+}
+function movePromo(id,dir){
+  const list=getPromoList(); const i=list.indexOf(String(id)); if(i<0) return;
+  let j=dir==='top'?0:i+dir; if(j<0||j>=list.length) return;
+  const [x]=list.splice(i,1); list.splice(j,0,x);
+  savePromoList(list); renderPromoPanel();
+}
+function copyPromoLink(){
+  const link='https://orbivagh.com/?promo=deals';
+  const done=()=>toast('Promo link copied: '+link,'ok');
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done,()=>prompt('Copy this link:',link));
+  else prompt('Copy this link:',link);
+}
+function renderPromoPanel(){
+  const el=document.getElementById('promoPanel'); if(!el) return;
+  const list=getPromoList();
+  const rows=list.map((id,i)=>{
+    const p=adminProds.find(x=>String(x.id)===id);
+    if(!p) return `<li style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid #eef2f7;font-size:13px;color:#b91c1c"><span style="width:22px;text-align:center;font-weight:700">${i+1}</span><span style="flex:1">Product ${escHtml(id)} no longer exists</span><button class="btn btn-outline btn-sm" onclick="setPromoted('${id}',false);renderPromoPanel();renderTable()">Remove</button></li>`;
+    const img=(p.images&&p.images[0])||'';
+    const warn=p.hidden?' <span style="background:#64748b;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px">HIDDEN — not shown</span>':'';
+    return `<li style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid #eef2f7;font-size:13px">
+      <span style="width:22px;text-align:center;font-weight:800;color:#1d4ed8">${i+1}</span>
+      ${img?`<img src="${img}" style="width:34px;height:34px;object-fit:contain;border-radius:6px;background:#f8fafc" onerror="this.style.display='none'">`:''}
+      <span style="flex:1;min-width:0"><span style="font-weight:600">${escHtml(p.name)}</span>${warn}<br><span style="color:var(--muted);font-size:11px">${escHtml(p.model||'')} · ${fmt(p.price)}</span></span>
+      <button class="btn btn-outline btn-sm" title="Move up" ${i===0?'disabled':''} onclick="movePromo('${id}',-1)"><i class="fas fa-arrow-up"></i></button>
+      <button class="btn btn-outline btn-sm" title="Move down" ${i===list.length-1?'disabled':''} onclick="movePromo('${id}',1)"><i class="fas fa-arrow-down"></i></button>
+      <button class="btn btn-outline btn-sm" title="Remove from ads" onclick="setPromoted('${id}',false);renderPromoPanel();renderTable()"><i class="fas fa-times"></i></button>
+    </li>`;}).join('');
+  el.innerHTML=`<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px"><div style="font-weight:800;font-size:14px;color:#1d4ed8"><i class="fas fa-bullhorn"></i> Ads promo link <span style="font-weight:600;color:var(--muted);font-size:12px">· ${list.length} product${list.length===1?'':'s'} advertised</span></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:3px">Tick the <i class="fas fa-bullhorn"></i> button on any product row (or the Advertise box when editing). Use this link in your ads: <strong>orbivagh.com/?promo=deals</strong> — it always shows the products below, in this order.</div></div>
+      <button class="btn btn-primary btn-sm" onclick="copyPromoLink()"><i class="fas fa-link"></i> Copy promo link</button>
+    </div>
+    ${list.length?`<ol style="list-style:none;margin:10px 0 0;padding:0">${rows}</ol>`:'<div style="margin-top:10px;font-size:12.5px;color:var(--muted)">No products advertised yet — the promo link will show the normal homepage until you tick some.</div>'}`;
 }
 function toggleProductBlackFriday(id){
   const edits=lsGet('obv_prod_edits',{});
@@ -2783,6 +2848,7 @@ function openAddModal(){
   document.getElementById('f_badge').value='';document.getElementById('f_rating').value=4.5;
   document.getElementById('f_hidden').checked=false;
   document.getElementById('f_blackFriday').checked=false;
+  document.getElementById('f_promoted').checked=false;
   document.getElementById('specsContainer').innerHTML='';
   clearImageSlots();addImageSlot();
   document.getElementById('folderImportUrl').value='';
@@ -2800,6 +2866,7 @@ function openEditModal(id){
   document.getElementById('f_rating').value=p.rating||4.5;
   document.getElementById('f_hidden').checked=!!p.hidden;
   document.getElementById('f_blackFriday').checked=!!p.blackFriday;
+  document.getElementById('f_promoted').checked=getPromoList().includes(String(p.id));
   document.getElementById('f_name').value=p.name;
   document.getElementById('specsContainer').innerHTML='';
   if(p.specs)Object.entries(p.specs).forEach(([k,v])=>addSpecRow(k,v));
@@ -3283,6 +3350,7 @@ function _doSaveProduct(stayOpen, name, price, _sku, _imgs){
       editingId=product.id;
       document.getElementById('modalTitle').textContent='Edit: '+product.name;
     }
+    try{setPromoted(editingId,document.getElementById('f_promoted').checked,true);}catch(e){}
     if(!stayOpen)closeModal('productModal');
     loadProducts();filterProducts(true);renderDashboard();
   } catch(e){
@@ -3338,7 +3406,7 @@ function deleteAllKeepImages() {
 const BACKUP_KEYS=[
   'obv_prod_edits','obv_prod_adds','obv_prod_dels',
   'obv_settings','obv_branding','obv_flash_prods',
-  'obv_delivery_text','obv_freeDelivery','obv_freeDeliveryPromo','obv_sku_img_map','obv_promo_codes','obv_reviews_enabled','obv_reviews','obv_combo_deals',
+  'obv_delivery_text','obv_freeDelivery','obv_freeDeliveryPromo','obv_sku_img_map','obv_promo_codes','obv_reviews_enabled','obv_reviews','obv_combo_deals','obv_promo_list',
   'obv_img_required','obv_images','obv_history',
   'obv_orders','obv_data_version',
   'obv_cat_adds','obv_cat_dels','obv_cat_edits',
