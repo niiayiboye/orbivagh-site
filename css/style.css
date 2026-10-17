@@ -3047,3 +3047,14 @@ input, select, textarea { font-family: inherit; }
   border-radius: 50%;
   animation: img-spin 0.7s linear infinite;
 }
+
+/* ── Promo ("Featured from our ads") section ── */
+.promo-section { padding: 22px 0 8px; background: linear-gradient(180deg, #eef4ff 0%, #ffffff 100%); border-bottom: 1px solid var(--border, #e2e8f0); }
+.promo-section .section-header { margin-bottom: 14px; }
+@media (min-width: 768px) { .promo-section { padding: 36px 0 20px; } }
+
+/* ── Copy link buttons (product page) ── */
+.pp-copy-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.pp-copy-btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px; border: 1.5px solid var(--border, #e2e8f0); background: #fff; color: var(--text-body, #1e293b); border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.pp-copy-btn:hover { border-color: var(--primary, #1d4ed8); color: var(--primary, #1d4ed8); }
+.pp-copy-btn.copied { background: #ecfdf5; border-color: #10b981; color: #047857; }
