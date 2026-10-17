@@ -176,5 +176,46 @@ function applyComboPageVisibility() {
 }
 document.addEventListener('DOMContentLoaded', applyComboPageVisibility);
 
+
+/* ── Floating Call button (phones only) + Meta (Facebook) Pixel ──────────────
+   Call button: sits above the WhatsApp button, uses the store phone from
+   admin Settings. Pixel: loads only when a Pixel ID is saved under the
+   'obv_meta_pixel' key; every Call / WhatsApp tap is sent as a "Contact" event. */
+function obvTrack(name, params) {
+  try { if (typeof window.fbq === 'function') window.fbq('track', name, params || {}); } catch(e) {}
+}
+function obvLoadMetaPixel() {
+  try {
+    var id = (localStorage.getItem('obv_meta_pixel') || '').replace(/\D/g, '');
+    if (!id || window.fbq) return;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init', id);
+    window.fbq('track', 'PageView');
+  } catch(e) {}
+}
+function obvAddCallButton() {
+  try {
+    if (document.querySelector('.call-float') || !document.querySelector('.whatsapp-float')) return;
+    var s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
+    var digits = String(s.storePhone || '0502578905').replace(/\D/g, '');
+    if (digits.indexOf('233') === 0) digits = '0' + digits.slice(3);
+    if (digits.length === 9) digits = '0' + digits;
+    if (!document.getElementById('obvCallCss')) {
+      var css = document.createElement('style'); css.id = 'obvCallCss';
+      css.textContent = '.call-float{position:fixed;bottom:142px;right:16px;z-index:900;width:50px;height:50px;border-radius:50%;background:#1d4ed8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 4px 16px rgba(29,78,216,.45);text-decoration:none;transition:transform .2s}.call-float:active{transform:scale(.94)}@media(min-width:1024px){.call-float{display:none}}';
+      document.head.appendChild(css);
+    }
+    var a = document.createElement('a');
+    a.className = 'call-float'; a.href = 'tel:' + digits; a.title = 'Call us'; a.setAttribute('aria-label', 'Call Orbiva Technologies');
+    a.innerHTML = '<i class="fas fa-phone-alt"></i>';
+    a.addEventListener('click', function() { obvTrack('Contact', { method: 'call' }); });
+    document.body.appendChild(a);
+    var wa = document.querySelector('.whatsapp-float');
+    if (wa && !wa.dataset.obvTracked) { wa.dataset.obvTracked = '1'; wa.addEventListener('click', function() { obvTrack('Contact', { method: 'whatsapp' }); }); }
+  } catch(e) {}
+}
+document.addEventListener('DOMContentLoaded', function() { obvAddCallButton(); obvLoadMetaPixel(); });
+
 /* Kick off sync immediately so it's ready by DOMContentLoaded. */
 window.obvSyncPromise = sbSync();
+window.obvSyncPromise.then(function() { obvAddCallButton(); obvLoadMetaPixel(); });
