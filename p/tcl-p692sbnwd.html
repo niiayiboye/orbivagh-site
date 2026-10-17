@@ -702,6 +702,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           <i class="fas fa-heart"></i>
         </button>
       </div>
+      <div class="pp-copy-row">
+        <button type="button" class="pp-copy-btn" id="ppCopyLink" title="Copy a link to this product for ads and WhatsApp"><i class="fas fa-link"></i> Copy link</button>
+      </div>
       ${specsHtml ? `
         <div class="pp-specs">
           <h4>Specifications</h4>
@@ -711,6 +714,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   `;
 
   // ── Wire up interactions ──
+  // Copy link — short ad-friendly link (?p=) that opens this product
+  document.getElementById('ppCopyLink')?.addEventListener('click', async function () {
+    const btn = this;
+    const _modelUnique = p.model && PRODUCTS.filter(x => x.model && x.model.toLowerCase() === p.model.toLowerCase()).length === 1;
+    const link = 'https://orbivagh.com/?p=' + encodeURIComponent(_modelUnique ? p.model : p.id);
+    let ok = false;
+    try { await navigator.clipboard.writeText(link); ok = true; } catch (e) {
+      try {
+        const ta = document.createElement('textarea'); ta.value = link; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove();
+      } catch (e2) {}
+    }
+    const orig = btn.innerHTML;
+    btn.classList.toggle('copied', ok);
+    btn.innerHTML = ok ? '<i class="fas fa-check"></i> Link copied' : '<i class="fas fa-link"></i> ' + link;
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = orig; }, ok ? 1800 : 6000);
+  });
+
   // Add to cart
   document.getElementById('ppAddCart').addEventListener('click', () => {
     const qty = parseInt(document.getElementById('ppQty').value) || 1;
