@@ -336,6 +336,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Render immediately with local product data — don't make every visitor
   // wait on Supabase before seeing anything. Overrides (admin edits/deletes)
   // are applied and the grid is quietly re-rendered the moment sync finishes.
+  // When this device already has a saved copy of the store data, apply it
+  // before the first draw so the grid is right immediately, then redraw only
+  // if the sync brings something different.
+  const _shopSnap = obvDataSnapshot();
+  const _shopEarly = obvHasCachedData();
+  if (_shopEarly) { try { applyOverrides(); } catch(e) {} }
   renderShopFilters();
   initShopPage();
   initMegaBackdrop();
@@ -349,9 +355,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   await Promise.race([window.obvSyncPromise || Promise.resolve(), new Promise(r => setTimeout(r, 1200))]);
-  applyOverrides();
-  renderShopFilters();
-  initShopPage();
+  if (!_shopEarly) {
+    applyOverrides();
+    renderShopFilters();
+    initShopPage();
+  } else if (obvDataSnapshot() !== _shopSnap) {
+    applyOverrides(true);
+    renderShopFilters();
+    initShopPage();
+  }
 });
 
 // Give category-filtered views (shop.html?cat=tv) their own title/description/

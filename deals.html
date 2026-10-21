@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="canonical" href="https://orbivagh.com/deals.html">
+  <meta name="robots" content="noindex, follow">
+  <meta name="description" content="Special offers from Orbiva Technologies — hand-picked electronics and home appliances at great prices in Ghana.">
+  <script>if(localStorage.getItem('obv_freeDelivery')==='off')document.documentElement.setAttribute('data-no-delivery','');
+  (function(){try{var b=JSON.parse(localStorage.getItem('obv_branding')||'{}');if(b.logoUrl||b.logoSize){document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.logo-img').forEach(function(i){if(b.logoUrl)i.src=b.logoUrl;if(b.logoSize)i.style.height=b.logoSize+'px';});});}}catch(e){}}());
+  </script>
+  <link rel="icon" type="image/jpeg" href="img/logo.jpeg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Special Deals – Orbiva Technologies</title>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Orbiva Technologies">
+  <meta property="og:title" content="Special Deals – Orbiva Technologies">
+  <meta property="og:description" content="Hand-picked electronics and home appliances at great prices in Ghana.">
+  <meta property="og:image" content="https://orbivagh.com/img/logo.jpeg">
+  <meta property="og:url" content="https://orbivagh.com/deals.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Special Deals – Orbiva Technologies">
+  <meta name="twitter:description" content="Hand-picked electronics and home appliances at great prices in Ghana.">
+  <meta name="twitter:image" content="https://orbivagh.com/img/logo.jpeg">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="container top-bar-inner">
+    <div class="top-bar-left">
+      <a href="tel:0502578905"><i class="fas fa-phone-alt"></i> 050 257 8905</a>
+      <a href="mailto:info@orbivagh.com"><i class="fas fa-envelope"></i> info@orbivagh.com</a>
+    </div>
+    <div class="top-bar-right">
+      <a href="track-order.html">Track Order</a>
+      <a href="contact.html">Help</a>
+    </div>
+  </div>
+</div>
+
+<!-- Header (same as index) -->
+<header class="header" id="mainHeader">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <img src="img/logo.jpeg" alt="Orbiva Technologies" class="logo-img">
+    </a>
+    <nav class="desktop-nav" id="desktopNav">
+      <a href="shop.html" class="desktop-nav-link">Shop</a>
+      <div class="desktop-nav-item">
+        <a href="shop.html" class="desktop-nav-link">Shop by Brand <i class="fas fa-chevron-down fa-xs"></i></a>
+        <ul class="desktop-dropdown" id="desktopBrandDropdown"></ul>
+      </div>
+      <div class="desktop-nav-item desktop-nav-item-cat">
+        <a href="shop.html" class="desktop-nav-link">Categories <i class="fas fa-chevron-down fa-xs"></i></a>
+        <div class="category-mega-menu" id="desktopCatDropdown"></div>
+      </div>
+      <a href="combo-deals.html" class="desktop-nav-link">Combo Deals</a>
+    </nav>
+    <div class="header-actions">
+      <button class="action-btn" id="searchToggle" title="Search"><i class="fas fa-search"></i></button>
+      <button class="action-btn" id="wishlistToggle" title="Wishlist">
+        <i class="fas fa-heart"></i><span class="badge" id="wishlistCount">0</span>
+      </button>
+      <button class="action-btn cart-btn" id="cartToggle" title="Cart">
+        <i class="fas fa-shopping-cart"></i><span class="badge" id="cartCount">0</span>
+        <span class="cart-total-label" id="cartTotalLabel">GH₵ 0</span>
+      </button>
+      <button class="action-btn" id="accountToggle" title="Account"><i class="fas fa-user"></i></button>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <nav class="nav" id="mainNav">
+    <div class="container nav-inner">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="shop.html" class="nav-link active">Shop</a></li>
+        <li class="has-dropdown">
+          <a href="shop.html" class="nav-link">Categories <i class="fas fa-chevron-down fa-xs"></i></a>
+          <ul class="dropdown" id="catDropdown"></ul>
+        </li>
+        <li class="has-dropdown">
+          <a href="shop.html" class="nav-link">Brands <i class="fas fa-chevron-down fa-xs"></i></a>
+          <ul class="dropdown" id="brandDropdown"></ul>
+        </li>
+        <li><a href="shop.html?filter=deals" class="nav-link deals-link"><i class="fas fa-fire"></i> Deals <span class="hot-tag">HOT</span></a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-promo free-delivery-banner"><i class="fas fa-truck"></i><span>Free delivery on orders above GH₵ 500</span></div>
+    </div>
+  </nav>
+</header>
+
+<!-- Sidebars & Modals (same structure) -->
+<div class="overlay" id="overlay"></div>
+<aside class="cart-sidebar" id="cartSidebar">
+  <div class="cart-sidebar-header">
+    <h3><i class="fas fa-shopping-cart"></i> Your Cart (<span id="cartItemCount">0</span>)</h3>
+    <button class="close-btn" id="closeCart"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cart-items-wrap" id="cartItemsWrap">
+    <div class="cart-empty" id="cartEmpty"><i class="fas fa-shopping-cart"></i><p>Your cart is empty</p><a href="shop.html" class="btn-primary">Start Shopping</a></div>
+    <ul class="cart-items-list" id="cartItemsList"></ul>
+  </div>
+  <div class="cart-sidebar-footer" id="cartFooter" style="display:none">
+    <div class="cart-subtotal"><span>Subtotal</span><strong id="cartSubtotal">GH₵ 0</strong></div>
+    <div class="cart-total-row"><span>Total</span><strong id="cartTotal">GH₵ 0</strong></div>
+    <a href="checkout.html" class="btn-primary btn-block">Checkout</a>
+    <a href="shop.html" class="btn-outline btn-block">Continue Shopping</a>
+  </div>
+</aside>
+<aside class="wishlist-sidebar" id="wishlistSidebar">
+  <div class="cart-sidebar-header">
+    <h3><i class="fas fa-heart"></i> Wishlist (<span id="wishlistItemCount">0</span>)</h3>
+    <button class="close-btn" id="closeWishlist"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cart-items-wrap" id="wishlistItemsWrap">
+    <div class="cart-empty" id="wishlistEmpty"><i class="fas fa-heart"></i><p>Your wishlist is empty</p></div>
+    <ul class="cart-items-list" id="wishlistItemsList"></ul>
+  </div>
+</aside>
+<div class="modal" id="accountModal">
+  <div class="modal-box">
+    <button class="close-btn modal-close" id="closeAccount"><i class="fas fa-times"></i></button>
+    <div id="signupFormView">
+      <h2>Stay Updated</h2>
+      <p class="modal-sub">Get notified about new products &amp; promotions</p>
+      <form class="auth-form" id="registerForm">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="reg_fname">First Name</label>
+            <input type="text" id="reg_fname" name="first_name" autocomplete="given-name" placeholder="John" required />
+          </div>
+          <div class="form-group">
+            <label for="reg_lname">Last Name</label>
+            <input type="text" id="reg_lname" name="last_name" autocomplete="family-name" placeholder="Doe" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="reg_email">Email Address</label>
+          <input type="email" id="reg_email" name="email" autocomplete="email" placeholder="Enter your email" required />
+        </div>
+        <div class="form-group">
+          <label for="reg_phone">Phone Number</label>
+          <input type="tel" id="reg_phone" name="phone" autocomplete="tel" placeholder="+233 XX XXX XXXX" />
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);line-height:1.5;margin:2px 0 14px">
+          <i class="fas fa-info-circle"></i> We'll only use this to let you know about new products and promotions — nothing else, no spam.
+        </p>
+        <button type="submit" class="btn-primary btn-block">Sign Me Up</button>
+      </form>
+    </div>
+    <div id="signupWelcomeView" style="display:none;text-align:center;padding:12px 4px">
+      <div style="width:64px;height:64px;border-radius:50%;background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 18px">
+        <i class="fas fa-check"></i>
+      </div>
+      <h2>Welcome, <span id="welcomeName"></span>!</h2>
+      <p class="modal-sub" style="margin-bottom:22px">You're on the list — we'll let you know the moment new products and promotions land.</p>
+      <button type="button" class="btn-primary btn-block" onclick="document.getElementById('accountModal').classList.remove('open');document.body.style.overflow=''">Continue Shopping</button>
+    </div>
+  </div>
+</div>
+
+<!-- Special deals landing page (ads) -->
+<section class="deals-hero">
+  <div class="container">
+    <span class="deals-eyebrow"><i class="fas fa-bolt"></i> Special offers</span>
+    <h1 id="dealsTitle">Featured Deals</h1>
+    <p id="dealsSub">Hand-picked products at great prices. Tap any product to see photos, details and order.</p>
+    <div class="deals-hero-actions">
+      <a class="deals-btn deals-btn-wa" id="dealsWa" href="https://wa.me/233502578905" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Ask us on WhatsApp</a>
+      <a class="deals-btn deals-btn-call" id="dealsCall" href="tel:0502578905"><i class="fas fa-phone-alt"></i> Call us</a>
+    </div>
+    <div class="deals-perks free-delivery-banner"><i class="fas fa-truck"></i> <span>Free delivery on orders above GH₵ 500</span></div>
+  </div>
+</section>
+
+<div class="container deals-wrap">
+  <div class="deals-toolbar" id="dealsToolbar" style="display:none">
+    <div class="deals-chips" id="dealsChips"></div>
+    <div class="deals-sort">
+      <span class="results-count" id="dealsCount"></span>
+      <select class="sort-select" id="dealsSort" aria-label="Sort deals">
+        <option value="featured">Featured</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="discount">Biggest Discount</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="products-grid" id="dealsGrid">
+    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w-3-4"></div><div class="skeleton skeleton-line w-1-2"></div><div class="skeleton skeleton-line w-1-3"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w-3-4"></div><div class="skeleton skeleton-line w-1-2"></div><div class="skeleton skeleton-line w-1-3"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w-3-4"></div><div class="skeleton skeleton-line w-1-2"></div><div class="skeleton skeleton-line w-1-3"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w-3-4"></div><div class="skeleton skeleton-line w-1-2"></div><div class="skeleton skeleton-line w-1-3"></div></div></div>
+  </div>
+
+  <div class="deals-empty" id="dealsEmpty" style="display:none">
+    <i class="fas fa-tag"></i>
+    <h3>No special deals right now</h3>
+    <p>New offers are added often — have a look at everything we stock.</p>
+    <a class="deals-btn deals-btn-main" href="shop.html">Browse all products</a>
+  </div>
+
+  <div class="deals-more" id="dealsMore" style="display:none">
+    <h3>Not quite what you need?</h3>
+    <p>We stock TVs, air conditioners, fridges, kitchen appliances and more.</p>
+    <div class="deals-more-actions">
+      <a class="deals-btn deals-btn-main" href="shop.html">Browse all products</a>
+      <a class="deals-btn deals-btn-wa" id="dealsWa2" href="https://wa.me/233502578905" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Chat with us</a>
+    </div>
+  </div>
+</div>
+
+<!-- Footer (abbreviated) -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="logo"><img src="img/logo.jpeg" alt="Orbiva Technologies" class="logo-img"></div>
+      <p class="footer-about">Your Trusted Home Appliance Store in Ghana.</p>
+      <div class="footer-socials">
+        <a href="PASTE_FACEBOOK_LINK_HERE" target="_blank" rel="noopener" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/orbiva_gh" target="_blank" rel="noopener" title="Instagram"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Categories</h4><ul id="footerCatLinks"></ul></div>
+    <div class="footer-col"><h4>Support</h4><ul><li><a href="contact.html">FAQs</a></li><li><a href="contact.html">Returns</a></li><li><a href="track-order.html">Track Order</a></li></ul></div>
+    <div class="footer-col footer-contact-col"><h4>Contact</h4><div class="footer-contact-item"><i class="fas fa-phone-alt"></i><a href="tel:0502578905" data-store-phone>050 257 8905</a></div><div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:info@orbivagh.com" data-store-email>info@orbivagh.com</a></div></div>
+  </div>
+  <div class="footer-bottom"><div class="container footer-bottom-inner"><p>&copy; <span id="footerYear">2025</span> Orbiva Technologies.</p></div></div>
+</footer>
+
+<nav class="bottom-nav" id="bottomNav">
+  <a href="index.html" class="bottom-nav-item">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <button class="bottom-nav-item" id="bnavCategories" onclick="openCategoryDrawer()">
+    <i class="fas fa-list-ul"></i>
+    <span>Categories</span>
+  </button>
+  <a href="shop.html" class="bottom-nav-item">
+    <i class="fas fa-th-large"></i>
+    <span>Shop</span>
+  </a>
+  <button class="bottom-nav-item" id="bnavCart" onclick="document.getElementById('cartToggle').click()">
+    <i class="fas fa-shopping-cart"></i>
+    <span>Cart</span>
+    <span class="bnav-badge" id="bnavCartCount">0</span>
+  </button>
+  <button class="bottom-nav-item" id="bnavWish" onclick="document.getElementById('wishlistToggle').click()">
+    <i class="fas fa-heart"></i>
+    <span>Saved</span>
+    <span class="bnav-badge" id="bnavWishCount">0</span>
+  </button>
+</nav>
+
+<div class="cat-drawer-backdrop" id="catDrawerBackdrop" onclick="closeCategoryDrawer()"></div>
+<div class="cat-drawer" id="catDrawer">
+  <div class="cat-drawer-handle"></div>
+  <div class="cat-drawer-header">
+    <h3>Shop by Category</h3>
+    <button class="cat-drawer-close" onclick="closeCategoryDrawer()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cat-drawer-list" id="catDrawerList"></div>
+</div>
+
+<div class="search-panel" id="searchPanel">
+  <div class="search-panel-hd">
+    <h2 class="search-panel-title">Search</h2>
+    <button class="search-panel-close" id="searchPanelClose"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="search-panel-bd">
+    <div class="search-panel-input-wrap">
+      <input type="text" id="searchPanelInput" class="search-panel-input" placeholder="Search products, brands, SKU…" autocomplete="off">
+    </div>
+    <div id="searchPanelSugs" class="search-panel-sugs"></div>
+  </div>
+</div>
+<div class="search-panel-backdrop" id="searchPanelBackdrop"></div>
+<div class="toast-container" id="toastContainer"></div>
+<button class="back-to-top" id="backToTop"><i class="fas fa-chevron-up"></i></button>
+
+<script src="js/supabase.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/cart.js"></script>
+<script>
+/* Special deals page: shows the products ticked under "Ads promo link" in admin,
+   in admin's order. Optional ?g=<group> shows just one group. Other URL
+   parameters (utm_*, fbclid, …) are left untouched. */
+function dealsSlug(n){ return String(n||'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
+function dealsItems() {
+  let groups = {};
+  try { groups = JSON.parse(localStorage.getItem('obv_promo_groups') || '{}') || {}; } catch(e) {}
+  return getPromoProducts().map((p, i) => ({ p, i, group: String(groups[String(p.id)] || '').trim() }));
+}
+let _dealsSort = 'featured';
+function dealsActiveSlug() {
+  const g = new URLSearchParams(location.search).get('g') || '';
+  return dealsSlug(g);
+}
+function renderDeals() {
+  const grid = document.getElementById('dealsGrid');
+  const all = dealsItems();
+  const toolbar = document.getElementById('dealsToolbar');
+  const empty = document.getElementById('dealsEmpty');
+  const more = document.getElementById('dealsMore');
+  if (!all.length) {
+    grid.innerHTML = ''; toolbar.style.display = 'none'; more.style.display = 'none'; empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  // groups present (in first-seen order)
+  const groupMap = new Map();
+  all.forEach(it => { if (it.group) { const s = dealsSlug(it.group); if (s && !groupMap.has(s)) groupMap.set(s, it.group); } });
+  let active = dealsActiveSlug();
+  if (!groupMap.has(active)) active = ''; // unknown group → show everything
+  let items = active ? all.filter(it => dealsSlug(it.group) === active) : all.slice();
+  if (_dealsSort === 'price-asc') items.sort((a, b) => a.p.price - b.p.price);
+  else if (_dealsSort === 'price-desc') items.sort((a, b) => b.p.price - a.p.price);
+  else if (_dealsSort === 'discount') items.sort((a, b) => (b.p.discount || 0) - (a.p.discount || 0));
+  // heading
+  document.getElementById('dealsTitle').textContent = active ? groupMap.get(active) : 'Featured Deals';
+  document.title = (active ? groupMap.get(active) + ' Deals' : 'Special Deals') + ' – Orbiva Technologies';
+  // chips (only when there is more than one group)
+  const chips = document.getElementById('dealsChips');
+  if (groupMap.size > 1 || (groupMap.size === 1 && all.some(it => !it.group))) {
+    const mk = (slug, label, n) => `<button class="deals-chip${slug === active ? ' active' : ''}" data-g="${slug}">${label} <span>${n}</span></button>`;
+    chips.innerHTML = mk('', 'All', all.length) + [...groupMap].map(([s, n]) => mk(s, n.replace(/</g, '&lt;'), all.filter(it => dealsSlug(it.group) === s).length)).join('');
+  } else chips.innerHTML = '';
+  toolbar.style.display = '';
+  document.getElementById('dealsCount').textContent = items.length + (items.length === 1 ? ' product' : ' products');
+  grid.innerHTML = items.map(it => renderProductCard(it.p)).join('');
+  more.style.display = '';
+  try { updateWishlistButtons(); } catch(e) {}
+  try { triggerReveal(); } catch(e) {}
+  // tell Meta which offer was viewed (no-op unless the Pixel is set up)
+  if (!renderDeals._tracked) { renderDeals._tracked = true; try { obvTrack('ViewContent', { content_name: active ? groupMap.get(active) : 'Featured Deals', content_type: 'product_group' }); } catch(e) {} }
+}
+document.addEventListener('DOMContentLoaded', async () => {
+  const snap = obvDataSnapshot();
+  const early = obvHasCachedData();
+  if (early) { try { applyOverrides(); } catch(e) {} renderDeals(); }
+  // WhatsApp / call links from admin settings
+  try {
+    const s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
+    let wa = String(s.storeWhatsapp || s.storePhone || '0502578905').replace(/\D/g, '');
+    if (wa.startsWith('0')) wa = '233' + wa.slice(1); else if (!wa.startsWith('233')) wa = '233' + wa;
+    const msg = encodeURIComponent('Hello Orbiva, I saw your deals on the website and would like to order / ask about: ');
+    ['dealsWa', 'dealsWa2'].forEach(id => { const a = document.getElementById(id); if (a) a.href = 'https://wa.me/' + wa + '?text=' + msg; });
+  } catch(e) {}
+  document.getElementById('dealsSort').addEventListener('change', e => { _dealsSort = e.target.value; renderDeals(); });
+  document.getElementById('dealsChips').addEventListener('click', e => {
+    const b = e.target.closest('.deals-chip'); if (!b) return;
+    const u = new URL(location.href);
+    if (b.dataset.g) u.searchParams.set('g', b.dataset.g); else u.searchParams.delete('g');
+    history.replaceState(null, '', u.pathname + u.search);
+    renderDeals();
+  });
+  await Promise.race([window.obvSyncPromise || Promise.resolve(), new Promise(r => setTimeout(r, 3000))]);
+  if (!early) { try { applyOverrides(); } catch(e) {} renderDeals(); }
+  else if (obvDataSnapshot() !== snap) { try { applyOverrides(true); } catch(e) {} renderDeals(); }
+});
+</script>
+</body>
+</html>

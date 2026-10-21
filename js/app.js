@@ -69,8 +69,35 @@ function showToast(type, title, msg, icon) {
 
 /* ── Apply admin product/brand edits from localStorage ── */
 let _overridesApplied = false;
-function applyOverrides() {
-  if (_overridesApplied) return;
+let _pristineCatalog = null;
+/* Keys whose contents change what the catalog / menus / settings look like.
+   Compared before and after the Supabase sync so pages only redraw when the
+   fresh data really differs from what was cached on the visitor's device. */
+const OBV_DATA_KEYS = ['obv_prod_edits','obv_prod_adds','obv_prod_dels','obv_brand_adds','obv_brand_dels',
+  'obv_cat_adds','obv_cat_dels','obv_cat_edits','obv_settings','obv_combo_deals','obv_combo_page',
+  'obv_flashSale','obv_blackFriday','obv_img_required','obv_freeDelivery','obv_branding','obv_promo_list'];
+function obvDataSnapshot() {
+  try { return OBV_DATA_KEYS.map(k => localStorage.getItem(k) || '').join('\u0001'); } catch(e) { return ''; }
+}
+/* True when this device already has a saved copy of the store data from an
+   earlier visit, so the page can draw correctly right away instead of
+   waiting for the network and then changing. */
+function obvHasCachedData() {
+  try { return localStorage.getItem('obv_data_version') !== null && localStorage.getItem('obv_settings') !== null; } catch(e) { return false; }
+}
+function applyOverrides(force) {
+  if (_overridesApplied && !force) return;
+  // Keep an untouched copy of the base catalog so overrides can be applied
+  // again from scratch if the sync brings newer data than the cached copy.
+  try {
+    if (!_pristineCatalog) {
+      _pristineCatalog = { p: JSON.stringify(PRODUCTS), b: JSON.stringify(BRANDS), c: JSON.stringify(CATEGORIES) };
+    } else if (force) {
+      PRODUCTS.length = 0; PRODUCTS.push(...JSON.parse(_pristineCatalog.p));
+      BRANDS.length = 0; BRANDS.push(...JSON.parse(_pristineCatalog.b));
+      CATEGORIES.length = 0; CATEGORIES.push(...JSON.parse(_pristineCatalog.c));
+    }
+  } catch(e) {}
   _overridesApplied = true;
   // If data.js was redeployed with a new version, clear stale product
   // deletions/edits/adds — a full catalog rebuild means anything added
@@ -156,7 +183,13 @@ function applyOverrides() {
     SEARCH_INDEX.length = 0;
     SEARCH_INDEX.push(...productEntries, ...categoryEntries, ...brandEntries);
   }
-  // Apply store settings (WhatsApp, phone, email, store name)
+  applyStoreSettings();
+}
+
+/* Store phone/email/address/hours/WhatsApp from admin Settings. Safe to run
+   more than once — also called early from cached settings so a second phone
+   number doesn't pop in after the Supabase sync. */
+function applyStoreSettings() {
   try {
     const s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
     if (s.storePhone) {
@@ -1600,6 +1633,22 @@ function handleProductDeepLink() {
   } catch(e) { return false; }
 }
 
+/* Old ad links (orbivagh.com/?promo=deals, ?promo=tvs) now go to the special
+   deals page, keeping utm_* / fbclid etc. Only the homepage does this. */
+function handlePromoRedirect() {
+  try {
+    if (!document.getElementById('promoSection')) return false;
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('promo') || params.has('p')) return false;
+    const v = (params.get('promo') || '').trim();
+    params.delete('promo');
+    if (v && v.toLowerCase() !== 'deals' && !params.has('g')) params.set('g', v);
+    const qs = params.toString();
+    window.location.replace('deals.html' + (qs ? '?' + qs : ''));
+    return true;
+  } catch(e) { return false; }
+}
+
 /* ?promo=… — top-of-page section with the advertised products. */
 function renderPromoSection() {
   const sec = document.getElementById('promoSection');
@@ -1615,53 +1664,15 @@ function renderPromoSection() {
   try { triggerReveal(); } catch(e) {}
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-  /* Mobile search must be ready immediately — before the Supabase wait */
-  try { initSearchPanel(); } catch(e) {}
-
-  /* Free-delivery banner: apply the last-known saved threshold immediately
-     from localStorage, rather than waiting on the Supabase sync below.
-     This prevents the hardcoded "500" placeholder from flashing on screen
-     before the real saved value (e.g. 7000) takes over. */
-  try {
-    const fdOffEarly = localStorage.getItem('obv_freeDelivery') === 'off';
-    if (fdOffEarly) {
-      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = 'none');
-    } else {
-      const settingsEarly = JSON.parse(localStorage.getItem('obv_settings') || '{}');
-      const thresholdEarly = settingsEarly.deliveryThreshold !== undefined ? settingsEarly.deliveryThreshold : 500;
-      document.querySelectorAll('.free-delivery-banner span').forEach(el => {
-        el.textContent = el.textContent.replace(/[\d,]+(\.\d+)?/, thresholdEarly);
-      });
-    }
-  } catch(e) {}
-
-  /* Logo: apply the last-known saved branding (custom logo/size) immediately
-     from localStorage, same reasoning as above — otherwise the default logo
-     flashes on screen before the admin's custom logo swaps in once the
-     Supabase fetch resolves. */
-  try {
-    const bEarly = JSON.parse(localStorage.getItem('obv_branding') || '{}');
-    if (bEarly.logoUrl || bEarly.logoSize) {
-      const urlEarly = bEarly.logoUrl || 'img/logo.jpeg';
-      const sizeEarly = (bEarly.logoSize || 54) + 'px';
-      document.querySelectorAll('.logo-img, .admin-logo-img').forEach(img => {
-        img.src = urlEarly;
-        img.style.height = sizeEarly;
-        img.style.maxWidth = 'none';
-      });
-    }
-  } catch(e) {}
-
-  await Promise.race([window.obvSyncPromise || Promise.resolve(), new Promise(r => setTimeout(r, 3000))]);
-  try { applyOverrides(); } catch(e) {}
-  if (handleProductDeepLink()) return;
+/* Everything on the page that is built from admin-managed data. Safe to
+   run more than once. */
+function renderDynamicSections() {
   try { renderPromoSection(); } catch(e) {}
   try { renderFaqs(); } catch(e) {}
   try { renderCategories(); } catch(e) {}
   try { renderFlashProducts(); } catch(e) {}
   try { renderFeaturedProducts(); } catch(e) {}
-  try { renderBrands(); initBrandsDragMarquee(); } catch(e) {}
+  try { renderBrands(); } catch(e) {}
   try { renderRecentlyViewed(); } catch(e) {}
   try {
     // Live count from PRODUCTS (not the static "products" field baked into
@@ -1699,6 +1710,98 @@ document.addEventListener('DOMContentLoaded', async () => {
     const footerCatList = document.getElementById('footerCatList');
     if (footerCatList) footerCatList.innerHTML = CATEGORIES.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, CATEGORIES)).map(c => `<li><a href="shop.html?cat=${c.id}">${c.name}</a></li>`).join('');
   } catch(e) {}
+}
+
+/* Free-delivery banner, flash sale, Black November banner and combo section
+   visibility from the saved admin settings. Safe to run more than once. */
+function applyDisplayToggles() {
+  try {
+    const fdOff = localStorage.getItem('obv_freeDelivery') === 'off';
+    if (fdOff) {
+      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = 'none');
+    } else {
+      document.documentElement.removeAttribute('data-no-delivery');
+      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = '');
+      // Update the GH₵ amount shown in every banner to match the saved threshold,
+      // instead of leaving the hardcoded "500" placeholder from the source markup.
+      const settings = JSON.parse(localStorage.getItem('obv_settings') || '{}');
+      const threshold = settings.deliveryThreshold !== undefined ? settings.deliveryThreshold : 500;
+      document.querySelectorAll('.free-delivery-banner span').forEach(el => {
+        el.textContent = el.textContent.replace(/[\d,]+(\.\d+)?/, threshold);
+      });
+    }
+    const flashEl = document.getElementById('flashSaleSection');
+    if (flashEl) flashEl.style.display = localStorage.getItem('obv_flashSale') === 'on' ? '' : 'none';
+    // Black November banner — separate on/off switch from Flash Sale so the
+    // seasonal campaign can run independently (set from Settings → Display).
+    const bfEl = document.getElementById('bfBanner');
+    if (bfEl) bfEl.style.display = localStorage.getItem('obv_blackFriday') === 'on' ? '' : 'none';
+    renderComboPromoSection();
+  } catch(e) {}
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  if (handlePromoRedirect()) return;
+  /* Mobile search must be ready immediately — before the Supabase wait */
+  try { initSearchPanel(); } catch(e) {}
+  try { applyStoreSettings(); } catch(e) {}
+
+  /* Free-delivery banner: apply the last-known saved threshold immediately
+     from localStorage, rather than waiting on the Supabase sync below.
+     This prevents the hardcoded "500" placeholder from flashing on screen
+     before the real saved value (e.g. 7000) takes over. */
+  try {
+    const fdOffEarly = localStorage.getItem('obv_freeDelivery') === 'off';
+    if (fdOffEarly) {
+      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = 'none');
+    } else {
+      const settingsEarly = JSON.parse(localStorage.getItem('obv_settings') || '{}');
+      const thresholdEarly = settingsEarly.deliveryThreshold !== undefined ? settingsEarly.deliveryThreshold : 500;
+      document.querySelectorAll('.free-delivery-banner span').forEach(el => {
+        el.textContent = el.textContent.replace(/[\d,]+(\.\d+)?/, thresholdEarly);
+      });
+    }
+  } catch(e) {}
+
+  /* Logo: apply the last-known saved branding (custom logo/size) immediately
+     from localStorage, same reasoning as above — otherwise the default logo
+     flashes on screen before the admin's custom logo swaps in once the
+     Supabase fetch resolves. */
+  try {
+    const bEarly = JSON.parse(localStorage.getItem('obv_branding') || '{}');
+    if (bEarly.logoUrl || bEarly.logoSize) {
+      const urlEarly = bEarly.logoUrl || 'img/logo.jpeg';
+      const sizeEarly = (bEarly.logoSize || 54) + 'px';
+      document.querySelectorAll('.logo-img, .admin-logo-img').forEach(img => {
+        img.src = urlEarly;
+        img.style.height = sizeEarly;
+        img.style.maxWidth = 'none';
+      });
+    }
+  } catch(e) {}
+
+  /* Draw from the copy saved on this device first (when there is one), so
+     menus, categories, phone numbers and banners are already right on screen
+     and don't pop in after the sync. After the sync, redraw only if the
+     fresh data is actually different. */
+  const _snapBefore = obvDataSnapshot();
+  const _drewEarly = obvHasCachedData();
+  if (_drewEarly) {
+    try { applyOverrides(); } catch(e) {}
+    try { renderDynamicSections(); } catch(e) {}
+    try { applyDisplayToggles(); } catch(e) {}
+  }
+
+  await Promise.race([window.obvSyncPromise || Promise.resolve(), new Promise(r => setTimeout(r, 3000))]);
+  const _changed = obvDataSnapshot() !== _snapBefore;
+  if (!_drewEarly) { try { applyOverrides(); } catch(e) {} }
+  else if (_changed) { try { applyOverrides(true); applyStoreSettings(); } catch(e) {} }
+  if (handleProductDeepLink()) return;
+  if (!_drewEarly || _changed) {
+    try { renderDynamicSections(); } catch(e) {}
+    try { applyDisplayToggles(); } catch(e) {}
+  }
+  try { initBrandsDragMarquee(); } catch(e) {}
   try { startCountdown(); } catch(e) {}
   try { initSearch(); } catch(e) {}
   try { initSearchPanel(); } catch(e) {}
@@ -1728,29 +1831,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { trackVisit(); } catch(e) {}
 
 
-  try {
-    const fdOff = localStorage.getItem('obv_freeDelivery') === 'off';
-    if (fdOff) {
-      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = 'none');
-    } else {
-      document.documentElement.removeAttribute('data-no-delivery');
-      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = '');
-      // Update the GH₵ amount shown in every banner to match the saved threshold,
-      // instead of leaving the hardcoded "500" placeholder from the source markup.
-      const settings = JSON.parse(localStorage.getItem('obv_settings') || '{}');
-      const threshold = settings.deliveryThreshold !== undefined ? settings.deliveryThreshold : 500;
-      document.querySelectorAll('.free-delivery-banner span').forEach(el => {
-        el.textContent = el.textContent.replace(/[\d,]+(\.\d+)?/, threshold);
-      });
-    }
-    const flashEl = document.getElementById('flashSaleSection');
-    if (flashEl) flashEl.style.display = localStorage.getItem('obv_flashSale') === 'on' ? '' : 'none';
-    // Black November banner — separate on/off switch from Flash Sale so the
-    // seasonal campaign can run independently (set from Settings → Display).
-    const bfEl = document.getElementById('bfBanner');
-    if (bfEl) bfEl.style.display = localStorage.getItem('obv_blackFriday') === 'on' ? '' : 'none';
-    renderComboPromoSection();
-  } catch(e) {}
+  try { applyDisplayToggles(); } catch(e) {}
 
   // Footer collapsible columns on mobile
   try {
