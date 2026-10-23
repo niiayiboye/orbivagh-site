@@ -236,7 +236,7 @@ function applyStoreSettings() {
       // markup/classes for styling — a second number, when set, is added
       // as its own separate link right next to this one rather than
       // merged into it.
-      document.querySelectorAll('a[href^="tel:"]:not([data-store-phone]):not(.tel-link)').forEach(el => {
+      document.querySelectorAll('a[href^="tel:"]:not([data-store-phone]):not(.tel-link):not(.call-float):not(.keep-tel)').forEach(el => {
         el.href = telHref;
         Array.from(el.childNodes).filter(n => n.nodeType === 3 && n.textContent.trim()).forEach(n => { n.textContent = ' ' + ph; });
         // Clear out a secondary-number link/separator a previous sync

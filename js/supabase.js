@@ -197,7 +197,7 @@ function obvAddCallButton() {
   try {
     if (document.querySelector('.call-float') || !document.querySelector('.whatsapp-float')) return;
     var s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
-    var digits = String(s.storePhone || '0502578905').replace(/\D/g, '');
+    var digits = String(s.callButtonPhone || '0556762816').replace(/\D/g, ''); // call button has its own number (optional admin setting: callButtonPhone)
     if (digits.indexOf('233') === 0) digits = '0' + digits.slice(3);
     if (digits.length === 9) digits = '0' + digits;
     if (!document.getElementById('obvCallCss')) {
