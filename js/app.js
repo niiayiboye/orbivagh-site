@@ -192,66 +192,35 @@ function applyOverrides(force) {
 function applyStoreSettings() {
   try {
     const s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
-    if (s.storePhone) {
-      // Normalize to one consistent "0XX XXX XXXX" display format no
-      // matter how the admin actually typed it into Settings (with or
-      // without spaces, with or without the country code). Without this,
-      // the page's nicely-formatted default number visibly flashes into
-      // whatever raw formatting was typed in, the instant sync finishes.
-      const ph = formatGhPhone(s.storePhone);
-      const ph2 = s.storePhone2 ? formatGhPhone(s.storePhone2) : '';
-      const telHref = 'tel:' + ph.replace(/\D/g,'');
-      const telHref2 = ph2 ? 'tel:' + ph2.replace(/\D/g,'') : '';
+    {
+      // Two separate numbers (admin → Settings): one for CALLS, one for
+      // WHATSAPP. Each falls back to its built-in default (see supabase.js).
+      const cs = obvContactSettings();
+      const callShown = formatGhPhone(cs.call), waShown = formatGhPhone(cs.wa);
+      const telHref = 'tel:' + cs.call;
+      const waBase = 'https://wa.me/' + obvIntlPhone(cs.wa);
 
-      // Elements explicitly marked as the store's phone display (e.g. the
-      // footer). With two numbers, each is shown and behaves as its own
-      // separate, independently clickable number — not one combined block
-      // of text that always dials the first number no matter which part
-      // a customer taps.
+      // Elements explicitly marked as the store's call number (e.g. footer).
       document.querySelectorAll('[data-store-phone]').forEach(el => {
-        if (el.tagName === 'A') {
-          if (ph2) {
-            // Two <a> tags can't nest inside one <a> — HTML doesn't allow
-            // it — so this anchor becomes a plain wrapper holding both
-            // real, separately-dialable links instead.
-            const span = document.createElement('span');
-            for (const attr of el.attributes) { if (attr.name !== 'href') span.setAttribute(attr.name, attr.value); }
-            const icon = el.querySelector('i');
-            span.innerHTML = (icon ? icon.outerHTML + ' ' : '') +
-              `<a href="${telHref}" class="tel-link">${ph}</a> / <a href="${telHref2}" class="tel-link">${ph2}</a>`;
-            el.replaceWith(span);
-          } else {
-            el.textContent = ph;
-            el.href = telHref;
-          }
-        } else {
-          el.innerHTML = ph2
-            ? `<a href="${telHref}" class="tel-link">${ph}</a> / <a href="${telHref2}" class="tel-link">${ph2}</a>`
-            : ph;
-        }
+        el.textContent = callShown;
+        if (el.tagName === 'A') el.href = telHref;
       });
-
-      // Plain click-to-call links elsewhere (e.g. the top bar) that
-      // aren't tagged with data-store-phone. These keep their own
-      // markup/classes for styling — a second number, when set, is added
-      // as its own separate link right next to this one rather than
-      // merged into it.
-      document.querySelectorAll('a[href^="tel:"]:not([data-store-phone]):not(.tel-link):not(.call-float):not(.keep-tel)').forEach(el => {
+      // Elements explicitly marked as the store's WhatsApp number.
+      document.querySelectorAll('[data-store-whatsapp]').forEach(el => {
+        el.textContent = waShown;
+        if (el.tagName === 'A') el.href = waBase;
+      });
+      // Plain click-to-call links elsewhere (e.g. the top bar). The floating
+      // call button and "Call us" buttons keep their own labels.
+      document.querySelectorAll('a[href^="tel:"]:not([data-store-phone]):not(.call-float):not(.keep-tel)').forEach(el => {
         el.href = telHref;
-        Array.from(el.childNodes).filter(n => n.nodeType === 3 && n.textContent.trim()).forEach(n => { n.textContent = ' ' + ph; });
-        // Clear out a secondary-number link/separator a previous sync
-        // added, before deciding whether to add a fresh one.
-        if (el.nextSibling && el.nextSibling.nodeType === 3 && el.nextSibling.textContent === ' / ') el.nextSibling.remove();
-        if (el.nextElementSibling && el.nextElementSibling.classList && el.nextElementSibling.classList.contains('tel-link-secondary')) el.nextElementSibling.remove();
-        if (ph2) {
-          const sep = document.createTextNode(' / ');
-          const link2 = document.createElement('a');
-          link2.href = telHref2;
-          link2.className = 'tel-link tel-link-secondary';
-          link2.textContent = ph2;
-          el.parentNode.insertBefore(sep, el.nextSibling);
-          el.parentNode.insertBefore(link2, sep.nextSibling);
-        }
+        Array.from(el.childNodes).filter(n => n.nodeType === 3 && n.textContent.trim()).forEach(n => { n.textContent = ' ' + callShown; });
+      });
+      // Every WhatsApp link — keeps any pre-filled message (?text=…).
+      document.querySelectorAll('a.whatsapp-float, a[href*="wa.me"]').forEach(el => {
+        let q = '';
+        try { q = new URL(el.href, location.href).search; } catch(e) {}
+        el.href = waBase + q;
       });
     }
     if (s.storeEmail) {
@@ -272,16 +241,6 @@ function applyStoreSettings() {
     if (s.hoursWeekday || s.hoursSunday) {
       const hoursHtml = [s.hoursWeekday, s.hoursSunday].filter(Boolean).join('<br>');
       document.querySelectorAll('[data-store-hours]').forEach(el => { el.innerHTML = hoursHtml; });
-    }
-    if (s.storeWhatsapp || s.storePhone) {
-      // The admin settings field is filled in local Ghana format (e.g.
-      // "050 257 8905"), but wa.me links need the full international
-      // number with no leading 0 — otherwise WhatsApp can't resolve it at
-      // all, which silently breaks the chat button.
-      let wa = (s.storeWhatsapp || s.storePhone).replace(/\D/g, '');
-      if (wa.startsWith('0')) wa = '233' + wa.slice(1);
-      else if (!wa.startsWith('233')) wa = '233' + wa;
-      document.querySelectorAll('a.whatsapp-float, a[href*="wa.me"]').forEach(el => { el.href = 'https://wa.me/' + wa; });
     }
     if (s.storeName) {
       document.querySelectorAll('[data-store-name]').forEach(el => el.textContent = s.storeName);

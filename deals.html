@@ -32,7 +32,7 @@
 <div class="top-bar">
   <div class="container top-bar-inner">
     <div class="top-bar-left">
-      <a href="tel:0502578905"><i class="fas fa-phone-alt"></i> 050 257 8905</a>
+      <a href="tel:0556762816"><i class="fas fa-phone-alt"></i> 055 676 2816</a>
       <a href="mailto:info@orbivagh.com"><i class="fas fa-envelope"></i> info@orbivagh.com</a>
     </div>
     <div class="top-bar-right">
@@ -230,7 +230,7 @@
     <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="contact.html">Contact</a></li></ul></div>
     <div class="footer-col"><h4>Categories</h4><ul id="footerCatLinks"></ul></div>
     <div class="footer-col"><h4>Support</h4><ul><li><a href="contact.html">FAQs</a></li><li><a href="contact.html">Returns</a></li><li><a href="track-order.html">Track Order</a></li></ul></div>
-    <div class="footer-col footer-contact-col"><h4>Contact</h4><div class="footer-contact-item"><i class="fas fa-phone-alt"></i><a href="tel:0502578905" data-store-phone>050 257 8905</a></div><div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:info@orbivagh.com" data-store-email>info@orbivagh.com</a></div></div>
+    <div class="footer-col footer-contact-col"><h4>Contact</h4><div class="footer-contact-item"><i class="fas fa-phone-alt"></i><a href="tel:0556762816" data-store-phone>055 676 2816</a></div><div class="footer-contact-item"><i class="fab fa-whatsapp"></i><a href="https://wa.me/233502578905" data-store-whatsapp target="_blank" rel="noopener">050 257 8905</a></div><div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:info@orbivagh.com" data-store-email>info@orbivagh.com</a></div></div>
   </div>
   <div class="footer-bottom"><div class="container footer-bottom-inner"><p>&copy; <span id="footerYear">2025</span> Orbiva Technologies.</p></div></div>
 </footer>
@@ -347,13 +347,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const snap = obvDataSnapshot();
   const early = obvHasCachedData();
   if (early) { try { applyOverrides(); } catch(e) {} renderDeals(); }
-  // WhatsApp / call links from admin settings
+  // WhatsApp / call links from admin settings (two separate numbers)
   try {
-    const s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
-    let wa = String(s.storeWhatsapp || s.storePhone || '0502578905').replace(/\D/g, '');
-    if (wa.startsWith('0')) wa = '233' + wa.slice(1); else if (!wa.startsWith('233')) wa = '233' + wa;
+    const cs = obvContactSettings();
     const msg = encodeURIComponent('Hello Orbiva, I saw your deals on the website and would like to order / ask about: ');
-    ['dealsWa', 'dealsWa2'].forEach(id => { const a = document.getElementById(id); if (a) a.href = 'https://wa.me/' + wa + '?text=' + msg; });
+    ['dealsWa', 'dealsWa2'].forEach(id => { const a = document.getElementById(id); if (a) a.href = 'https://wa.me/' + obvIntlPhone(cs.wa) + '?text=' + msg; });
+    const call = document.getElementById('dealsCall'); if (call) call.href = 'tel:' + cs.call;
   } catch(e) {}
   document.getElementById('dealsSort').addEventListener('change', e => { _dealsSort = e.target.value; renderDeals(); });
   document.getElementById('dealsChips').addEventListener('click', e => {

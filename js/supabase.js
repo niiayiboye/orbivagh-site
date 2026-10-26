@@ -177,8 +177,34 @@ function applyComboPageVisibility() {
 document.addEventListener('DOMContentLoaded', applyComboPageVisibility);
 
 
+/* ── Store contact numbers ────────────────────────────────────────────────
+   Two separate numbers, both set in admin → Settings:
+     • Call number     (settings.storeCallPhone) — every "call" link/button
+     • WhatsApp number (settings.storeWhatsapp)  — every WhatsApp link/button
+   The defaults below are used until Settings has been saved with new values. */
+var OBV_DEFAULT_CALL = '0556762816';
+var OBV_DEFAULT_WA   = '0502578905';
+function obvLocalPhone(raw) {            // → 0XXXXXXXXX
+  var d = String(raw || '').replace(/\D/g, '');
+  if (d.indexOf('233') === 0) d = '0' + d.slice(3);
+  else if (d.length === 9) d = '0' + d;
+  return d;
+}
+function obvIntlPhone(raw) {             // → 233XXXXXXXXX (for wa.me)
+  var d = obvLocalPhone(raw);
+  return d.indexOf('0') === 0 ? '233' + d.slice(1) : d;
+}
+function obvContactSettings() {
+  var s = {};
+  try { s = JSON.parse(localStorage.getItem('obv_settings') || '{}') || {}; } catch(e) {}
+  return {
+    call: obvLocalPhone(s.storeCallPhone || OBV_DEFAULT_CALL),
+    wa:   obvLocalPhone(s.storeWhatsapp  || OBV_DEFAULT_WA)
+  };
+}
+
 /* ── Floating Call button (phones only) + Meta (Facebook) Pixel ──────────────
-   Call button: sits above the WhatsApp button, uses the store phone from
+   Call button: sits above the WhatsApp button, uses the Call number from
    admin Settings. Pixel: loads only when a Pixel ID is saved under the
    'obv_meta_pixel' key; every Call / WhatsApp tap is sent as a "Contact" event. */
 function obvTrack(name, params) {
@@ -196,13 +222,10 @@ function obvLoadMetaPixel() {
 function obvAddCallButton() {
   try {
     if (document.querySelector('.call-float') || !document.querySelector('.whatsapp-float')) return;
-    var s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
-    var digits = String(s.callButtonPhone || '0556762816').replace(/\D/g, ''); // call button has its own number (optional admin setting: callButtonPhone)
-    if (digits.indexOf('233') === 0) digits = '0' + digits.slice(3);
-    if (digits.length === 9) digits = '0' + digits;
+    var digits = obvContactSettings().call;
     if (!document.getElementById('obvCallCss')) {
       var css = document.createElement('style'); css.id = 'obvCallCss';
-      css.textContent = '.call-float{position:fixed;bottom:142px;right:16px;z-index:900;width:50px;height:50px;border-radius:50%;background:#1d4ed8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 4px 16px rgba(29,78,216,.45);text-decoration:none;transition:transform .2s}.call-float:active{transform:scale(.94)}@media(min-width:1024px){.call-float{display:none}}';
+      css.textContent = '.call-float{position:fixed;bottom:142px;right:16px;z-index:900;width:50px;height:50px;border-radius:50%;background:#1d4ed8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 4px 16px rgba(29,78,216,.45);text-decoration:none;transition:transform .2s}.call-float:active{transform:scale(.94)}.call-float::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #1d4ed8;opacity:0;animation:obvCallPulse 3.6s ease-out infinite;pointer-events:none}.call-float i{display:inline-block;transform-origin:50% 50%;animation:obvCallRing 3.6s ease-in-out infinite}@keyframes obvCallRing{0%,52%,100%{transform:rotate(0)}56%{transform:rotate(-18deg)}60%{transform:rotate(16deg)}64%{transform:rotate(-14deg)}68%{transform:rotate(12deg)}72%{transform:rotate(-8deg)}76%{transform:rotate(6deg)}80%{transform:rotate(0)}}@keyframes obvCallPulse{0%,50%{transform:scale(1);opacity:0}54%{opacity:.55}85%,100%{transform:scale(1.7);opacity:0}}@media(prefers-reduced-motion:reduce){.call-float i,.call-float::after{animation:none}}@media(min-width:1024px){.call-float{display:none}}';
       document.head.appendChild(css);
     }
     var a = document.createElement('a');

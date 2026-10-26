@@ -629,8 +629,8 @@ textarea{resize:vertical;min-height:70px}
         <h3><i class="fas fa-store" style="color:var(--primary)"></i> Store Information</h3>
         <div class="form-grid">
           <div class="form-group"><label>Store Name</label><input type="text" id="s_name" placeholder="Orbiva Technologies"></div>
-          <div class="form-group"><label>Phone Number</label><input type="text" id="s_phone" placeholder="050 257 8905"></div>
-          <div class="form-group"><label>Phone Number 2 <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="s_phone2" placeholder="055 676 2816"></div>
+          <div class="form-group"><label><i class="fas fa-phone-alt" style="color:#1d4ed8"></i> Call Number <span style="font-weight:400;color:var(--muted)">(used for every call link &amp; the call button)</span></label><input type="text" id="s_phone" placeholder="055 676 2816"></div>
+          <div class="form-group"><label><i class="fab fa-whatsapp" style="color:#16a34a"></i> WhatsApp Number <span style="font-weight:400;color:var(--muted)">(used for every WhatsApp chat link)</span></label><input type="text" id="s_whatsapp" placeholder="050 257 8905"></div>
           <div class="form-group"><label>Email Address</label><input type="text" id="s_email" placeholder="info@orbivagh.com"></div>
           <div class="form-group"><label>Currency Symbol</label><input type="text" id="s_currency" placeholder="GH₵"></div>
           <div class="form-group full"><label>Address / Delivery Area</label><input type="text" id="s_address" placeholder="e.g. Accra &amp; Ghana-wide delivery (or your shop address, once you have one)"></div>
@@ -2194,7 +2194,8 @@ function generateInvoice(orderId) {
   const settings = lsGet('obv_settings', {});
   const branding = lsGet('obv_branding', {});
   const bizName = settings.storeName || 'Orbiva Technologies';
-  const bizPhone = [settings.storePhone, settings.storePhone2].filter(Boolean).join(' / ');
+  const _cs = obvContactSettings();
+  const bizPhone = 'Call: ' + _cs.call + '  ·  WhatsApp: ' + _cs.wa;
   const bizEmail = settings.storeEmail || '';
   const currency = settings.currency || 'GH₵';
   const logoUrl = branding.logoUrl || 'img/logo.jpeg';
@@ -4048,8 +4049,8 @@ function copyImgUrl(index){
 function loadSettings(){
   const s=lsGet('obv_settings',{});
   document.getElementById('s_name').value=s.storeName||'';
-  document.getElementById('s_phone').value=s.storePhone||'';
-  document.getElementById('s_phone2').value=s.storePhone2||'';
+  document.getElementById('s_phone').value=s.storeCallPhone||OBV_DEFAULT_CALL;
+  document.getElementById('s_whatsapp').value=s.storeWhatsapp||OBV_DEFAULT_WA;
   // Falls back to the old obv_settings.driveApiKey once, for anyone who
   // saved a key before this moved to obv_admin_secrets — saveSettings()
   // rewrites it to the new spot the next time this page is saved.
@@ -4228,8 +4229,10 @@ function saveSettings(){
   lsSet('obv_settings',{
     ...s,
     storeName:document.getElementById('s_name').value.trim(),
-    storePhone:document.getElementById('s_phone').value.trim(),
-    storePhone2:document.getElementById('s_phone2').value.trim(),
+    storeCallPhone:document.getElementById('s_phone').value.trim(),
+    storeWhatsapp:document.getElementById('s_whatsapp').value.trim(),
+    storePhone:document.getElementById('s_phone').value.trim(),   // kept equal to the call number for older code
+    storePhone2:'',
     storeEmail:document.getElementById('s_email').value.trim(),
     currency:document.getElementById('s_currency').value.trim(),
     storeAddress:document.getElementById('s_address').value.trim(),
