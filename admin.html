@@ -368,6 +368,7 @@ textarea{resize:vertical;min-height:70px}
       <div class="nav-item" onclick="showPage('supplier')" id="nav-supplier"><i class="fas fa-truck"></i> Supplier Requests</div>
       <div class="nav-item" onclick="showPage('customers')" id="nav-customers"><i class="fas fa-address-book"></i> Customer Signups</div>
       <div class="nav-section" style="margin-top:8px">Admin</div>
+      <div class="nav-item" onclick="showPage('analytics')" id="nav-analytics"><i class="fas fa-chart-line"></i> Analytics</div>
       <div class="nav-item" onclick="showPage('history')" id="nav-history"><i class="fas fa-history"></i> Change History</div>
       <div class="nav-item" onclick="showPage('settings')" id="nav-settings"><i class="fas fa-cog"></i> Settings</div>
     </nav>
@@ -628,8 +629,8 @@ textarea{resize:vertical;min-height:70px}
         <h3><i class="fas fa-store" style="color:var(--primary)"></i> Store Information</h3>
         <div class="form-grid">
           <div class="form-group"><label>Store Name</label><input type="text" id="s_name" placeholder="Orbiva Technologies"></div>
-          <div class="form-group"><label>Phone Number</label><input type="text" id="s_phone" placeholder="050 257 8905"></div>
-          <div class="form-group"><label>Phone Number 2 <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="s_phone2" placeholder="055 676 2816"></div>
+          <div class="form-group"><label><i class="fas fa-phone-alt" style="color:#1d4ed8"></i> Call Number <span style="font-weight:400;color:var(--muted)">(used for every call link &amp; the call button)</span></label><input type="text" id="s_phone" placeholder="055 676 2816"></div>
+          <div class="form-group"><label><i class="fab fa-whatsapp" style="color:#16a34a"></i> WhatsApp Number <span style="font-weight:400;color:var(--muted)">(used for every WhatsApp chat link)</span></label><input type="text" id="s_whatsapp" placeholder="050 257 8905"></div>
           <div class="form-group"><label>Email Address</label><input type="text" id="s_email" placeholder="info@orbivagh.com"></div>
           <div class="form-group"><label>Currency Symbol</label><input type="text" id="s_currency" placeholder="GH₵"></div>
           <div class="form-group full"><label>Address / Delivery Area</label><input type="text" id="s_address" placeholder="e.g. Accra &amp; Ghana-wide delivery (or your shop address, once you have one)"></div>
@@ -1033,6 +1034,32 @@ textarea{resize:vertical;min-height:70px}
     </div>
 
     <!-- HISTORY -->
+    <!-- ANALYTICS -->
+    <div class="content" id="page-analytics" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+        <div><h2 style="font-size:18px;font-weight:800">Website Analytics</h2><p style="font-size:13px;color:var(--muted)">Who visits, where they come from, and what they tap. Counting started when this feature went live.</p></div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select id="anRange" class="filter-sel" onchange="loadAnalytics()">
+            <option value="1">Today</option><option value="7" selected>Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option>
+          </select>
+          <button class="btn btn-outline" onclick="loadAnalytics()"><i class="fas fa-sync-alt"></i> Refresh</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:13px;margin-bottom:14px">
+        <label style="display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" id="anHideBots" checked onchange="renderAnalytics()"> Hide bots &amp; crawlers</label>
+        <label style="display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" id="anIgnoreMe" onchange="setIgnoreMe(this.checked)"> Don't count my visits on this device</label>
+      </div>
+      <div class="stats-grid" id="anKpis"></div>
+      <div class="widget" style="margin-bottom:16px"><div class="widget-title">Visitors per day</div><div id="anChart"></div></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+        <div class="widget"><div class="widget-title">Where visitors come from</div><div id="anSources"></div></div>
+        <div class="widget"><div class="widget-title">Ad campaigns</div><div id="anCampaigns"></div></div>
+        <div class="widget"><div class="widget-title">Most viewed pages</div><div id="anPages"></div></div>
+        <div class="widget"><div class="widget-title">Cities</div><div id="anCities"></div></div>
+        <div class="widget"><div class="widget-title">Devices</div><div id="anDevices"></div></div>
+      </div>
+    </div>
+
     <div class="content" id="page-history" style="display:none">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
         <div><h2 style="font-size:18px;font-weight:800">Change History</h2><p style="font-size:13px;color:var(--muted)">A log of all changes made in this portal. Click Undo to reverse any action.</p></div>
@@ -1580,8 +1607,8 @@ if ('serviceWorker' in navigator) {
 }
 
 /* ── Navigation ── */
-const PAGES = ['dashboard','orders','deals','products','images','brands','categories','reviews','combos','faqs','supplier','customers','history','settings'];
-const PAGE_TITLES = {dashboard:'Dashboard',orders:'Orders',deals:'Deals & Promotions',products:'Products',images:'Image Library',brands:'Brands',categories:'Categories',faqs:'FAQs',supplier:'Supplier Requests',customers:'Customer Signups',history:'Change History',settings:'Settings'};
+const PAGES = ['dashboard','orders','deals','products','images','brands','categories','reviews','combos','faqs','supplier','customers','analytics','history','settings'];
+const PAGE_TITLES = {dashboard:'Dashboard',orders:'Orders',deals:'Deals & Promotions',products:'Products',images:'Image Library',brands:'Brands',categories:'Categories',faqs:'FAQs',supplier:'Supplier Requests',customers:'Customer Signups',analytics:'Analytics',history:'Change History',settings:'Settings'};
 function toggleSidebar(){
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarBackdrop').classList.toggle('open');
@@ -1611,6 +1638,7 @@ function showPage(page) {
   if (page==='faqs')       renderFaqsGridAdmin();
   if (page==='supplier')   renderSupplierPage();
   if (page==='customers')  renderCustomersPage();
+  if (page==='analytics') { try{document.getElementById('anIgnoreMe').checked=localStorage.getItem('obv_me')==='1';}catch(e){} loadAnalytics(); }
   if (page==='history')   renderHistory();
   if (page==='settings')  loadSettings();
 }
@@ -2166,7 +2194,8 @@ function generateInvoice(orderId) {
   const settings = lsGet('obv_settings', {});
   const branding = lsGet('obv_branding', {});
   const bizName = settings.storeName || 'Orbiva Technologies';
-  const bizPhone = [settings.storePhone, settings.storePhone2].filter(Boolean).join(' / ');
+  const _cs = obvContactSettings();
+  const bizPhone = 'Call: ' + _cs.call + '  ·  WhatsApp: ' + _cs.wa;
   const bizEmail = settings.storeEmail || '';
   const currency = settings.currency || 'GH₵';
   const logoUrl = branding.logoUrl || 'img/logo.jpeg';
@@ -2707,6 +2736,23 @@ function renderTable(){
    re-ordering here updates the same link instantly — no new link needed. */
 function getPromoList(){ const l=lsGet('obv_promo_list',[]); return Array.isArray(l)?l.map(String):[]; }
 function savePromoList(list){ lsSet('obv_promo_list',list); sbPush('obv_promo_list'); }
+/* Optional group name per advertised product (e.g. "TVs", "Kitchen") stored as
+   {productId: "Group name"} under 'obv_promo_groups'. The page orbivagh.com/deals.html
+   shows everything; orbivagh.com/deals.html?g=tvs shows just that group. */
+function getPromoGroups(){ const g=lsGet('obv_promo_groups',{}); return (g&&typeof g==='object'&&!Array.isArray(g))?g:{}; }
+function promoSlug(n){ return String(n||'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
+function setPromoGroup(id,name){
+  const g=getPromoGroups(); name=String(name||'').trim().slice(0,40);
+  if(name) g[String(id)]=name; else delete g[String(id)];
+  lsSet('obv_promo_groups',g); sbPush('obv_promo_groups');
+  renderPromoPanel();
+}
+function copyText(link,msg){
+  const done=()=>toast((msg||'Link copied')+': '+link,'ok');
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done,()=>prompt('Copy this link:',link));
+  else prompt('Copy this link:',link);
+}
+function copyGroupLink(slug){ copyText('https://orbivagh.com/deals.html?g='+slug,'Group link copied'); }
 function setPromoted(id,on,silent){
   id=String(id);
   let list=getPromoList().filter(x=>x!==id);
@@ -2726,15 +2772,10 @@ function movePromo(id,dir){
   const [x]=list.splice(i,1); list.splice(j,0,x);
   savePromoList(list); renderPromoPanel();
 }
-function copyPromoLink(){
-  const link='https://orbivagh.com/?promo=deals';
-  const done=()=>toast('Promo link copied: '+link,'ok');
-  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done,()=>prompt('Copy this link:',link));
-  else prompt('Copy this link:',link);
-}
+function copyPromoLink(){ copyText('https://orbivagh.com/deals.html','Promo link copied'); }
 function renderPromoPanel(){
   const el=document.getElementById('promoPanel'); if(!el) return;
-  const list=getPromoList();
+  const list=getPromoList(); const groups=getPromoGroups();
   const rows=list.map((id,i)=>{
     const p=adminProds.find(x=>String(x.id)===id);
     if(!p) return `<li style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid #eef2f7;font-size:13px;color:#b91c1c"><span style="width:22px;text-align:center;font-weight:700">${i+1}</span><span style="flex:1">Product ${escHtml(id)} no longer exists</span><button class="btn btn-outline btn-sm" onclick="setPromoted('${id}',false);renderPromoPanel();renderTable()">Remove</button></li>`;
@@ -2744,16 +2785,103 @@ function renderPromoPanel(){
       <span style="width:22px;text-align:center;font-weight:800;color:#1d4ed8">${i+1}</span>
       ${img?`<img src="${img}" style="width:34px;height:34px;object-fit:contain;border-radius:6px;background:#f8fafc" onerror="this.style.display='none'">`:''}
       <span style="flex:1;min-width:0"><span style="font-weight:600">${escHtml(p.name)}</span>${warn}<br><span style="color:var(--muted);font-size:11px">${escHtml(p.model||'')} · ${fmt(p.price)}</span></span>
+      <input list="promoGroupList" value="${escHtml(groups[id]||'')}" placeholder="Group (optional)" title="Optional group, e.g. TVs or Kitchen" maxlength="40" style="width:110px;padding:5px 7px;border:1px solid #d6dee8;border-radius:6px;font-size:12px" onchange="setPromoGroup('${id}',this.value)">
       <button class="btn btn-outline btn-sm" title="Move up" ${i===0?'disabled':''} onclick="movePromo('${id}',-1)"><i class="fas fa-arrow-up"></i></button>
       <button class="btn btn-outline btn-sm" title="Move down" ${i===list.length-1?'disabled':''} onclick="movePromo('${id}',1)"><i class="fas fa-arrow-down"></i></button>
       <button class="btn btn-outline btn-sm" title="Remove from ads" onclick="setPromoted('${id}',false);renderPromoPanel();renderTable()"><i class="fas fa-times"></i></button>
     </li>`;}).join('');
+  const groupNames=[...new Set(list.map(id=>groups[id]).filter(Boolean))];
+  const groupLinks=groupNames.length?`<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)">Group links: ${groupNames.map(n=>`<button class="btn btn-outline btn-sm" onclick="copyGroupLink('${promoSlug(n)}')"><i class="fas fa-link"></i> ${escHtml(n)} (${list.filter(id=>groups[id]===n).length})</button>`).join('')}</div>`:'';
   el.innerHTML=`<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <div style="flex:1;min-width:220px"><div style="font-weight:800;font-size:14px;color:#1d4ed8"><i class="fas fa-bullhorn"></i> Ads promo link <span style="font-weight:600;color:var(--muted);font-size:12px">· ${list.length} product${list.length===1?'':'s'} advertised</span></div>
-      <div style="font-size:12px;color:var(--muted);margin-top:3px">Tick the <i class="fas fa-bullhorn"></i> button on any product row (or the Advertise box when editing). Use this link in your ads: <strong>orbivagh.com/?promo=deals</strong> — it always shows the products below, in this order.</div></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:3px">Tick the <i class="fas fa-bullhorn"></i> button on any product row (or the Advertise box when editing). Use this link in your ads: <strong>orbivagh.com/deals.html</strong> — a special page that always shows the products below, in this order. Give products a <em>Group</em> name to make separate links for different ads.</div></div>
       <button class="btn btn-primary btn-sm" onclick="copyPromoLink()"><i class="fas fa-link"></i> Copy promo link</button>
     </div>
+    ${groupLinks}
+    <datalist id="promoGroupList">${groupNames.map(n=>`<option value="${escHtml(n)}">`).join('')}</datalist>
     ${list.length?`<ol style="list-style:none;margin:10px 0 0;padding:0">${rows}</ol>`:'<div style="margin-top:10px;font-size:12.5px;color:var(--muted)">No products advertised yet — the promo link will show the normal homepage until you tick some.</div>'}`;
+}
+
+/* ── Analytics (reads the insert-only site_visits table) ── */
+let _anRows = [];
+function setIgnoreMe(on){ try{ if(on) localStorage.setItem('obv_me','1'); else localStorage.removeItem('obv_me'); toast(on?'This device will no longer be counted':'This device will be counted again','ok'); }catch(e){} }
+async function loadAnalytics(){
+  const days=parseInt(document.getElementById('anRange').value,10)||7;
+  const since=new Date(); since.setUTCHours(0,0,0,0); since.setUTCDate(since.getUTCDate()-(days-1));
+  const kp=document.getElementById('anKpis'); if(kp) kp.innerHTML='<div style="grid-column:1/-1;padding:20px;color:var(--muted)">Loading…</div>';
+  try{
+    const token=await getValidAdminAccessToken();
+    if(!token){ kp.innerHTML='<div style="grid-column:1/-1;padding:20px;color:#b91c1c">Please log in again to view analytics.</div>'; return; }
+    let all=[], from=0;
+    while(from<30000){
+      const r=await fetch(`${SB_URL}/rest/v1/site_visits?select=t,sid,ev,p,src,medium,campaign,ref,device,country,cc,city,ip,is_bot&t=gte.${since.toISOString()}&order=t.desc`,{headers:{apikey:SB_KEY,Authorization:'Bearer '+token,Range:from+'-'+(from+999)}});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const part=await r.json(); all=all.concat(part);
+      if(part.length<1000) break; from+=1000;
+    }
+    _anRows=all; _anDays=days; renderAnalytics();
+  }catch(e){ if(kp) kp.innerHTML='<div style="grid-column:1/-1;padding:20px;color:#b91c1c">Could not load analytics ('+escHtml(e.message||e)+').</div>'; }
+}
+let _anDays=7;
+function anTable(rows,total){
+  if(!rows.length) return '<div style="color:var(--muted);font-size:13px;padding:6px 0">No data yet.</div>';
+  const max=Math.max(...rows.map(r=>r[1]),1);
+  return rows.map(([label,n,extra])=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;border-top:1px solid #eef2f7">
+    <div style="flex:1;min-width:0"><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${label}${extra?` <span style="color:var(--muted);font-size:11px">${extra}</span>`:''}</div>
+    <div style="height:5px;background:#eef2f7;border-radius:3px;margin-top:3px"><div style="height:5px;width:${Math.round(n/max*100)}%;background:#1d4ed8;border-radius:3px"></div></div></div>
+    <div style="font-weight:700;width:46px;text-align:right">${n}</div></div>`).join('');
+}
+function anPageLabel(p){
+  const [seg,qs]=String(p||'').split('?'); const q=new URLSearchParams(qs||'');
+  const names={'index.html':'Home','':'Home','shop.html':'Shop','product.html':'Product','contact.html':'Contact','checkout.html':'Checkout','confirmation.html':'Order confirmed','deals.html':'Special deals page','combo-deals.html':'Combo deals','track-order.html':'Track order','black-friday.html':'Black Friday'};
+  const pid=q.get('id')||seg.replace(/\.html$/,'');
+  const prod=(typeof adminProds!=='undefined')&&adminProds.find(x=>String(x.id)===String(pid));
+  if(seg==='product.html'&&prod) return escHtml(prod.name);
+  if(!names[seg]&&prod) return escHtml(prod.name);
+  let label=names[seg]||escHtml(seg);
+  if(seg==='deals.html'&&q.get('g')) label+=' · '+escHtml(q.get('g'));
+  if(seg==='shop.html'){ if(q.get('cat')) label+=' · '+escHtml(q.get('cat')); else if(q.get('brand')) label+=' · '+escHtml(q.get('brand')); else if(q.get('q')) label+=' · search “'+escHtml(q.get('q'))+'”'; }
+  return label;
+}
+function renderAnalytics(){
+  const hide=document.getElementById('anHideBots').checked;
+  const rows=_anRows.filter(r=>!(hide&&r.is_bot));
+  const views=rows.filter(r=>r.ev==='view');
+  const key=r=>r.sid||r.ip||'?';
+  const visitors=new Set(views.map(key));
+  const sess=ev=>new Set(rows.filter(r=>r.ev===ev).map(key)).size;
+  const tile=(label,val,sub,color)=>`<div class="stat-card"><div style="font-size:12px;color:var(--muted);font-weight:600">${label}</div><div style="font-size:26px;font-weight:800;color:${color||'#0f172a'};margin:4px 0">${val}</div><div style="font-size:11px;color:var(--muted)">${sub||''}</div></div>`;
+  const nCall=rows.filter(r=>r.ev==='call').length, nWa=rows.filter(r=>r.ev==='whatsapp').length, nCart=rows.filter(r=>r.ev==='add_to_cart').length;
+  const orders=views.filter(r=>/^confirmation\.html/.test(r.p||'')).length;
+  document.getElementById('anKpis').innerHTML=
+    tile('Visitors',visitors.size,'unique visits (sessions)','#1d4ed8')+
+    tile('Page views',views.length,visitors.size?(views.length/visitors.size).toFixed(1)+' pages per visit':'')+
+    tile('Call taps',nCall,sess('call')+' people','#16a34a')+
+    tile('WhatsApp taps',nWa,sess('whatsapp')+' people','#16a34a')+
+    tile('Added to cart',nCart,sess('add_to_cart')+' people','#d97706')+
+    tile('Orders placed',orders,'confirmation page views','#7c3aed');
+  // daily chart
+  const dayMap={}; for(let i=0;i<_anDays;i++){ const d=new Date(); d.setUTCDate(d.getUTCDate()-i); dayMap[d.toISOString().slice(0,10)]={v:new Set(),pv:0}; }
+  views.forEach(r=>{ const d=(r.t||'').slice(0,10); if(dayMap[d]){ dayMap[d].v.add(key(r)); dayMap[d].pv++; } });
+  const days=Object.keys(dayMap).sort(); const maxV=Math.max(...days.map(d=>dayMap[d].v.size),1);
+  document.getElementById('anChart').innerHTML=`<div style="display:flex;align-items:flex-end;gap:${_anDays>30?1:4}px;height:130px">${days.map(d=>{const n=dayMap[d].v.size;return `<div title="${d}: ${n} visitors, ${dayMap[d].pv} page views" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%"><div style="font-size:10px;color:var(--muted)">${_anDays<=30&&n?n:''}</div><div style="width:100%;max-width:34px;height:${Math.max(n/maxV*100,n?3:0)}%;background:#1d4ed8;border-radius:3px 3px 0 0"></div></div>`;}).join('')}</div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>${days[0]}</span><span>${days[days.length-1]}</span></div>`;
+  // sources: one row per session (first view)
+  const firstBySid={}; views.slice().reverse().forEach(r=>{ const k=key(r); if(!firstBySid[k]) firstBySid[k]=r; });
+  const srcCount={}, campCount={};
+  Object.values(firstBySid).forEach(r=>{ const k=(r.src||'direct')+(r.medium&&r.src!=='direct'?' · '+r.medium:''); srcCount[k]=(srcCount[k]||0)+1; if(r.campaign){ campCount[r.campaign]=(campCount[r.campaign]||0)+1; } });
+  const top=(o,n)=>Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,n).map(([k,v])=>[escHtml(k),v]);
+  document.getElementById('anSources').innerHTML=anTable(top(srcCount,10));
+  // campaigns also include deals-page visitors
+  const dealsSess=new Set(views.filter(r=>/^deals\.html/.test(r.p||'')).map(key)).size;
+  const campRows=top(campCount,8); if(dealsSess) campRows.unshift(['Special deals page (deals.html)',dealsSess]);
+  document.getElementById('anCampaigns').innerHTML=anTable(campRows)+'<div style="font-size:11px;color:var(--muted);margin-top:8px">Tip: add <b>?utm_campaign=name</b> to an ad link to see it listed here by name.</div>';
+  const pageCount={}; views.forEach(r=>{ const k=r.p||'index.html'; pageCount[k]=(pageCount[k]||0)+1; });
+  document.getElementById('anPages').innerHTML=anTable(Object.entries(pageCount).sort((a,b)=>b[1]-a[1]).slice(0,12).map(([k,v])=>[anPageLabel(k),v]));
+  const cityCount={}; Object.values(firstBySid).forEach(r=>{ const k=(r.city?r.city+', ':'')+(r.country||'Unknown'); cityCount[k]=(cityCount[k]||0)+1; });
+  document.getElementById('anCities').innerHTML=anTable(top(cityCount,10));
+  const devCount={}; Object.values(firstBySid).forEach(r=>{ const k=r.device||'unknown'; devCount[k]=(devCount[k]||0)+1; });
+  document.getElementById('anDevices').innerHTML=anTable(top(devCount,5));
 }
 function toggleProductBlackFriday(id){
   const edits=lsGet('obv_prod_edits',{});
@@ -3406,7 +3534,7 @@ function deleteAllKeepImages() {
 const BACKUP_KEYS=[
   'obv_prod_edits','obv_prod_adds','obv_prod_dels',
   'obv_settings','obv_branding','obv_flash_prods',
-  'obv_delivery_text','obv_freeDelivery','obv_freeDeliveryPromo','obv_sku_img_map','obv_promo_codes','obv_reviews_enabled','obv_reviews','obv_combo_deals','obv_promo_list',
+  'obv_delivery_text','obv_freeDelivery','obv_freeDeliveryPromo','obv_sku_img_map','obv_promo_codes','obv_reviews_enabled','obv_reviews','obv_combo_deals','obv_promo_list','obv_promo_groups',
   'obv_img_required','obv_images','obv_history',
   'obv_orders','obv_data_version',
   'obv_cat_adds','obv_cat_dels','obv_cat_edits',
@@ -3921,8 +4049,8 @@ function copyImgUrl(index){
 function loadSettings(){
   const s=lsGet('obv_settings',{});
   document.getElementById('s_name').value=s.storeName||'';
-  document.getElementById('s_phone').value=s.storePhone||'';
-  document.getElementById('s_phone2').value=s.storePhone2||'';
+  document.getElementById('s_phone').value=s.storeCallPhone||OBV_DEFAULT_CALL;
+  document.getElementById('s_whatsapp').value=s.storeWhatsapp||OBV_DEFAULT_WA;
   // Falls back to the old obv_settings.driveApiKey once, for anyone who
   // saved a key before this moved to obv_admin_secrets — saveSettings()
   // rewrites it to the new spot the next time this page is saved.
@@ -4101,8 +4229,10 @@ function saveSettings(){
   lsSet('obv_settings',{
     ...s,
     storeName:document.getElementById('s_name').value.trim(),
-    storePhone:document.getElementById('s_phone').value.trim(),
-    storePhone2:document.getElementById('s_phone2').value.trim(),
+    storeCallPhone:document.getElementById('s_phone').value.trim(),
+    storeWhatsapp:document.getElementById('s_whatsapp').value.trim(),
+    storePhone:document.getElementById('s_phone').value.trim(),   // kept equal to the call number for older code
+    storePhone2:'',
     storeEmail:document.getElementById('s_email').value.trim(),
     currency:document.getElementById('s_currency').value.trim(),
     storeAddress:document.getElementById('s_address').value.trim(),

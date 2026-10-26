@@ -58,6 +58,11 @@ function setAttr(html, elemId, attr, value) {
   return html.replace(re, `$1${escAttr(value)}$2`);
 }
 
+// Real approved reviews only, keyed by product id. Filled in main(); stays
+// empty when reviews are switched off in admin, so no rating markup is ever
+// published for reviews the page itself isn't showing.
+let REVIEWS_BY_PRODUCT = {};
+
 function generateProductPage(template, p) {
   const pid = String(p.id);
   const name = p.name || '';
@@ -103,6 +108,22 @@ function generateProductPage(template, p) {
       }
     }
   };
+  const revs = REVIEWS_BY_PRODUCT[pid] || [];
+  if (revs.length) {
+    const avg = revs.reduce((t, r) => t + Number(r.rating), 0) / revs.length;
+    schema.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: (Math.round(avg * 10) / 10).toFixed(1),
+      reviewCount: revs.length, bestRating: '5', worstRating: '1'
+    };
+    schema.review = revs.slice(0, 5).map(r => ({
+      '@type': 'Review',
+      author: { '@type': 'Person', name: String(r.name || 'Customer') },
+      reviewRating: { '@type': 'Rating', ratingValue: String(r.rating), bestRating: '5', worstRating: '1' },
+      reviewBody: String(r.comment || ''),
+      ...(r.createdAt ? { datePublished: String(r.createdAt).slice(0, 10) } : {})
+    }));
+  }
   const schemaJson = JSON.stringify(schema);
   out = out.replace(
     /(<script type="application\/ld\+json" id="productSchema">)\{\}(<\/script>)/,
@@ -268,13 +289,24 @@ function rebuildSitemap(existingXml, products, combos) {
 
 async function main() {
   console.log('Fetching live catalog data from Supabase...');
-  const [edits, adds, dels, comboDeals, comboPageSetting] = await Promise.all([
+  const [edits, adds, dels, comboDeals, comboPageSetting, reviewsOn, allReviews] = await Promise.all([
     fetchKv('obv_prod_edits'),
     fetchKv('obv_prod_adds'),
     fetchKv('obv_prod_dels'),
     fetchKv('obv_combo_deals'),
     fetchKv('obv_combo_page').catch(() => null),
+    fetchKv('obv_reviews_enabled').catch(() => null),
+    fetchKv('obv_reviews').catch(() => null),
   ]);
+
+  REVIEWS_BY_PRODUCT = {};
+  if (reviewsOn === 'on' && Array.isArray(allReviews)) {
+    for (const r of allReviews) {
+      if (r && r.status === 'approved' && r.productId && Number(r.rating) >= 1 && Number(r.rating) <= 5) {
+        (REVIEWS_BY_PRODUCT[r.productId] = REVIEWS_BY_PRODUCT[r.productId] || []).push(r);
+      }
+    }
+  }
 
   const { PRODUCTS } = loadBaseCatalog();
   const merged = mergeProducts(PRODUCTS, edits, adds, dels);

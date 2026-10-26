@@ -69,8 +69,35 @@ function showToast(type, title, msg, icon) {
 
 /* ── Apply admin product/brand edits from localStorage ── */
 let _overridesApplied = false;
-function applyOverrides() {
-  if (_overridesApplied) return;
+let _pristineCatalog = null;
+/* Keys whose contents change what the catalog / menus / settings look like.
+   Compared before and after the Supabase sync so pages only redraw when the
+   fresh data really differs from what was cached on the visitor's device. */
+const OBV_DATA_KEYS = ['obv_prod_edits','obv_prod_adds','obv_prod_dels','obv_brand_adds','obv_brand_dels',
+  'obv_cat_adds','obv_cat_dels','obv_cat_edits','obv_settings','obv_combo_deals','obv_combo_page',
+  'obv_flashSale','obv_blackFriday','obv_img_required','obv_freeDelivery','obv_branding','obv_promo_list'];
+function obvDataSnapshot() {
+  try { return OBV_DATA_KEYS.map(k => localStorage.getItem(k) || '').join('\u0001'); } catch(e) { return ''; }
+}
+/* True when this device already has a saved copy of the store data from an
+   earlier visit, so the page can draw correctly right away instead of
+   waiting for the network and then changing. */
+function obvHasCachedData() {
+  try { return localStorage.getItem('obv_data_version') !== null && localStorage.getItem('obv_settings') !== null; } catch(e) { return false; }
+}
+function applyOverrides(force) {
+  if (_overridesApplied && !force) return;
+  // Keep an untouched copy of the base catalog so overrides can be applied
+  // again from scratch if the sync brings newer data than the cached copy.
+  try {
+    if (!_pristineCatalog) {
+      _pristineCatalog = { p: JSON.stringify(PRODUCTS), b: JSON.stringify(BRANDS), c: JSON.stringify(CATEGORIES) };
+    } else if (force) {
+      PRODUCTS.length = 0; PRODUCTS.push(...JSON.parse(_pristineCatalog.p));
+      BRANDS.length = 0; BRANDS.push(...JSON.parse(_pristineCatalog.b));
+      CATEGORIES.length = 0; CATEGORIES.push(...JSON.parse(_pristineCatalog.c));
+    }
+  } catch(e) {}
   _overridesApplied = true;
   // If data.js was redeployed with a new version, clear stale product
   // deletions/edits/adds — a full catalog rebuild means anything added
@@ -156,69 +183,44 @@ function applyOverrides() {
     SEARCH_INDEX.length = 0;
     SEARCH_INDEX.push(...productEntries, ...categoryEntries, ...brandEntries);
   }
-  // Apply store settings (WhatsApp, phone, email, store name)
+  applyStoreSettings();
+}
+
+/* Store phone/email/address/hours/WhatsApp from admin Settings. Safe to run
+   more than once — also called early from cached settings so a second phone
+   number doesn't pop in after the Supabase sync. */
+function applyStoreSettings() {
   try {
     const s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
-    if (s.storePhone) {
-      // Normalize to one consistent "0XX XXX XXXX" display format no
-      // matter how the admin actually typed it into Settings (with or
-      // without spaces, with or without the country code). Without this,
-      // the page's nicely-formatted default number visibly flashes into
-      // whatever raw formatting was typed in, the instant sync finishes.
-      const ph = formatGhPhone(s.storePhone);
-      const ph2 = s.storePhone2 ? formatGhPhone(s.storePhone2) : '';
-      const telHref = 'tel:' + ph.replace(/\D/g,'');
-      const telHref2 = ph2 ? 'tel:' + ph2.replace(/\D/g,'') : '';
+    {
+      // Two separate numbers (admin → Settings): one for CALLS, one for
+      // WHATSAPP. Each falls back to its built-in default (see supabase.js).
+      const cs = obvContactSettings();
+      const callShown = formatGhPhone(cs.call), waShown = formatGhPhone(cs.wa);
+      const telHref = 'tel:' + cs.call;
+      const waBase = 'https://wa.me/' + obvIntlPhone(cs.wa);
 
-      // Elements explicitly marked as the store's phone display (e.g. the
-      // footer). With two numbers, each is shown and behaves as its own
-      // separate, independently clickable number — not one combined block
-      // of text that always dials the first number no matter which part
-      // a customer taps.
+      // Elements explicitly marked as the store's call number (e.g. footer).
       document.querySelectorAll('[data-store-phone]').forEach(el => {
-        if (el.tagName === 'A') {
-          if (ph2) {
-            // Two <a> tags can't nest inside one <a> — HTML doesn't allow
-            // it — so this anchor becomes a plain wrapper holding both
-            // real, separately-dialable links instead.
-            const span = document.createElement('span');
-            for (const attr of el.attributes) { if (attr.name !== 'href') span.setAttribute(attr.name, attr.value); }
-            const icon = el.querySelector('i');
-            span.innerHTML = (icon ? icon.outerHTML + ' ' : '') +
-              `<a href="${telHref}" class="tel-link">${ph}</a> / <a href="${telHref2}" class="tel-link">${ph2}</a>`;
-            el.replaceWith(span);
-          } else {
-            el.textContent = ph;
-            el.href = telHref;
-          }
-        } else {
-          el.innerHTML = ph2
-            ? `<a href="${telHref}" class="tel-link">${ph}</a> / <a href="${telHref2}" class="tel-link">${ph2}</a>`
-            : ph;
-        }
+        el.textContent = callShown;
+        if (el.tagName === 'A') el.href = telHref;
       });
-
-      // Plain click-to-call links elsewhere (e.g. the top bar) that
-      // aren't tagged with data-store-phone. These keep their own
-      // markup/classes for styling — a second number, when set, is added
-      // as its own separate link right next to this one rather than
-      // merged into it.
-      document.querySelectorAll('a[href^="tel:"]:not([data-store-phone]):not(.tel-link)').forEach(el => {
+      // Elements explicitly marked as the store's WhatsApp number.
+      document.querySelectorAll('[data-store-whatsapp]').forEach(el => {
+        el.textContent = waShown;
+        if (el.tagName === 'A') el.href = waBase;
+      });
+      // Plain click-to-call links elsewhere (e.g. the top bar). The floating
+      // call button and "Call us" buttons keep their own labels.
+      document.querySelectorAll('a[href^="tel:"]:not([data-store-phone]):not(.call-float):not(.keep-tel)').forEach(el => {
         el.href = telHref;
-        Array.from(el.childNodes).filter(n => n.nodeType === 3 && n.textContent.trim()).forEach(n => { n.textContent = ' ' + ph; });
-        // Clear out a secondary-number link/separator a previous sync
-        // added, before deciding whether to add a fresh one.
-        if (el.nextSibling && el.nextSibling.nodeType === 3 && el.nextSibling.textContent === ' / ') el.nextSibling.remove();
-        if (el.nextElementSibling && el.nextElementSibling.classList && el.nextElementSibling.classList.contains('tel-link-secondary')) el.nextElementSibling.remove();
-        if (ph2) {
-          const sep = document.createTextNode(' / ');
-          const link2 = document.createElement('a');
-          link2.href = telHref2;
-          link2.className = 'tel-link tel-link-secondary';
-          link2.textContent = ph2;
-          el.parentNode.insertBefore(sep, el.nextSibling);
-          el.parentNode.insertBefore(link2, sep.nextSibling);
-        }
+        Array.from(el.childNodes).filter(n => n.nodeType === 3 && n.textContent.trim()).forEach(n => { n.textContent = ' ' + callShown; });
+      });
+      // Every WhatsApp link — keeps any pre-filled message (?text=…).
+      document.querySelectorAll('a.whatsapp-float, a[href*="wa.me"]').forEach(el => {
+        let q = '';
+        try { q = new URL(el.href, location.href).search; } catch(e) {}
+        el.href = waBase + q;
       });
     }
     if (s.storeEmail) {
@@ -239,16 +241,6 @@ function applyOverrides() {
     if (s.hoursWeekday || s.hoursSunday) {
       const hoursHtml = [s.hoursWeekday, s.hoursSunday].filter(Boolean).join('<br>');
       document.querySelectorAll('[data-store-hours]').forEach(el => { el.innerHTML = hoursHtml; });
-    }
-    if (s.storeWhatsapp || s.storePhone) {
-      // The admin settings field is filled in local Ghana format (e.g.
-      // "050 257 8905"), but wa.me links need the full international
-      // number with no leading 0 — otherwise WhatsApp can't resolve it at
-      // all, which silently breaks the chat button.
-      let wa = (s.storeWhatsapp || s.storePhone).replace(/\D/g, '');
-      if (wa.startsWith('0')) wa = '233' + wa.slice(1);
-      else if (!wa.startsWith('233')) wa = '233' + wa;
-      document.querySelectorAll('a.whatsapp-float, a[href*="wa.me"]').forEach(el => { el.href = 'https://wa.me/' + wa; });
     }
     if (s.storeName) {
       document.querySelectorAll('[data-store-name]').forEach(el => el.textContent = s.storeName);
@@ -1600,6 +1592,22 @@ function handleProductDeepLink() {
   } catch(e) { return false; }
 }
 
+/* Old ad links (orbivagh.com/?promo=deals, ?promo=tvs) now go to the special
+   deals page, keeping utm_* / fbclid etc. Only the homepage does this. */
+function handlePromoRedirect() {
+  try {
+    if (!document.getElementById('promoSection')) return false;
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('promo') || params.has('p')) return false;
+    const v = (params.get('promo') || '').trim();
+    params.delete('promo');
+    if (v && v.toLowerCase() !== 'deals' && !params.has('g')) params.set('g', v);
+    const qs = params.toString();
+    window.location.replace('deals.html' + (qs ? '?' + qs : ''));
+    return true;
+  } catch(e) { return false; }
+}
+
 /* ?promo=… — top-of-page section with the advertised products. */
 function renderPromoSection() {
   const sec = document.getElementById('promoSection');
@@ -1615,53 +1623,15 @@ function renderPromoSection() {
   try { triggerReveal(); } catch(e) {}
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-  /* Mobile search must be ready immediately — before the Supabase wait */
-  try { initSearchPanel(); } catch(e) {}
-
-  /* Free-delivery banner: apply the last-known saved threshold immediately
-     from localStorage, rather than waiting on the Supabase sync below.
-     This prevents the hardcoded "500" placeholder from flashing on screen
-     before the real saved value (e.g. 7000) takes over. */
-  try {
-    const fdOffEarly = localStorage.getItem('obv_freeDelivery') === 'off';
-    if (fdOffEarly) {
-      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = 'none');
-    } else {
-      const settingsEarly = JSON.parse(localStorage.getItem('obv_settings') || '{}');
-      const thresholdEarly = settingsEarly.deliveryThreshold !== undefined ? settingsEarly.deliveryThreshold : 500;
-      document.querySelectorAll('.free-delivery-banner span').forEach(el => {
-        el.textContent = el.textContent.replace(/[\d,]+(\.\d+)?/, thresholdEarly);
-      });
-    }
-  } catch(e) {}
-
-  /* Logo: apply the last-known saved branding (custom logo/size) immediately
-     from localStorage, same reasoning as above — otherwise the default logo
-     flashes on screen before the admin's custom logo swaps in once the
-     Supabase fetch resolves. */
-  try {
-    const bEarly = JSON.parse(localStorage.getItem('obv_branding') || '{}');
-    if (bEarly.logoUrl || bEarly.logoSize) {
-      const urlEarly = bEarly.logoUrl || 'img/logo.jpeg';
-      const sizeEarly = (bEarly.logoSize || 54) + 'px';
-      document.querySelectorAll('.logo-img, .admin-logo-img').forEach(img => {
-        img.src = urlEarly;
-        img.style.height = sizeEarly;
-        img.style.maxWidth = 'none';
-      });
-    }
-  } catch(e) {}
-
-  await Promise.race([window.obvSyncPromise || Promise.resolve(), new Promise(r => setTimeout(r, 3000))]);
-  try { applyOverrides(); } catch(e) {}
-  if (handleProductDeepLink()) return;
+/* Everything on the page that is built from admin-managed data. Safe to
+   run more than once. */
+function renderDynamicSections() {
   try { renderPromoSection(); } catch(e) {}
   try { renderFaqs(); } catch(e) {}
   try { renderCategories(); } catch(e) {}
   try { renderFlashProducts(); } catch(e) {}
   try { renderFeaturedProducts(); } catch(e) {}
-  try { renderBrands(); initBrandsDragMarquee(); } catch(e) {}
+  try { renderBrands(); } catch(e) {}
   try { renderRecentlyViewed(); } catch(e) {}
   try {
     // Live count from PRODUCTS (not the static "products" field baked into
@@ -1699,6 +1669,98 @@ document.addEventListener('DOMContentLoaded', async () => {
     const footerCatList = document.getElementById('footerCatList');
     if (footerCatList) footerCatList.innerHTML = CATEGORIES.filter(c => !c.parentId && categoryHasVisibleProducts(c.id, CATEGORIES)).map(c => `<li><a href="shop.html?cat=${c.id}">${c.name}</a></li>`).join('');
   } catch(e) {}
+}
+
+/* Free-delivery banner, flash sale, Black November banner and combo section
+   visibility from the saved admin settings. Safe to run more than once. */
+function applyDisplayToggles() {
+  try {
+    const fdOff = localStorage.getItem('obv_freeDelivery') === 'off';
+    if (fdOff) {
+      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = 'none');
+    } else {
+      document.documentElement.removeAttribute('data-no-delivery');
+      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = '');
+      // Update the GH₵ amount shown in every banner to match the saved threshold,
+      // instead of leaving the hardcoded "500" placeholder from the source markup.
+      const settings = JSON.parse(localStorage.getItem('obv_settings') || '{}');
+      const threshold = settings.deliveryThreshold !== undefined ? settings.deliveryThreshold : 500;
+      document.querySelectorAll('.free-delivery-banner span').forEach(el => {
+        el.textContent = el.textContent.replace(/[\d,]+(\.\d+)?/, threshold);
+      });
+    }
+    const flashEl = document.getElementById('flashSaleSection');
+    if (flashEl) flashEl.style.display = localStorage.getItem('obv_flashSale') === 'on' ? '' : 'none';
+    // Black November banner — separate on/off switch from Flash Sale so the
+    // seasonal campaign can run independently (set from Settings → Display).
+    const bfEl = document.getElementById('bfBanner');
+    if (bfEl) bfEl.style.display = localStorage.getItem('obv_blackFriday') === 'on' ? '' : 'none';
+    renderComboPromoSection();
+  } catch(e) {}
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  if (handlePromoRedirect()) return;
+  /* Mobile search must be ready immediately — before the Supabase wait */
+  try { initSearchPanel(); } catch(e) {}
+  try { applyStoreSettings(); } catch(e) {}
+
+  /* Free-delivery banner: apply the last-known saved threshold immediately
+     from localStorage, rather than waiting on the Supabase sync below.
+     This prevents the hardcoded "500" placeholder from flashing on screen
+     before the real saved value (e.g. 7000) takes over. */
+  try {
+    const fdOffEarly = localStorage.getItem('obv_freeDelivery') === 'off';
+    if (fdOffEarly) {
+      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = 'none');
+    } else {
+      const settingsEarly = JSON.parse(localStorage.getItem('obv_settings') || '{}');
+      const thresholdEarly = settingsEarly.deliveryThreshold !== undefined ? settingsEarly.deliveryThreshold : 500;
+      document.querySelectorAll('.free-delivery-banner span').forEach(el => {
+        el.textContent = el.textContent.replace(/[\d,]+(\.\d+)?/, thresholdEarly);
+      });
+    }
+  } catch(e) {}
+
+  /* Logo: apply the last-known saved branding (custom logo/size) immediately
+     from localStorage, same reasoning as above — otherwise the default logo
+     flashes on screen before the admin's custom logo swaps in once the
+     Supabase fetch resolves. */
+  try {
+    const bEarly = JSON.parse(localStorage.getItem('obv_branding') || '{}');
+    if (bEarly.logoUrl || bEarly.logoSize) {
+      const urlEarly = bEarly.logoUrl || 'img/logo.jpeg';
+      const sizeEarly = (bEarly.logoSize || 54) + 'px';
+      document.querySelectorAll('.logo-img, .admin-logo-img').forEach(img => {
+        img.src = urlEarly;
+        img.style.height = sizeEarly;
+        img.style.maxWidth = 'none';
+      });
+    }
+  } catch(e) {}
+
+  /* Draw from the copy saved on this device first (when there is one), so
+     menus, categories, phone numbers and banners are already right on screen
+     and don't pop in after the sync. After the sync, redraw only if the
+     fresh data is actually different. */
+  const _snapBefore = obvDataSnapshot();
+  const _drewEarly = obvHasCachedData();
+  if (_drewEarly) {
+    try { applyOverrides(); } catch(e) {}
+    try { renderDynamicSections(); } catch(e) {}
+    try { applyDisplayToggles(); } catch(e) {}
+  }
+
+  await Promise.race([window.obvSyncPromise || Promise.resolve(), new Promise(r => setTimeout(r, 3000))]);
+  const _changed = obvDataSnapshot() !== _snapBefore;
+  if (!_drewEarly) { try { applyOverrides(); } catch(e) {} }
+  else if (_changed) { try { applyOverrides(true); applyStoreSettings(); } catch(e) {} }
+  if (handleProductDeepLink()) return;
+  if (!_drewEarly || _changed) {
+    try { renderDynamicSections(); } catch(e) {}
+    try { applyDisplayToggles(); } catch(e) {}
+  }
+  try { initBrandsDragMarquee(); } catch(e) {}
   try { startCountdown(); } catch(e) {}
   try { initSearch(); } catch(e) {}
   try { initSearchPanel(); } catch(e) {}
@@ -1728,29 +1790,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { trackVisit(); } catch(e) {}
 
 
-  try {
-    const fdOff = localStorage.getItem('obv_freeDelivery') === 'off';
-    if (fdOff) {
-      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = 'none');
-    } else {
-      document.documentElement.removeAttribute('data-no-delivery');
-      document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = '');
-      // Update the GH₵ amount shown in every banner to match the saved threshold,
-      // instead of leaving the hardcoded "500" placeholder from the source markup.
-      const settings = JSON.parse(localStorage.getItem('obv_settings') || '{}');
-      const threshold = settings.deliveryThreshold !== undefined ? settings.deliveryThreshold : 500;
-      document.querySelectorAll('.free-delivery-banner span').forEach(el => {
-        el.textContent = el.textContent.replace(/[\d,]+(\.\d+)?/, threshold);
-      });
-    }
-    const flashEl = document.getElementById('flashSaleSection');
-    if (flashEl) flashEl.style.display = localStorage.getItem('obv_flashSale') === 'on' ? '' : 'none';
-    // Black November banner — separate on/off switch from Flash Sale so the
-    // seasonal campaign can run independently (set from Settings → Display).
-    const bfEl = document.getElementById('bfBanner');
-    if (bfEl) bfEl.style.display = localStorage.getItem('obv_blackFriday') === 'on' ? '' : 'none';
-    renderComboPromoSection();
-  } catch(e) {}
+  try { applyDisplayToggles(); } catch(e) {}
 
   // Footer collapsible columns on mobile
   try {
