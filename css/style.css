@@ -3085,3 +3085,36 @@ input, select, textarea { font-family: inherit; }
 .deals-more p{margin:0 0 14px;color:#64748b;font-size:14px}
 .deals-more-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 @media(max-width:480px){.deals-hero h1{font-size:24px}.deals-sort{width:100%;justify-content:space-between}}
+
+/* ── Deals page: "added to cart" sheet ── */
+.added-sheet { position: fixed; inset: 0; z-index: 2500; pointer-events: none; }
+.added-sheet-backdrop { position: absolute; inset: 0; background: rgba(15,23,42,.35); opacity: 0; transition: opacity .25s; }
+.added-sheet-card {
+  position: absolute; left: 0; right: 0; bottom: 0; background: #fff;
+  border-radius: 18px 18px 0 0; padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 30px rgba(15,23,42,.18); transform: translateY(100%); transition: transform .28s cubic-bezier(.2,.8,.2,1);
+  max-width: 520px; margin: 0 auto;
+}
+.added-sheet.show { pointer-events: auto; }
+.added-sheet.show .added-sheet-backdrop { opacity: 1; }
+.added-sheet.show .added-sheet-card { transform: translateY(0); }
+.added-sheet-top { display: flex; gap: 12px; align-items: center; }
+.added-sheet-thumb { width: 56px; height: 56px; border-radius: 10px; background: #f1f5f9; display: grid; place-items: center; overflow: hidden; flex-shrink: 0; font-size: 24px; color: var(--primary); }
+.added-sheet-thumb img { width: 100%; height: 100%; object-fit: contain; }
+.added-sheet-info { flex: 1; min-width: 0; }
+.added-sheet-ok { color: #16a34a; font-size: 12px; font-weight: 700; }
+.added-sheet-name { font-size: 14px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.added-sheet-x { background: none; border: 0; font-size: 16px; color: var(--text-muted); padding: 8px; cursor: pointer; }
+.added-sheet-total { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding: 10px 12px; background: #f8fafc; border-radius: 10px; font-size: 14px; }
+.added-sheet-total strong { font-size: 16px; }
+.added-sheet-actions { display: grid; gap: 10px; }
+.added-sheet-actions .btn-primary, .added-sheet-actions .btn-outline { width: 100%; padding: 14px; font-size: 15px; text-align: center; justify-content: center; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+@media (min-width: 600px) { .added-sheet-actions { grid-template-columns: 1fr 1fr; } .added-sheet-card { border-radius: 18px; bottom: 24px; } }
+
+/* Deals page: Buy Now button under Add to Cart */
+.buy-now-btn {
+  width: 100%; margin-top: 8px; padding: 11px 12px; border-radius: 10px; font-size: 14px; font-weight: 700;
+  background: #fff; color: var(--primary); border: 1.5px solid var(--primary); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px;
+}
+.buy-now-btn:active { background: rgba(29,78,216,.08); transform: scale(.98); }

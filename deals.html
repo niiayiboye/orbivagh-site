@@ -291,6 +291,52 @@
 <script src="js/app.js"></script>
 <script src="js/cart.js"></script>
 <script>
+/* Added-to-cart sheet: keeps the visitor on the deals page but puts
+   checkout one tap away. */
+window.obvAddedPanel = function (product) {
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); };
+  var el = document.getElementById('obvAddedSheet');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'obvAddedSheet';
+    el.className = 'added-sheet';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-label', 'Added to cart');
+    el.innerHTML = '<div class="added-sheet-backdrop" data-close></div><div class="added-sheet-card"></div>';
+    document.body.appendChild(el);
+    el.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) obvCloseAdded(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') obvCloseAdded(); });
+  }
+  var img = (product.images && product.images[0]) ? '<img src="' + esc(product.images[0]) + '" alt="" loading="lazy">' : '<i class="' + esc(product.icon || 'fas fa-box') + '"></i>';
+  var n = getCartCount();
+  el.querySelector('.added-sheet-card').innerHTML =
+    '<div class="added-sheet-top"><div class="added-sheet-thumb">' + img + '</div>' +
+    '<div class="added-sheet-info"><div class="added-sheet-ok"><i class="fas fa-check-circle"></i> Added to your cart</div>' +
+    '<div class="added-sheet-name">' + esc(product.name) + '</div></div>' +
+    '<button class="added-sheet-x" data-close aria-label="Close"><i class="fas fa-times"></i></button></div>' +
+    '<div class="added-sheet-total"><span>Cart (' + n + ' item' + (n === 1 ? '' : 's') + ')</span><strong>' + fmt(getCartTotal()) + '</strong></div>' +
+    '<div class="added-sheet-actions"><a class="btn-primary added-sheet-checkout" href="checkout.html">Checkout now <i class="fas fa-arrow-right"></i></a>' +
+    '<button class="btn-outline added-sheet-keep" data-close>Keep browsing</button></div>';
+  requestAnimationFrame(function () { el.classList.add('show'); });
+};
+/* Buy Now: put exactly one of this item in the cart and go straight to checkout. */
+function obvBuyNow(id) {
+  var p = PRODUCTS.find(function (x) { return x.id === id; });
+  if (!p) return;
+  var existing = cart.find(function (i) { return i.id === id; });
+  if (!existing) {
+    cart.push({ id: p.id, name: p.name, brand: p.brand, icon: p.icon, image: (p.images && p.images[0]) || null, price: p.price, qty: 1 });
+  }
+  saveCart();
+  try { if (typeof obvLogEvent === 'function') obvLogEvent('buy_now', p.name); } catch (e) {}
+  window.location.href = 'checkout.html';
+}
+function obvCloseAdded() {
+  var el = document.getElementById('obvAddedSheet');
+  if (el) el.classList.remove('show');
+}
+</script>
+<script>
 /* Special deals page: shows the products ticked under "Ads promo link" in admin,
    in admin's order. Optional ?g=<group> shows just one group. Other URL
    parameters (utm_*, fbclid, …) are left untouched. */
@@ -337,6 +383,17 @@ function renderDeals() {
   toolbar.style.display = '';
   document.getElementById('dealsCount').textContent = items.length + (items.length === 1 ? ' product' : ' products');
   grid.innerHTML = items.map(it => renderProductCard(it.p)).join('');
+  // "Buy Now" under each Add to Cart: one tap to checkout for this item.
+  grid.querySelectorAll('.add-to-cart-btn:not([disabled])').forEach(btn => {
+    const m = /handleAddToCart\(this,'([^']+)'\)/.exec(btn.getAttribute('onclick') || '');
+    if (!m) return;
+    const buy = document.createElement('button');
+    buy.className = 'buy-now-btn';
+    buy.type = 'button';
+    buy.innerHTML = '<i class="fas fa-bolt"></i> Buy Now';
+    buy.addEventListener('click', e => { e.stopPropagation(); obvBuyNow(m[1]); });
+    btn.insertAdjacentElement('afterend', buy);
+  });
   more.style.display = '';
   try { updateWishlistButtons(); } catch(e) {}
   try { triggerReveal(); } catch(e) {}
