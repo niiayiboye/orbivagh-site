@@ -873,9 +873,10 @@ function renderFeaturedProducts(filter = 'all', append = false) {
 }
 
 function loadMore() {
-  visibleCount += 4;
   const grid = document.getElementById('featuredGrid');
   if (!grid) return;
+  const prevCount = grid.children.length;
+  visibleCount += 4;
 
   const filtered = (activeFilter === 'all')
     ? (shuffledAll || PRODUCTS)
@@ -885,6 +886,14 @@ function loadMore() {
   grid.innerHTML = showing.map(p => renderProductCard(p)).join('');
   updateWishlistButtons();
   triggerReveal();
+
+  // The button now lives at the end of the page, far below the grid, so
+  // bring the first newly added product into view instead of leaving the
+  // visitor staring at the footer.
+  const firstNew = grid.children[prevCount];
+  if (firstNew && firstNew.scrollIntoView) {
+    firstNew.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 
   const lmBtn = document.getElementById('loadMoreBtn');
   if (lmBtn) {

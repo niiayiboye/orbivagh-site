@@ -28,6 +28,12 @@ function addToCart(productId, quantity = 1) {
   }
   saveCart();
   updateCartUI();
+  // Pages that define obvAddedPanel (the deals landing page) show a
+  // "Checkout now / Keep browsing" sheet instead of the toast.
+  if (typeof window.obvAddedPanel === 'function') {
+    window.obvAddedPanel(product);
+    return;
+  }
   showToast('success', 'Added to Cart', `${product.name} has been added to your cart.`, 'fas fa-shopping-cart');
   showCartConfirmFloat(product.name);
 }
