@@ -141,15 +141,20 @@ function applyDeliveryText() {
   try {
     const txt = localStorage.getItem('obv_delivery_text');
     const s = JSON.parse(localStorage.getItem('obv_settings') || '{}');
-    const threshold = s.deliveryThreshold !== undefined ? s.deliveryThreshold : 500;
+    // No number is written into the page source any more: the banners say
+    // "qualifying orders" until the saved threshold is known, so an old
+    // GH₵ amount can never appear. Only once the admin threshold is saved
+    // do we fill it in.
+    const threshold = s.deliveryThreshold;
+    if (threshold === undefined || threshold === null || threshold === '') return;
+    const amt = Number(threshold).toLocaleString('en-GH');
     document.querySelectorAll('.free-delivery-banner span').forEach(el => {
-      // Keep the custom wording if one was saved, but always swap in the
-      // current threshold number so it can never go stale — previously this
-      // fully overwrote the text with the raw saved string, which could
-      // silently reintroduce an old GH₵ amount even after the threshold
-      // was updated elsewhere in admin.
-      const base = (txt && txt.trim()) ? txt.trim() : el.textContent;
-      el.textContent = base.replace(/[\d,]+(\.\d+)?/, threshold);
+      const compact = !!el.closest('.trust-text');
+      if (txt && txt.trim() && !compact) {
+        el.textContent = /[\d,]+(\.\d+)?/.test(txt) ? txt.trim().replace(/[\d,]+(\.\d+)?/, amt) : txt.trim();
+      } else {
+        el.textContent = (compact ? 'Orders above GH₵ ' : 'Free delivery on orders above GH₵ ') + amt;
+      }
     });
   } catch(e) {}
 }
@@ -350,3 +355,23 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addToCart._obv = true;
   }
 });
+
+/* ── Christmas logo touch ─────────────────────────────────────────
+   On automatically from 1 Nov to 6 Jan. Add ?xmas=on or ?xmas=off to
+   any page URL to force it on/off on that device (remembered). The
+   stylesheet only loads while it is on. */
+(function() {
+  try {
+    var q = (location.search.match(/[?&]xmas=(on|off)/) || [])[1];
+    if (q) localStorage.setItem('obv_xmas', q);
+    var force = localStorage.getItem('obv_xmas');
+    var d = new Date(), m = d.getMonth(), day = d.getDate();
+    var inSeason = m >= 10 || m === 11 || (m === 0 && day <= 6);
+    var on = force ? force === 'on' : inSeason;
+    if (!on) return;
+    document.documentElement.classList.add('xmas');
+    var l = document.createElement('link');
+    l.rel = 'stylesheet'; l.href = '/css/christmas.css';
+    document.head.appendChild(l);
+  } catch(e) {}
+})();

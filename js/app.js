@@ -1681,13 +1681,8 @@ function applyDisplayToggles() {
     } else {
       document.documentElement.removeAttribute('data-no-delivery');
       document.querySelectorAll('.free-delivery-banner').forEach(el => el.style.display = '');
-      // Update the GH₵ amount shown in every banner to match the saved threshold,
-      // instead of leaving the hardcoded "500" placeholder from the source markup.
-      const settings = JSON.parse(localStorage.getItem('obv_settings') || '{}');
-      const threshold = settings.deliveryThreshold !== undefined ? settings.deliveryThreshold : 500;
-      document.querySelectorAll('.free-delivery-banner span').forEach(el => {
-        el.textContent = el.textContent.replace(/[\d,]+(\.\d+)?/, threshold);
-      });
+      // Fill in the saved threshold (banners carry no number in the source).
+      if (typeof applyDeliveryText === 'function') applyDeliveryText();
     }
     const flashEl = document.getElementById('flashSaleSection');
     if (flashEl) flashEl.style.display = localStorage.getItem('obv_flashSale') === 'on' ? '' : 'none';
