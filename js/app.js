@@ -1107,24 +1107,24 @@ function startCountdown() {
    SEARCH PANEL  (right-side drawer, all devices)
 ════════════════════════════════════════ */
 /* ════════════════════════════════════════
-   SMART SEARCH ENGINE
-   Multi-word (any order), synonym-aware, and typo-tolerant.
+   SMART SEARCH ENGINE  (v2)
+   - every word typed must match (AND), in any order
+   - words match at the START of a word, so "ac" no longer matches "black"
+   - sizes/units are normalised: 65", 65'', 65 inch, 65inch all equal;
+     1.5 hp = 1.5hp; 9 kg = 9kg; 30 ltrs = 30l
+   - equivalents work both ways: tv/television, fridge/refrigerator,
+     washer/washing machine, ac/air conditioner, sound bar/soundbar
+   - matches in the product name rank above matches in the description
+   - small typos are forgiven (only on words of 5+ letters)
 ════════════════════════════════════════ */
-const SEARCH_SYNONYMS = {
-  'tv':'television','tvs':'television','televisions':'television','telly':'television',
-  'ac':'air conditioner','acs':'air conditioner','aircon':'air conditioner','aircondition':'air conditioner','airconditioner':'air conditioner','aircons':'air conditioner',
-  'fridge':'refrigerator','fridges':'refrigerator','refrigerators':'refrigerator','freezer':'refrigerator','freezers':'refrigerator',
-  'washer':'washing machine','washers':'washing machine','laundry':'washing machine','washingmachine':'washing machine','washingmachines':'washing machine',
-  'speaker':'audio','speakers':'audio','sound':'audio','soundsystem':'audio','soundbar':'audio','soundbars':'audio',
-  'micro':'microwave','microwaves':'microwave',
-};
+const SEARCH_STOPWORDS = new Set(['inch','in','the','a','an','for','and','with','of','to','new']);
 
 function _levenshtein(a, b) {
   if (a === b) return 0;
   const al = a.length, bl = b.length;
   if (al === 0) return bl;
   if (bl === 0) return al;
-  if (Math.abs(al - bl) > 2) return 99; // quick bail for obviously-unrelated lengths
+  if (Math.abs(al - bl) > 2) return 99;
   let prev = Array.from({ length: bl + 1 }, (_, i) => i);
   for (let i = 1; i <= al; i++) {
     const cur = [i];
@@ -1136,49 +1136,91 @@ function _levenshtein(a, b) {
   return prev[bl];
 }
 
+// Turn any text (a query or a product's text) into one canonical form so the
+// same thing written two ways compares equal.
+function _norm(str) {
+  return ' ' + String(str || '').toLowerCase()
+    .replace(/[′’‘″“”ʺ]/g, "'")
+    .replace(/(\d)\s*(?:''|"|'|inch(?:es)?\b|in\b)/g, '$1inch ')
+    .replace(/(\d)\s*(?:hp|horse\s*power)\b/g, '$1hp ')
+    .replace(/(\d)\s*(?:kgs?|kilo(?:gram)?s?)\b/g, '$1kg ')
+    .replace(/(\d)\s*(?:watts?|w)\b/g, '$1w ')
+    .replace(/(\d)\s*(?:ltrs?|litres?|liters?|l)\b/g, '$1l ')
+    .replace(/air\s*-?\s*condition\w*/g, ' ac air conditioner ')
+    .replace(/\b(?:tvs?|televisions?|telly)\b/g, ' tv television ')
+    .replace(/\b(?:fridges?|refrigerators?)\b/g, ' fridge refrigerator ')
+    .replace(/\b(?:washers?|washing\s*machines?)\b/g, ' washer washing machine ')
+    .replace(/\bsound\s*bars?\b/g, ' soundbar sound bar ')
+    .replace(/\b(?:micro|microwaves?)\b/g, ' microwave ')
+    .replace(/\b(?:freezers?)\b/g, ' freezer ')
+    .replace(/\s+/g, ' ') + ' ';
+}
+
 function _tokenize(str) {
-  return str.toLowerCase().replace(/['"″]/g, '"').split(/\s+/).map(t => t.trim()).filter(Boolean);
+  return _norm(str).split(/[^a-z0-9.]+/).map(t => t.replace(/^\.+|\.+$/g, '')).filter(t => t && !SEARCH_STOPWORDS.has(t));
+}
+
+const _reCache = {};
+function _tokRegex(t) {
+  if (_reCache[t]) return _reCache[t];
+  const e = t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // numbers must match as a whole number (65 matches 65inch, not 165 or 1.65);
+  // words match from the start of a word.
+  _reCache[t] = /^[0-9]/.test(t) ? new RegExp('(^|[^0-9.])' + e + '(?![0-9])') : new RegExp('(^|[^a-z0-9])' + e);
+  return _reCache[t];
 }
 
 function smartSearch(index, query, skuMap) {
   skuMap = skuMap || {};
-  const qTokens = _tokenize(query);
+  const qTokens = [...new Set(_tokenize(query))];
   if (!qTokens.length) return [];
-  const fullQuery = qTokens.join(' ');
+    const qNorm = qTokens.join(' ');
 
-  function scoreItem(item) {
-    const hay = (item.searchText || (item.text + ' ' + (item.sub || ''))).toLowerCase();
-    const sku = (skuMap[item.id] || '').toLowerCase();
-    const words = hay.split(/\s+/);
-
-    let score = 0, matchedTokens = 0;
-    for (const qt of qTokens) {
-      const expanded = SEARCH_SYNONYMS[qt] || qt;
-      if (sku && sku.includes(qt)) { matchedTokens++; score += 4; continue; }
-      if (hay.includes(qt) || hay.includes(expanded)) {
-        matchedTokens++;
-        score += hay.startsWith(qt) ? 3 : 2;
-        continue;
-      }
-      // Typo-tolerant fallback: allow small edit distance against any word,
-      // scaled to word length so short words aren't over-matched.
-      const maxDist = qt.length >= 6 ? 2 : (qt.length >= 4 ? 1 : 0);
-      const close = maxDist > 0 && words.some(w => w.length >= 3 && _levenshtein(w, qt) <= maxDist);
-      if (close) { matchedTokens++; score += 1; }
+  function scoreItem(item, need) {
+    if (!item._n) {
+      item._n = {
+        name:  _norm(item.text),
+        brand: _norm(item.sub),
+        all:   _norm(item.searchText || (item.text + ' ' + (item.sub || '')))
+      };
+      item._n.words = item._n.all.split(/[^a-z0-9.]+/).filter(w => w.length >= 4);
     }
-    if (matchedTokens === 0) return 0;
+    const n = item._n;
+    const sku = (skuMap[item.id] || '').toLowerCase();
+    let score = 0, matched = 0;
 
-    if (hay.includes(fullQuery)) score += 4;                 // whole phrase present
-    if (item.text.toLowerCase() === query) score += 6;       // exact name match
-    score += (matchedTokens / qTokens.length) * 3;            // reward full token coverage
+    for (const qt of qTokens) {
+      const re = _tokRegex(qt);
+      if (re.test(n.name))       { matched++; score += 4; }
+      else if (re.test(n.brand)) { matched++; score += 3; }
+      else if (sku && qt.length >= 3 && sku.includes(qt)) { matched++; score += 4; }
+      else if (re.test(n.all))   { matched++; score += 1.5; }
+      else if (qt.length >= 5 && !/[0-9]/.test(qt)) {
+        const maxDist = qt.length >= 8 ? 2 : 1;
+        if (n.words.some(w => _levenshtein(w, qt) <= maxDist)) { matched++; score += 1; }
+      }
+    }
+    if (matched < need) return 0;
+
+    if (n.name.includes(' ' + qNorm.split(' ')[0]) && matched === qTokens.length) score += 1;
+    if (matched === qTokens.length) score += 3;
+    if (String(item.text || '').toLowerCase().trim() === String(query).toLowerCase().trim()) score += 8;
+    if (item.type !== 'product') score += 0.5;   // brand / category pages sit just above equal-scoring products
     return score;
   }
 
-  return index
-    .map(item => ({ item, score: scoreItem(item) }))
-    .filter(({ score }) => score > 0)
-    .sort((a, b) => b.score - a.score)
-    .map(({ item }) => item);
+  function run(need) {
+    return index
+      .map((item, i) => ({ item, i, score: scoreItem(item, need) }))
+      .filter(r => r.score > 0)
+      .sort((a, b) => (b.score - a.score) || (a.i - b.i))
+      .map(r => r.item);
+  }
+  // Every word must match. If that finds nothing (e.g. "deep freezer" when no
+  // product says "deep"), relax by one word so the customer still sees something.
+  let out = run(qTokens.length);
+  if (!out.length && qTokens.length >= 2) out = run(qTokens.length - 1);
+  return out;
 }
 
 function initSearchPanel() {
@@ -1227,7 +1269,7 @@ function initSearchPanel() {
     const skuMap = panel._skuMap || {};
     const idx = (typeof SEARCH_INDEX !== 'undefined' ? SEARCH_INDEX : []);
     const matches = smartSearch(idx, q, skuMap).slice(0, 8);
-    if (!matches.length) { sugs.innerHTML = '<div style="padding:20px 14px;color:var(--text-muted);font-size:14px">No results found</div>'; return; }
+    if (!matches.length) { sugs.innerHTML = '<div style="padding:20px 14px;color:var(--text-muted);font-size:14px">No results for "'+q.replace(/[<>&"]/g,'')+'". Try a brand (Samsung, TCL, Nasco, Midea) or a product like TV, fridge, AC, freezer.</div>'; return; }
 
     sugs.innerHTML = matches.map(item => {
       if (item.type === 'product') {
