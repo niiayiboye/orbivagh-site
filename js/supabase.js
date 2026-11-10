@@ -315,7 +315,7 @@ function obvPageName() {
   else if (seg === 'shop.html' && (q.get('cat') || q.get('brand') || q.get('q'))) seg += '?' + (q.get('cat') ? 'cat=' + q.get('cat') : q.get('brand') ? 'brand=' + q.get('brand') : 'q=' + q.get('q'));
   return seg.slice(0, 200);
 }
-async function obvLogEvent(ev) {
+async function obvLogEvent(ev, item, price, qty) {
   try {
     if (obvAnalyticsOff()) return;
     var ua = navigator.userAgent || '';
@@ -325,6 +325,7 @@ async function obvLogEvent(ev) {
       src: s.src, medium: s.medium, campaign: s.campaign, ref: s.ref,
       device: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'mobile' : 'desktop',
       country: g.country || '', cc: g.cc || '', region: g.region || '', city: g.city || '', ip: g.ip || '',
+      item: item ? String(item).slice(0, 160) : null, price: price != null && isFinite(price) ? Number(price) : null, qty: qty != null && isFinite(qty) ? Number(qty) : null,
       is_bot: !!(navigator.webdriver || /bot|crawl|spider|slurp|headless|lighthouse|facebookexternalhit|preview|monitor|curl|python|node-fetch/i.test(ua))
     };
     fetch(SB_URL + '/rest/v1/site_visits', {
@@ -346,7 +347,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }, true);
   if (typeof window.addToCart === 'function' && !window.addToCart._obv) {
     var orig = window.addToCart;
-    window.addToCart = function() { obvLogEvent('add_to_cart'); return orig.apply(this, arguments); };
+    window.addToCart = function(id, q) {
+      try {
+        var pr = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).find(function(x) { return String(x.id) === String(id); });
+        obvLogEvent('add_to_cart', pr ? pr.name : String(id), pr ? pr.price : null, q || 1);
+      } catch (e) { obvLogEvent('add_to_cart'); }
+      return orig.apply(this, arguments);
+    };
     window.addToCart._obv = true;
   }
 });

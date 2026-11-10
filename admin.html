@@ -1057,6 +1057,7 @@ textarea{resize:vertical;min-height:70px}
         <div class="widget"><div class="widget-title">Most viewed pages</div><div id="anPages"></div></div>
         <div class="widget"><div class="widget-title">Cities</div><div id="anCities"></div></div>
         <div class="widget"><div class="widget-title">Devices</div><div id="anDevices"></div></div>
+        <div class="widget" style="grid-column:1/-1"><div class="widget-title">Products added to cart</div><div id="anCartAdds"></div></div>
       </div>
     </div>
 
@@ -2814,7 +2815,7 @@ async function loadAnalytics(){
     if(!token){ kp.innerHTML='<div style="grid-column:1/-1;padding:20px;color:#b91c1c">Please log in again to view analytics.</div>'; return; }
     let all=[], from=0;
     while(from<30000){
-      const r=await fetch(`${SB_URL}/rest/v1/site_visits?select=t,sid,ev,p,src,medium,campaign,ref,device,country,cc,city,ip,is_bot&t=gte.${since.toISOString()}&order=t.desc`,{headers:{apikey:SB_KEY,Authorization:'Bearer '+token,Range:from+'-'+(from+999)}});
+      const r=await fetch(`${SB_URL}/rest/v1/site_visits?select=t,sid,ev,p,src,medium,campaign,ref,device,country,cc,city,ip,is_bot,item,price,qty&t=gte.${since.toISOString()}&order=t.desc`,{headers:{apikey:SB_KEY,Authorization:'Bearer '+token,Range:from+'-'+(from+999)}});
       if(!r.ok) throw new Error('HTTP '+r.status);
       const part=await r.json(); all=all.concat(part);
       if(part.length<1000) break; from+=1000;
@@ -2882,6 +2883,15 @@ function renderAnalytics(){
   document.getElementById('anCities').innerHTML=anTable(top(cityCount,10));
   const devCount={}; Object.values(firstBySid).forEach(r=>{ const k=r.device||'unknown'; devCount[k]=(devCount[k]||0)+1; });
   document.getElementById('anDevices').innerHTML=anTable(top(devCount,5));
+  // cart activity: which products people added / tapped Buy now on
+  const cartRows=rows.filter(r=>r.ev==='add_to_cart'||r.ev==='buy_now');
+  const cartEl=document.getElementById('anCartAdds');
+  if(cartEl){
+    const byProd={}; cartRows.forEach(r=>{ const k=r.item||'(name not recorded – before tracking)'; byProd[k]=byProd[k]||{n:0,s:new Set()}; byProd[k].n++; byProd[k].s.add(key(r)); });
+    const topP=Object.entries(byProd).sort((a,b)=>b[1].s.size-a[1].s.size).slice(0,10).map(([k,v])=>[escHtml(k),v.s.size+' people']);
+    const recent=cartRows.slice(0,25).map(r=>`<tr><td style="padding:4px 6px;color:var(--muted);white-space:nowrap">${escHtml((r.t||'').slice(5,16).replace('T',' '))}</td><td style="padding:4px 6px">${r.ev==='buy_now'?'<b style="color:#7c3aed">Buy now</b>':'Cart'}</td><td style="padding:4px 6px">${escHtml(r.item||'—')}${r.price?' · GH₵ '+Number(r.price).toLocaleString():''}</td><td style="padding:4px 6px;color:var(--muted)">${escHtml((r.city||'')+(r.device?' · '+r.device:'')+(r.src&&r.src!=='direct'?' · '+r.src:''))}</td></tr>`).join('');
+    cartEl.innerHTML=(cartRows.length?anTable(topP)+'<div style="font-size:12px;font-weight:700;margin:12px 0 4px">Latest cart activity</div><div style="overflow:auto;max-height:260px"><table style="width:100%;font-size:12px;border-collapse:collapse">'+recent+'</table></div>':'<div style="color:var(--muted);font-size:13px">No cart activity in this period.</div>');
+  }
 }
 function toggleProductBlackFriday(id){
   const edits=lsGet('obv_prod_edits',{});
