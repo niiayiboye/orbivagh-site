@@ -207,6 +207,29 @@ function obvContactSettings() {
    Call button: sits above the WhatsApp button, uses the Call number from
    admin Settings. Pixel: loads only when a Pixel ID is saved under the
    'obv_meta_pixel' key; every Call / WhatsApp tap is sent as a "Contact" event. */
+/* ── Google Analytics 4 (G-VP1CLLF637) ─────────────────────────────────────
+   Skipped for the owner's own visits, admin and non-live hosts (same rule as
+   our own analytics). Events sent: page_view (automatic), add_to_cart,
+   begin_checkout, purchase. In Google Ads, link this GA4 property and import
+   add_to_cart / purchase as conversions. */
+var OBV_GA_ID = 'G-VP1CLLF637';
+function obvGa(name, params) {
+  try { if (typeof window.gtag === 'function') window.gtag('event', name, params || {}); } catch(e) {}
+}
+function obvLoadGA() {
+  try {
+    if (window.gtag || obvAnalyticsOff()) return;
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + OBV_GA_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function() { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', OBV_GA_ID);
+  } catch(e) {}
+}
+obvLoadGA();
+
 function obvTrack(name, params) {
   try { if (typeof window.fbq === 'function') window.fbq('track', name, params || {}); } catch(e) {}
 }
@@ -351,6 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
       try {
         var pr = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).find(function(x) { return String(x.id) === String(id); });
         obvLogEvent('add_to_cart', pr ? pr.name : String(id), pr ? pr.price : null, q || 1);
+        if (pr) obvGa('add_to_cart', { currency: 'GHS', value: Number(pr.price) * (q || 1), items: [{ item_id: String(pr.id), item_name: pr.name, item_brand: pr.brand, price: Number(pr.price), quantity: q || 1 }] });
       } catch (e) { obvLogEvent('add_to_cart'); }
       return orig.apply(this, arguments);
     };

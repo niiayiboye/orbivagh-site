@@ -248,6 +248,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   await (window.obvSyncPromise || Promise.resolve());
   applyOverrides();
   renderCheckoutSummary();
+  try {
+    if (typeof obvGa === 'function' && typeof cart !== 'undefined' && cart.length) {
+      obvGa('begin_checkout', { currency: 'GHS', value: getCartTotal(), items: cart.map(function (i) { return { item_id: String(i.id), item_name: i.name, price: Number(i.price), quantity: i.qty || 1 }; }) });
+    }
+  } catch (e) {}
 });
 
 function renderCheckoutSummary() {
@@ -475,6 +480,9 @@ async function saveAndConfirmOrder(paymentMethod, paystackRef) {
     } catch(e) {}
   }
 
+  try {
+    if (typeof obvGa === 'function') obvGa('purchase', { transaction_id: String(order.id), currency: 'GHS', value: Number(total) || 0, items: (itemsSnap || []).map(function (i) { return { item_id: String(i.sku), item_name: i.name, price: Number(i.price), quantity: i.qty || 1 }; }), transport_type: 'beacon' });
+  } catch (e) {}
   clearCart();
   window.location.href = 'confirmation.html?order=' + order.id;
 }
