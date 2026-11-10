@@ -230,6 +230,35 @@ function obvLoadGA() {
 }
 obvLoadGA();
 
+/* ── "Pay on delivery" welcome bar ───────────────────────────────────────────
+   Shown once per visit, as soon as someone lands on a shopping page, so they
+   know they can order online and pay when it arrives. Dismissible. The green
+   "Pay on delivery" notes in the cart are tappable and go straight to checkout. */
+function obvPodBar() {
+  try {
+    if (/admin|checkout|confirmation|track-order/i.test(location.pathname)) return;
+    if (sessionStorage.getItem('obv_pod_seen') === '1' || document.getElementById('obvPodBar')) return;
+    if (!document.getElementById('obvPodCss')) {
+      var css = document.createElement('style'); css.id = 'obvPodCss';
+      css.textContent = '.pod-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 40px 9px 14px;background:#065f46;color:#fff;font-size:13.5px;line-height:1.35;text-align:center;position:relative;z-index:950}.pod-bar a{color:#fff;font-weight:700;text-decoration:underline;white-space:nowrap}.pod-bar button{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;color:#fff;font-size:20px;line-height:1;cursor:pointer;padding:6px 10px}.pod-hint{cursor:pointer}';
+      document.head.appendChild(css);
+    }
+    var bar = document.createElement('div');
+    bar.id = 'obvPodBar'; bar.className = 'pod-bar'; bar.setAttribute('role', 'status');
+    bar.innerHTML = '<span>\uD83D\uDE9A <b>Pay on delivery available</b> \u2014 order online and pay only when it arrives.</span> <a href="deals.html">See deals</a><button type="button" aria-label="Close">&times;</button>';
+    bar.querySelector('button').addEventListener('click', function() { bar.remove(); });
+    document.body.insertBefore(bar, document.body.firstChild);
+    sessionStorage.setItem('obv_pod_seen', '1');
+  } catch(e) {}
+}
+document.addEventListener('DOMContentLoaded', function() {
+  obvPodBar();
+  document.addEventListener('click', function(e) {
+    var h = e.target.closest && e.target.closest('.pod-hint');
+    if (h && !e.target.closest('a')) location.href = 'checkout.html';
+  });
+});
+
 function obvTrack(name, params) {
   try { if (typeof window.fbq === 'function') window.fbq('track', name, params || {}); } catch(e) {}
 }
