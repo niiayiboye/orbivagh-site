@@ -3118,3 +3118,4 @@ input, select, textarea { font-family: inherit; }
   display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px;
 }
 .buy-now-btn:active { background: rgba(29,78,216,.08); transform: scale(.98); }
+.pod-hint{display:flex;align-items:flex-start;gap:8px;margin:10px 0;padding:9px 12px;border-radius:10px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-size:13px;line-height:1.4}.pod-hint i{margin-top:2px}.pod-hint b{font-weight:700}
