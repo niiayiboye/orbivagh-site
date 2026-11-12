@@ -1563,7 +1563,11 @@ async function doLogin() {
     });
     const data = await res.json();
     if (!res.ok) {
-      errEl.textContent = 'Incorrect email or password. Try again.';
+      // Server-side lockout (password verification hook) or IP rate limit: show the real reason.
+      const _m = String((data && (data.msg || data.message || data.error_description)) || '');
+      errEl.textContent = /too many|try again in|rate limit|attempt/i.test(_m) || res.status === 429
+        ? (/try again in/i.test(_m) ? _m : 'Too many attempts. Please wait a few minutes and try again.')
+        : 'Incorrect email or password. Try again.';
       errEl.style.display = 'block';
       document.getElementById('loginPass').value = '';
       return;
