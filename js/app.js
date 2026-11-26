@@ -1778,6 +1778,25 @@ function applyDisplayToggles() {
         }
       }
     }
+    // Wide promo banner further down the home page: turns into a Black Friday
+    // banner while the timed Black Friday prices are running, and falls back to
+    // the normal wording by itself afterwards.
+    try {
+      const wp = document.getElementById('wideBfPromo');
+      let d = null; try { d = JSON.parse(localStorage.getItem('obv_bf_prices') || 'null'); } catch(e) {}
+      const endMs = d && d.until ? Date.parse(d.until) : 0;
+      if (wp && d && d.items && endMs && Date.now() >= Date.parse(d.from || 0) && Date.now() < endMs) {
+        const maxDisc = Math.max(0, ...Object.values(d.items).map(o => Number(o.disc) || 0));
+        const lastDay = new Date(endMs - 60000).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+        const set = (id, html) => { const e = document.getElementById(id); if (e) e.innerHTML = html; };
+        wp.classList.add('is-bf');
+        set('wpTag', '<i class="fas fa-bolt"></i> Black Friday');
+        set('wpTitle', 'Black Friday Deals' + (maxDisc ? ' \u2014 up to ' + maxDisc + '% off' : ''));
+        set('wpText', 'Limited stock. Black Friday prices end at midnight on ' + lastDay + '. Pay on delivery.');
+        const b1 = document.getElementById('wpBtn1'); if (b1) { b1.href = 'black-friday.html'; b1.textContent = 'Shop Black Friday Deals'; }
+        const b2 = document.getElementById('wpBtn2'); if (b2) { b2.href = 'shop.html'; b2.textContent = 'View Catalogue'; }
+      }
+    } catch(e) {}
     renderComboPromoSection();
   } catch(e) {}
 }
