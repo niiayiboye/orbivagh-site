@@ -222,3 +222,17 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCartUI();
   updateWishlistUI();
 });
+
+/* Keep prices in the cart in step with the live catalog, so a Black Friday
+   price stops applying the moment the promo ends (carts are saved on the
+   visitor's phone with the price they had when the item was added). */
+function obvRefreshCartPrices() {
+  try {
+    let changed = false;
+    cart.forEach(i => {
+      const p = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).find(x => x.id === i.id);
+      if (p && Number(p.price) > 0 && Number(p.price) !== Number(i.price)) { i.price = p.price; changed = true; }
+    });
+    if (changed) { saveCart(); if (typeof updateCartUI === 'function') updateCartUI(); }
+  } catch (e) {}
+}
