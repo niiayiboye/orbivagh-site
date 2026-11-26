@@ -3119,3 +3119,20 @@ input, select, textarea { font-family: inherit; }
 }
 .buy-now-btn:active { background: rgba(29,78,216,.08); transform: scale(.98); }
 .pod-hint{display:flex;align-items:flex-start;gap:8px;margin:10px 0;padding:9px 12px;border-radius:10px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-size:13px;line-height:1.4}.pod-hint i{margin-top:2px}.pod-hint b{font-weight:700}
+/* ── Black Friday / Black November look (dark + gold) ── */
+.badge-bf{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(90deg,#f5c542,#d4a017);color:#0a0a0a;font-weight:800;letter-spacing:.6px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.badge-bf i{font-size:10px}
+.product-card.bf-card{box-shadow:0 0 0 2px #f5c542,0 8px 22px rgba(0,0,0,.10)}
+.product-img-wrap .bf-strip{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 10px;background:linear-gradient(90deg,#000,#1f1f1f);color:#f5c542;font-size:11px;font-weight:800;letter-spacing:1.2px;white-space:nowrap;text-transform:uppercase;pointer-events:none}
+.product-img-wrap .bf-strip i{font-size:10px}
+.bf-card .product-brand-badge{bottom:34px}
+.bf-banner{padding:0 16px;margin:18px 0}
+.bf-banner-inner{display:block;max-width:1200px;margin:0 auto;position:relative;overflow:hidden;text-align:center;padding:34px 20px;border-radius:18px;background:linear-gradient(135deg,#000,#1a1a1a);text-decoration:none}
+.bf-banner-inner::before{content:'';position:absolute;width:300px;height:300px;top:-120px;left:-70px;border-radius:50%;background:radial-gradient(circle,rgba(245,197,66,.30),transparent 70%);pointer-events:none}
+.bf-banner-inner::after{content:'';position:absolute;width:320px;height:320px;bottom:-140px;right:-80px;border-radius:50%;background:radial-gradient(circle,rgba(225,29,72,.22),transparent 70%);pointer-events:none}
+.bf-banner-badge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(90deg,#f5c542,#d4a017);color:#0a0a0a;font-size:12px;font-weight:800;letter-spacing:1.2px;padding:6px 16px;border-radius:999px;margin-bottom:12px}
+.bf-banner-title{position:relative;z-index:1;color:#fff;font-size:24px;font-weight:800;margin:0 0 6px;line-height:1.2}
+.bf-banner-sub{position:relative;z-index:1;color:rgba(255,255,255,.75);font-size:14px;margin:0 auto 16px;max-width:480px}
+.bf-banner-cta{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;background:#f5c542;color:#0a0a0a;font-weight:800;font-size:14px;padding:11px 22px;border-radius:999px}
+@media (min-width:768px){.bf-banner-inner{padding:48px 24px}.bf-banner-title{font-size:34px}.bf-banner-sub{font-size:16px}}
+@media (max-width:479px){.badge-bf{font-size:9.5px;padding:3px 7px;letter-spacing:.2px}.badge-bf i{display:none}}
