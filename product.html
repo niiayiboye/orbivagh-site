@@ -159,6 +159,13 @@
       color: var(--text-muted); margin-bottom: 22px;
     }
 
+    .pp-bf-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(90deg,#f5c542,#d4a017);color:#0a0a0a;font-weight:800;font-size:12px;letter-spacing:.8px;padding:6px 12px;border-radius:999px;margin:10px 0 6px;animation:ppBfPulse 2s ease-in-out infinite}
+    @keyframes ppBfPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,197,66,.55)}50%{box-shadow:0 0 0 8px rgba(245,197,66,0)}}
+    .pp-bf-box{background:linear-gradient(135deg,#000,#1a1a1a);border:1px solid #f5c542;border-radius:12px;padding:12px 16px;margin:0 0 16px;color:#fff}
+    .pp-bf-box-top{color:#f5c542;font-weight:800;font-size:15px}
+    .pp-bf-box-sub{color:#ddd;font-size:13px;margin-top:3px;font-weight:600}
+    .pp-bf-on .btn-primary#ppAddCart{background:linear-gradient(90deg,#f5c542,#d4a017)!important;color:#0a0a0a!important;font-weight:800}
+    .pp-bf-on .pp-price{color:#b8860b}
     .pp-price-row {
       display: flex; align-items: baseline; gap: 12px;
       margin-bottom: 22px;
@@ -670,6 +677,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         ${p.oldPrice ? `<span class="pp-old-price">${fmt(p.oldPrice)}</span>` : ''}
         ${p.discount ? `<span class="pp-discount-badge">-${p.discount}% OFF</span>` : ''}
       </div>
+      ${(p.blackFriday && localStorage.getItem('obv_blackFriday') === 'on') ? `<div class="pp-bf-box" id="ppBfBox">
+        <div class="pp-bf-box-top"><i class="fas fa-bolt"></i> Black Friday price${p.oldPrice && p.oldPrice > p.price ? ' &middot; you save ' + fmt(p.oldPrice - p.price) : ''}</div>
+        <div class="pp-bf-box-sub" id="ppBfCd">Limited stock &middot; Pay on delivery</div>
+      </div>` : ''}
       <div class="pp-qty-row">
         <span class="pp-qty-label">Quantity:</span>
         <div class="pp-qty-ctrl">
@@ -696,6 +707,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>` : ''}
     </div>
   `;
+
+  if (document.getElementById('ppBfBox')) {
+    document.querySelector('.pp-info').classList.add('pp-bf-on');
+    try {
+      const bf = JSON.parse(localStorage.getItem('obv_bf_prices') || 'null');
+      const end = bf && bf.until ? Date.parse(bf.until) : 0;
+      const cd = document.getElementById('ppBfCd');
+      if (end && cd) {
+        const tick = () => {
+          const ms = end - Date.now();
+          if (ms <= 0) { document.getElementById('ppBfBox').style.display = 'none'; return; }
+          const d = Math.floor(ms/864e5), h = Math.floor(ms%864e5/36e5), m = Math.floor(ms%36e5/6e4), sc = Math.floor(ms%6e4/1e3);
+          cd.innerHTML = 'Ends in <b style="color:#f5c542">' + (d ? d + 'd ' : '') + h + 'h ' + m + 'm ' + sc + 's</b> &middot; Pay on delivery';
+        };
+        tick(); setInterval(tick, 1000);
+      }
+    } catch (e) {}
+  }
 
   // ── Wire up interactions ──
   // Copy link — short ad-friendly link (?p=) that opens this product
