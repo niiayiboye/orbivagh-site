@@ -75,7 +75,7 @@ let _pristineCatalog = null;
    fresh data really differs from what was cached on the visitor's device. */
 const OBV_DATA_KEYS = ['obv_prod_edits','obv_prod_adds','obv_prod_dels','obv_brand_adds','obv_brand_dels',
   'obv_cat_adds','obv_cat_dels','obv_cat_edits','obv_settings','obv_combo_deals','obv_combo_page',
-  'obv_flashSale','obv_blackFriday','obv_img_required','obv_freeDelivery','obv_branding','obv_promo_list'];
+  'obv_flashSale','obv_blackFriday','obv_img_required','obv_freeDelivery','obv_branding','obv_promo_list','obv_bf_prices'];
 function obvDataSnapshot() {
   try { return OBV_DATA_KEYS.map(k => localStorage.getItem(k) || '').join('\u0001'); } catch(e) { return ''; }
 }
@@ -126,6 +126,22 @@ function applyOverrides(force) {
       if (dels.has(p.id)) return;
       PRODUCTS.push(edits[p.id] ? Object.assign({}, p, edits[p.id]) : p);
     });
+    // Timed Black Friday prices (key obv_bf_prices). They apply only while the
+    // current time is inside [from, until) and simply stop applying afterwards,
+    // so normal prices come back by themselves — nothing to switch off.
+    try {
+      const bf = JSON.parse(localStorage.getItem('obv_bf_prices') || 'null');
+      if (bf && bf.items) {
+        const nowMs = Date.now();
+        if (nowMs >= Date.parse(bf.from || 0) && nowMs < Date.parse(bf.until)) {
+          PRODUCTS.forEach(p => {
+            const o = bf.items[p.id];
+            if (!o) return;
+            p.price = o.price; p.oldPrice = o.old; p.discount = o.disc; p.blackFriday = true;
+          });
+        }
+      }
+    } catch(e) {}
     const brandAdds = JSON.parse(localStorage.getItem('obv_brand_adds') || '[]');
     const brandDels = new Set(JSON.parse(localStorage.getItem('obv_brand_dels') || '[]'));
     for (let i = BRANDS.length - 1; i >= 0; i--) {
@@ -183,6 +199,7 @@ function applyOverrides(force) {
     SEARCH_INDEX.length = 0;
     SEARCH_INDEX.push(...productEntries, ...categoryEntries, ...brandEntries);
   }
+  if (typeof obvRefreshCartPrices === 'function') obvRefreshCartPrices();
   applyStoreSettings();
 }
 
