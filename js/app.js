@@ -1753,7 +1753,31 @@ function applyDisplayToggles() {
     // Black November banner — separate on/off switch from Flash Sale so the
     // seasonal campaign can run independently (set from Settings → Display).
     const bfEl = document.getElementById('bfBanner');
-    if (bfEl) bfEl.style.display = localStorage.getItem('obv_blackFriday') === 'on' ? '' : 'none';
+    if (bfEl) {
+      // Shown while the Black November switch is on. If timed Black Friday prices
+      // exist and have ended, the banner hides itself too.
+      let bfData = null; try { bfData = JSON.parse(localStorage.getItem('obv_bf_prices') || 'null'); } catch(e) {}
+      const bfEnd = bfData && bfData.until ? Date.parse(bfData.until) : 0;
+      const bfOver = bfEnd && Date.now() >= bfEnd;
+      bfEl.style.display = (localStorage.getItem('obv_blackFriday') === 'on' && !bfOver) ? '' : 'none';
+      if (bfData && bfData.items && !bfOver) {
+        const maxDisc = Math.max(0, ...Object.values(bfData.items).map(o => Number(o.disc) || 0));
+        const up = document.getElementById('bfUpTo');
+        if (up && maxDisc) up.textContent = 'up to ' + maxDisc + '% off';
+        const box = document.getElementById('bfCountdown');
+        if (box && bfEnd && !window._bfTimer) {
+          const tick = () => {
+            const left = bfEnd - Date.now();
+            if (left <= 0) { clearInterval(window._bfTimer); bfEl.style.display = 'none'; return; }
+            const d = Math.floor(left / 864e5), h = Math.floor(left % 864e5 / 36e5), m = Math.floor(left % 36e5 / 6e4), s = Math.floor(left % 6e4 / 1e3);
+            const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+            set('bfD', d); set('bfH', String(h).padStart(2, '0')); set('bfM', String(m).padStart(2, '0')); set('bfS', String(s).padStart(2, '0'));
+          };
+          box.style.display = '';
+          tick(); window._bfTimer = setInterval(tick, 1000);
+        }
+      }
+    }
     renderComboPromoSection();
   } catch(e) {}
 }
