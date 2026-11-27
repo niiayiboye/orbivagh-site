@@ -1824,15 +1824,34 @@ function updatePendingBadge() {
 let _visitLogCache = [];
 let _visitChartGran = 'day';
 
+// The dashboard used to read an old 500-entry list (obv_visit_log) that stopped
+// updating on 12 Nov. It now reads the same real-visit table as the Analytics
+// page: one entry per visit (session), bots left out.
+async function fetchVisitLog() {
+  const token = await getValidAdminAccessToken();
+  if (!token) throw new Error('login');
+  const since = new Date(); since.setUTCFullYear(since.getUTCFullYear() - 1);
+  let all = [], from = 0;
+  while (from < 50000) {
+    const r = await fetch(`${SB_URL}/rest/v1/site_visits?select=t,sid,p,country,cc,region,city,ip&ev=eq.view&is_bot=eq.false&t=gte.${since.toISOString()}&order=t.asc`,
+      { headers: { apikey: SB_KEY, Authorization: 'Bearer ' + token, Range: from + '-' + (from + 999) } });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const part = await r.json(); all = all.concat(part);
+    if (part.length < 1000) break; from += 1000;
+  }
+  const seen = new Set(), log = [];
+  all.forEach(v => {
+    const k = v.sid || v.ip || ('x' + log.length);
+    if (seen.has(k)) return; seen.add(k);
+    log.push({ t: v.t, p: (v.p || 'index.html').split('?')[0], country: v.country || 'Unknown', countryCode: v.cc || '', region: v.region || '', city: v.city || '', ip: v.ip || '' });
+  });
+  return log.reverse();
+}
+
 async function loadVisitLog() {
   const badge = document.getElementById('visitTodayBadge');
   try {
-    const h = { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` };
-    const r = await fetch(`${SB_URL}/rest/v1/kv_store?key=eq.obv_visit_log`, { headers: h });
-    const rows = await r.json();
-    let log = [];
-    try { log = JSON.parse(rows[0]?.value || '[]'); } catch(e) {}
-    if (!Array.isArray(log)) log = [];
+    const log = await fetchVisitLog();
     _visitLogCache = log;
 
     const today = new Date().toISOString().slice(0,10);
@@ -2009,12 +2028,7 @@ async function loadVisitorLocations() {
   if (!el) return;
   el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Loading...</div>';
   try {
-    const h = { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` };
-    const r = await fetch(`${SB_URL}/rest/v1/kv_store?key=eq.obv_visit_log`, { headers: h });
-    const rows = await r.json();
-    let log = [];
-    try { log = JSON.parse(rows[0]?.value || '[]'); } catch(e) {}
-    if (!Array.isArray(log)) log = [];
+    const log = await fetchVisitLog();
     _visitLogCache = log; // shared with the chart/drill-down
 
     const today = new Date().toISOString().slice(0,10);
