@@ -1558,6 +1558,8 @@ function initMegaBackdrop() {
 ════════════════════════════════════════ */
 /* ── Visit Tracker ── */
 async function trackVisit() {
+  return; // retired: visits are recorded in site_visits (see supabase.js); the old 500-entry list stopped being used
+
   if (sessionStorage.getItem('obv_v')) return;
   sessionStorage.setItem('obv_v', '1');
   try {
